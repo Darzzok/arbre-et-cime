@@ -151,7 +151,10 @@ const definitions: Record<RouteId, RouteDefinition> = {
     path: "/entretien-exterieur",
     navLabel: "Entretien extérieur",
     navTagline: "Haies et débroussaillage",
-    title: "Taille de haies et entretien extérieur à Rouen",
+    // 36 caracteres : avec le gabarit « | Arbre et Cime Élagage », le titre
+    // complet tient en 60, la cible de SEO_STRATEGY.md § 6. « Entretien
+    // exterieur » reste porte par le h1 de la page.
+    title: "Taille de haies et entretien à Rouen",
     description:
       "Taille de haies, débroussaillage et entretien extérieur à Rouen et dans la métropole rouennaise. Évacuation des déchets comprise. Devis gratuit.",
     intent:

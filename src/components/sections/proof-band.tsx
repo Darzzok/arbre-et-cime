@@ -40,21 +40,21 @@ export function ProofBand() {
               as="li"
               key={proof.value}
               className={cn(
-                "py-5 pr-4 lg:py-6",
+                "py-5 lg:py-6",
                 "border-(--surface-rule)",
                 // Filets mobiles : entre les deux colonnes, entre les rangées.
-                "[&:nth-child(even)]:border-l [&:nth-child(even)]:pl-4",
+                "[&:nth-child(even)]:border-l",
                 "[&:nth-child(n+3)]:border-t",
                 // Desktop : quatre colonnes, un filet vertical entre chacune.
-                "lg:border-l lg:pl-7 lg:[&:nth-child(n+3)]:border-t-0",
-                "lg:first:border-l-0 lg:first:pl-0",
+                "lg:border-l lg:[&:nth-child(n+3)]:border-t-0",
+                "lg:first:border-l-0",
               )}
             >
               {/* Accent jaune réduit à un trait de 16 px : présent, jamais
                   dominant (règle de parcimonie, DESIGN_SYSTEM.md § 1). */}
               <span
                 aria-hidden="true"
-                className="block h-0.5 w-4 bg-safety"
+                className="mx-auto block h-0.5 w-4 bg-safety"
               />
 
               <p

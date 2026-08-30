@@ -316,17 +316,45 @@ dérogation.
 
 ---
 
-## Phase 7 — Contenu des pages services ⬜
+## Phase 7 — Pages services ✅
 
-La section Prestations de la homepage est livrée en phase 6. Reste le contenu
-des quatre pages elles-mêmes.
+Les quatre pages `/elagage`, `/abattage`, `/dessouchage` et
+`/entretien-exterieur` sont développées.
 
-- Rédaction selon le gabarit de `SEO_STRATEGY.md` § 5
-- Traitement des prestations secondaires en sections internes : abattage
-  difficile, débroussaillage, taille de haies, évacuation des déchets
-- Photographies de `public/images/services/` non encore utilisées
+- **Cinq blocs** par page : hero photographique, intention, cas
+  d'intervention, méthode et sécurité, conversion. Gabarit détaillé dans
+  `SEO_STRATEGY.md` § 5.
+- **Contenu réuni dans `src/lib/services-content.ts`** — un seul fichier à
+  relire pour vérifier que les quatre pages disent des choses réellement
+  différentes. Chaque page a son angle propre et sa précision de fin
+  (tableau dans `CONTENT_STRATEGY.md` § 6).
+- **Deux photographies par page**, toutes distinctes, prises de
+  `public/images/services/` et `public/images/details/`.
+- **Maillage interne** : chaque page renvoie aux trois autres services et
+  porte deux CTA vers `/devis`.
+- **JSON-LD** : `BreadcrumbList` actif, `Service` toujours gelé — il dépend
+  de `LocalBusiness`, lui-même en attente des données client.
 
-**Sortie :** parcours homepage → page service → CTA fonctionnel de bout en bout.
+**Sortie atteinte :** quatre `title` et `description` uniques (45 à 62
+caractères), canoniques présentes, un seul `h1` par page, hiérarchie
+`h1 > h2 ×5 > h3` sans saut, une image en `eager` et une en `lazy` par page,
+aucun débordement de 320 à 1440 px. Lint, typecheck et build au vert. Aucune
+dépendance ajoutée.
+
+*Correctif de contraste :* sur `/elagage`, le surtitre du hero tombait devant
+un bâtiment en pierre claire et descendait à **3,28** — sous le seuil AA. Le
+palier médian du dégradé a été appuyé et le surtitre passé en ivoire : les
+quatre pages sont désormais entre 6,6 et 11,4.
+
+*Correctif de clôture de page :* la section de conversion était en forêt et
+tombait directement sur le pied de page, lui aussi en forêt — 1 754 px de
+sombre d'un seul tenant, avec le logotype et un second bouton jaune répétés à
+300 px d'intervalle. La section est passée en clair avec un panneau sombre
+arrondi, et le CTA du pied de page en version éditoriale. Règle ajoutée à
+`DESIGN_SYSTEM.md` § 8 : aucune section ne se termine en forêt.
+
+*Reste à écrire, après retour client :* la FAQ de chaque page et le détail
+de ce qui fait varier un devis.
 
 ---
 

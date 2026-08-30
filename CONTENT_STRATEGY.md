@@ -211,17 +211,34 @@ préférable à un `alt` long quand l'information est utile à tous.
 
 ---
 
-## 6. Rédaction des pages services
+## 6. Rédaction des pages services — livrées en phase 7
 
-Structure définie dans `SEO_STRATEGY.md`. Points de vigilance rédactionnels :
+Structure définie dans `SEO_STRATEGY.md` § 5. Contenu dans
+**`src/lib/services-content.ts`**.
+
+Points de vigilance appliqués :
 
 - Ouvrir sur le **problème du client**, pas sur la définition de la prestation.
-- Nommer les cas concrets : arbre en limite de propriété, branche au-dessus
-  d'une toiture, souche à araser pour une terrasse, haie de 40 mètres à ramener
-  à hauteur.
-- Expliquer ce qui fait varier le prix, sans donner de tarif ferme.
-- Dire explicitement ce qui est inclus, en particulier l'évacuation.
-- FAQ : uniquement des questions réellement posées par les clients.
+- Nommer les cas concrets : branche au-dessus d'une toiture, souche à retirer
+  avant une terrasse, parcelle envahie de ronciers.
+- **Dire aussi quand la prestation ne se justifie pas.** `/dessouchage`
+  explique qu'une souche peut très bien rester en place si la zone n'est pas
+  réaménagée. C'est ce qui distingue un conseil d'un argumentaire.
+- Aucun tarif ferme, aucun délai chiffré.
+- FAQ : uniquement des questions réellement posées par les clients — à écrire
+  après retour du client.
+
+### Ce qui différencie réellement les quatre pages
+
+| Page | Angle propre | Précision de fin de page |
+| --- | --- | --- |
+| `/elagage` | Un arbre que l'on **conserve** : la taille se voit peu | La période dépend de l'essence, pas d'une saison unique |
+| `/abattage` | C'est **l'accès** qui dicte la technique, pas la taille de l'arbre | Se renseigner en mairie avant d'engager les travaux |
+| `/dessouchage` | Le dessouchage n'est **pas systématique** | Ce que devient le broyat |
+| `/entretien-exterieur` | **Ponctuel ou suivi** : le suivi coûte moins cher à l'année | L'évacuation est chiffrée à part |
+
+« Rouen » apparaît dans le `h1` et une ou deux fois dans le corps de chaque
+page. Jamais à chaque paragraphe.
 
 ---
 

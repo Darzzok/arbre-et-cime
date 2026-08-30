@@ -1,7 +1,8 @@
 import Link from "next/link";
 
+import { NavCta } from "@/components/layout/nav-cta";
 import { Wordmark } from "@/components/layout/wordmark";
-import { Body, ButtonLink, Container, Eyebrow, Small } from "@/components/ui";
+import { Body, Container, Eyebrow, Small } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { footerGroups, getRoute } from "@/lib/routes";
 import { area, site } from "@/lib/site";
@@ -20,7 +21,7 @@ export function SiteFooter() {
   return (
     <footer data-surface="dark" className="bg-(--surface-bg) text-(--surface-fg)">
       <Container className="py-12 lg:py-16">
-        <div className="flex flex-col gap-10 lg:flex-row lg:justify-between lg:gap-16">
+        <div className="flex flex-col items-center gap-10 lg:flex-row lg:items-start lg:justify-center lg:gap-24">
           {/* -------- Identite -------- */}
           <div className="lg:max-w-80">
             <Wordmark size="lg" />
@@ -34,7 +35,7 @@ export function SiteFooter() {
             </Body>
 
             {hasPhone || hasEmail ? (
-              <ul className="mt-5 flex flex-col gap-1">
+              <ul className="mt-5 flex flex-col items-center gap-1">
                 {hasPhone ? (
                   <li>
                     <a
@@ -58,13 +59,13 @@ export function SiteFooter() {
               </ul>
             ) : null}
 
-            <ButtonLink
-              href={getRoute("devis").path}
-              variant="primary"
-              className="mt-6"
-            >
-              Demander un devis gratuit
-            </ButtonLink>
+            {/* CTA éditorial, pas un aplat jaune : chaque page se termine déjà
+                par un bouton plein quelques centaines de pixels plus haut. Deux
+                aplats coup sur coup enfreindraient la règle de parcimonie
+                (DESIGN_SYSTEM.md § 1) et alourdiraient le pied de page. */}
+            <div className="mt-7">
+              <NavCta />
+            </div>
           </div>
 
           {/* -------- Colonnes de liens -------- */}
@@ -72,7 +73,7 @@ export function SiteFooter() {
             {footerGroups.map((group) => (
               <nav key={group.title} aria-label={group.title}>
                 <Eyebrow as="p">{group.title}</Eyebrow>
-                <ul className="mt-4 flex flex-col gap-1">
+                <ul className="mt-4 flex flex-col items-center gap-1">
                   {group.ids.map((id) => {
                     const route = getRoute(id);
                     return (

@@ -124,10 +124,48 @@ du document (un seul `h1`, aucun saut de niveau), jamais selon l'apparence.
 
 ---
 
-## 4. Mise en page éditoriale asymétrique — `VERROUILLÉ`
+## 4. Mise en page — `VERROUILLÉ`
 
-Le site n'utilise **pas** de grille de cartes uniformes. La composition est
-asymétrique et respire.
+Le site n'utilise **pas** de grille de cartes uniformes. La composition
+respire.
+
+### Alignement centré — décision client
+
+**Tout le contenu de page et le pied de page sont centrés.** Posé une seule
+fois dans `globals.css` :
+
+```css
+main,
+footer {
+  text-align: center;
+}
+```
+
+Une seule déclaration plutôt qu'un `text-center` sur chaque bloc : rien ne peut
+être oublié, et la bascule inverse tient en une ligne.
+
+**Exclus :** l'en-tête et le menu mobile — ce sont des barres de navigation,
+pas du contenu éditorial — ainsi que `/style-guide`, faite de tableaux que le
+centrage rendrait illisibles (elle porte `text-left`).
+
+Deux conséquences à connaître avant d'écrire un nouveau bloc :
+
+1. **Un bloc à largeur bornée doit porter `mx-auto`.** Sans lui, le texte est
+   centré dans une boîte, elle-même collée à gauche.
+2. **Une rangée `flex` ne suit pas `text-align`.** Elle a besoin de
+   `justify-center`, ou d'être empilée en colonne.
+
+Un accent posé **à côté** d'un texte long ne se centre pas correctement : la
+ligne s'étire et l'accent reste collé au bord. Le motif retenu est de le placer
+**au-dessus**, centré — c'est ce que font la bande de preuves et les points de
+méthode des pages services.
+
+> **Réserve technique.** Le texte courant centré se lit moins bien que ferré à
+> gauche : le bord gauche irrégulier oblige l'œil à rechercher le début de
+> chaque ligne. L'effet est négligeable sur un titre ou un chapô de trois
+> lignes, sensible sur les paragraphes longs des pages services. Décision
+> client assumée ; la largeur de lecture reste bornée à `max-w-reading` pour
+> limiter la gêne.
 
 ### Points de rupture
 
@@ -597,6 +635,19 @@ fois par image, et ne provoque un rendu que lorsque le booléen change.
 Composant serveur, sans JavaScript. Identité, prestations, zone d'intervention,
 CTA devis, liens légaux. **Aucune donnée inventée** : téléphone, e-mail et
 adresse ne s'affichent que s'ils existent réellement dans l'environnement.
+
+Son CTA est **éditorial** (`NavCta`), pas un aplat jaune : chaque page se
+termine déjà par un bouton plein quelques centaines de pixels plus haut. Deux
+aplats coup sur coup enfreindraient la règle de parcimonie du § 1.
+
+> **Règle de clôture de page.** Le pied de page est en forêt. **Aucune section
+> ne doit donc se terminer en forêt** : les deux fonds se confondraient en un
+> seul bloc sombre, et le pied de page perdrait son statut de bande de clôture.
+> Le cas s'est produit en phase 7 — la section de conversion des pages services
+> et le pied de page formaient 1 754 px de sombre d'un seul tenant, soit deux
+> écrans mobiles. La solution retenue : une section **claire** contenant un
+> **panneau sombre arrondi**. Le panneau concentre le poids visuel du CTA, la
+> gouttière claire qui l'entoure rend au pied de page sa fonction.
 
 > **Piège à connaître.** `cn()` ne fusionne pas les classes Tailwind
 > concurrentes. Passer `hidden` en `className` à un `ButtonLink` dont la

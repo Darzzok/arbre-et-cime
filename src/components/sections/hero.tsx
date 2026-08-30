@@ -123,7 +123,7 @@ export function Hero() {
           rendraient du texte forêt sur une photographie sombre. */}
       <div
         data-surface="dark"
-        className="relative flex min-h-svh items-end overflow-hidden lg:min-h-[min(100svh,56rem)] lg:items-center"
+        className="relative flex min-h-svh items-end overflow-hidden lg:min-h-[min(100svh,56rem)]"
       >
         {/* ---------------------------------------------------------------
             La photographie, plein cadre.
@@ -166,15 +166,9 @@ export function Hero() {
             couleurs d'origine. */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(20,37,30,0.94)_0%,rgba(20,37,30,0.88)_24%,rgba(20,37,30,0.72)_46%,rgba(20,37,30,0.32)_64%,rgba(20,37,30,0.06)_82%,rgba(20,37,30,0)_100%)] lg:hidden"
+          className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(20,37,30,0.94)_0%,rgba(20,37,30,0.88)_24%,rgba(20,37,30,0.72)_46%,rgba(20,37,30,0.32)_64%,rgba(20,37,30,0.06)_82%,rgba(20,37,30,0)_100%)]"
         />
 
-        {/* Voile de lisibilité desktop — le texte est à droite, le grimpeur
-            reste dégagé sur la gauche, où le dégradé est quasi nul. */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 hidden bg-[linear-gradient(to_left,rgba(20,37,30,0.93)_0%,rgba(20,37,30,0.82)_28%,rgba(20,37,30,0.38)_58%,rgba(20,37,30,0.04)_100%)] lg:block"
-        />
 
         {/* Protection de l'en-tête : le haut de l'image comporte du ciel clair. */}
         <div
@@ -183,10 +177,9 @@ export function Hero() {
         />
 
         <Container className="relative pt-28 pb-14 lg:pt-0 lg:pb-0">
-          {/* Colonne de droite : large assez pour que « Élagueur-grimpeur »
-              tienne sur une ligne à 76 px, tout en laissant le grimpeur
-              entièrement dégagé sur la gauche de la photographie. */}
-          <div className="lg:ml-auto lg:w-[62%]">
+          {/* Colonne centrée, assez large pour que « Élagueur-grimpeur »
+              tienne sur une ligne à 76 px. */}
+          <div className="mx-auto w-full lg:max-w-4xl">
             <Eyebrow data-hero style={step(0)}>
               <span aria-hidden="true" className="text-(--color-safety)">
                 01
@@ -204,7 +197,7 @@ export function Hero() {
                 as="h1"
                 id="hero-titre"
                 data-hero-mask
-                className="max-w-[15ch] pb-[0.12em] lg:max-w-none"
+                className="mx-auto max-w-[15ch] pb-[0.12em] lg:max-w-none"
               >
                 {/*
                  * `text-balance` couperait volontiers au trait d'union
@@ -224,13 +217,13 @@ export function Hero() {
             <div
               data-hero-trace
               aria-hidden="true"
-              className="mt-7 h-px w-16 bg-(--color-safety) lg:mt-8"
+              className="mx-auto mt-7 h-px w-16 bg-(--color-safety) lg:mt-8"
             />
 
             <Body
               data-hero
               style={step(3)}
-              className="mt-7 max-w-reading text-(--surface-fg) lg:mt-8"
+              className="mx-auto mt-7 max-w-reading text-(--surface-fg) lg:mt-8"
             >
               {site.name} intervient sur l’élagage, l’abattage et l’entretien
               des arbres à {area.city} et dans la {area.metro}
@@ -243,7 +236,7 @@ export function Hero() {
             <div
               data-hero
               style={step(4)}
-              className="mt-9 flex flex-col gap-3 sm:flex-row sm:gap-4 lg:mt-10"
+              className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4 lg:mt-10"
             >
               {/* La largeur est portée par une ENVELOPPE : `cn()` ne fusionne
                   pas les classes concurrentes (cf. DESIGN_SYSTEM.md § 8). */}

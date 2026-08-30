@@ -196,6 +196,23 @@
     text-wrap: pretty;
   }
 
+  /* --- Alignement centre — decision client -------------------------------
+     Tout le contenu de page et le pied de page sont centres. Pose ici plutot
+     qu'en `text-center` sur chaque bloc : une seule declaration, rien ne peut
+     etre oublie, et la bascule inverse tient en une ligne.
+
+     L'en-tete et le menu mobile sont exclus : ce sont des barres de
+     navigation, pas du contenu editorial.
+
+     Les blocs a largeur bornee (`max-w-reading`, `max-w-[15ch]`...) doivent
+     porter `mx-auto`, sinon le texte est centre dans une boite, elle-meme
+     collee a gauche. Les rangees en `flex` ne suivent pas `text-align` : elles
+     portent `justify-center`. */
+  main,
+  footer {
+    text-align: center;
+  }
+
   /* Aucun media ne deborde de sa colonne, quelle que soit la largeur. */
   img,
   svg,

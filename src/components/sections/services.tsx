@@ -71,7 +71,7 @@ export function Services() {
   return (
     <Section surface="light" aria-labelledby="prestations-titre">
       <Container>
-        <Reveal className="max-w-reading">
+        <Reveal className="mx-auto max-w-reading">
           <Eyebrow>Prestations</Eyebrow>
           {/* Titre volontairement contenu : 30 px sur mobile, 36 px sur
               desktop, au lieu des 46 px de l'échelle `text-title`. Ce sont les
@@ -174,11 +174,11 @@ export function Services() {
                       {route.navLabel}
                     </h3>
 
-                    <p className="mt-2 max-w-[42ch] font-sans text-caption leading-relaxed text-(--surface-fg-muted)">
+                    <p className="mx-auto mt-2 max-w-[42ch] font-sans text-caption leading-relaxed text-(--surface-fg-muted)">
                       {card.description}
                     </p>
 
-                    <span className="mt-5 inline-flex items-center gap-2.5 font-sans text-caption font-semibold text-(--surface-fg)">
+                    <span className="mt-5 inline-flex items-center justify-center gap-2.5 font-sans text-caption font-semibold text-(--surface-fg)">
                       Voir le service
                       <svg
                         aria-hidden="true"
@@ -208,7 +208,7 @@ export function Services() {
         </ul>
 
         <Reveal className="mt-10 lg:mt-14">
-          <Body className="max-w-reading text-(--surface-fg-muted)">
+          <Body className="mx-auto max-w-reading text-(--surface-fg-muted)">
             L’abattage difficile, le débroussaillage, la taille de haies et
             l’évacuation des déchets sont traités à l’intérieur de ces quatre
             pages, selon la nature du chantier.

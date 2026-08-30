@@ -9,8 +9,8 @@ Normandie.** Le rayon de 100 km est une **information commerciale**, affichée e
 rassurante, mais il n'est ni un mot-clé cible, ni un prétexte à multiplier des
 pages villes.
 
-**État : architecture livrée en phase 3.** Les contenus réels arrivent aux
-phases 7 à 10.
+**État : architecture livrée en phase 3, pages services rédigées en phase 7.**
+Restent les contenus de `/realisations` et `/zones-intervention` (phases 9 et 10).
 
 ---
 
@@ -152,21 +152,36 @@ vérifié par le typage, une prestation ne peut pas être oubliée.
 
 ---
 
-## 5. Gabarit d'une page service
+## 5. Gabarit d'une page service — livré en phase 7
 
-1. `h1` : « Prestation à Rouen et dans la métropole rouennaise ».
-2. Chapô : le problème du client, pas la prestation.
-3. Photo réelle de la prestation.
-4. Comment intervient Arbre et Cime : méthode, matériel, sécurité.
-5. Cas de figure traités (accès difficile, proximité de bâti, urgence).
-6. Ce qui est inclus — dont évacuation des déchets.
-7. Éléments qui font varier le devis (hauteur, accès, essence, évacuation).
-8. Prestations secondaires rattachées, traitées en sections.
-9. Zone d'intervention.
-10. CTA appel + devis.
-11. FAQ ciblée (3 à 5 questions réelles).
+**Cinq blocs, pas plus.** Une page service doit se lire, pas s'endurer.
 
-Longueur cible : 700 à 1 200 mots utiles.
+| # | Bloc | Contenu |
+| --- | --- | --- |
+| 1 | **Hero** | Photographie plein cadre, surtitre, `h1` « Prestation à Rouen », chapô d'une phrase, CTA devis |
+| 2 | **Intention** | À quoi sert la prestation, et quand elle ne se justifie pas |
+| 3 | **Cas d'intervention** | 4 ou 5 situations concrètes, en panneaux sobres numérotés |
+| 4 | **Méthode et sécurité** | Comment on intervient, trois points opérationnels, photographie de détail, plus une précision propre à la prestation |
+| 5 | **Conversion** | Repères courts, « Parlons de votre chantier », CTA devis, et les trois autres services |
+
+Le contenu rédactionnel des quatre pages vit dans
+**`src/lib/services-content.ts`**, réuni là pour être relu d'un bloc : c'est
+le seul moyen de vérifier qu'aucune page n'est la copie d'une autre avec un
+mot-clé permuté. La structure, elle, est délibérément commune — c'est ce
+qu'attendent les moteurs d'un ensemble de pages sœurs.
+
+**Ce qui n'y figure volontairement pas :**
+
+- **aucun tarif ni fourchette** — impossible à tenir sans voir le chantier ;
+- **aucun diagnostic sanitaire** sur `/elagage` : promettre de « sauver » un
+  arbre serait une affirmation que rien ne garantit ;
+- **aucune technique de dessouchage nommée** tant que le matériel réel du
+  client n'est pas confirmé — la page dit que le choix se décide sur place ;
+- **aucune dramatisation** sur `/abattage` : la page décrit des situations,
+  elle ne fabrique pas de l'urgence.
+
+La FAQ et le détail « ce qui fait varier le devis » restent à écrire quand le
+client aura confirmé son matériel et ses cas les plus fréquents.
 
 ---
 

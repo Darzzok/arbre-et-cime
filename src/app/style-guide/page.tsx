@@ -190,7 +190,10 @@ const spacingScale = [
 
 export default function StyleGuidePage() {
   return (
-    <main id={MAIN_CONTENT_ID} tabIndex={-1}>
+    /* Ferré à gauche, contrairement au reste du site : cette page est une
+       référence de développement, faite de tableaux et de spécimens que le
+       centrage rendrait illisibles. */
+    <main id={MAIN_CONTENT_ID} tabIndex={-1} className="text-left">
       {/* ---------------------------------------------------------------- */}
       <Section surface="dark" spacing="tight" aria-labelledby="sg-titre">
         <Container>
