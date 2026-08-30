@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
+
 import { Container, Display, Eyebrow, Lead, Section, Small } from "@/components/ui";
+import { buildMetadata } from "@/lib/seo";
 import { area, site } from "@/lib/site";
+
+export const metadata: Metadata = buildMetadata("home");
 
 /**
  * Page d'attente.

@@ -63,16 +63,49 @@ d'action mobile sont livrés avec le châssis en phase 4.
 
 ---
 
-## Phase 3 — Architecture SEO et routes ⬜
+## Phase 3 — Architecture SEO et routes ✅
 
-- Création de l'arborescence de `SEO_STRATEGY.md` (prestations, zone,
-  réalisations, devis, contact, pages légales)
-- Slugs définitifs alignés sur `ServiceSlug`
-- `generateMetadata` par route, canoniques
-- Fil d'Ariane
+Livré (voir `SEO_STRATEGY.md` pour le détail) :
 
-**Sortie :** toutes les routes répondent en statique avec des métadonnées
-distinctes et correctes.
+- **Architecture plate, 12 routes publiques** : `/`, `/elagage`, `/abattage`,
+  `/dessouchage`, `/entretien-exterieur`, `/realisations`,
+  `/zones-intervention`, `/devis`, `/a-propos`, `/contact`,
+  `/mentions-legales`, `/politique-confidentialite`. Toutes pré-rendues en
+  statique. Slugs définitifs.
+- **Source de vérité unique `src/lib/routes.ts`** : chemins, libellés,
+  titres, descriptions, intentions SEO, priorités, indexabilité, groupes de
+  navigation, fil d'Ariane et rattachement des huit prestations aux quatre
+  pages services. Aucune URL n'est écrite en dur ailleurs.
+- **Fabrique de métadonnées `buildMetadata()`** (`src/lib/seo.ts`) : titre,
+  description, canonique, Open Graph, Twitter, robots. Canonique omise sur les
+  pages `noindex`. Emplacement d'image Open Graph prêt, laissé vide tant qu'une
+  photographie réelle n'est pas livrée.
+- **`sitemap.ts` et `robots.ts`** générés depuis les routes.
+  `/style-guide` exclue du sitemap automatiquement et laissée explorable pour
+  que son `noindex` soit effectivement lu.
+- **Gestion d'environnement** : aucune URL absolue, aucun canonical, aucun
+  JSON-LD et sitemap vide lorsque `NEXT_PUBLIC_SITE_URL` est absente en
+  production. Vérifié au build : zéro occurrence de `localhost` dans le HTML.
+- **Architecture JSON-LD** (`src/lib/structured-data.ts` + `<JsonLd>`) :
+  `BreadcrumbList` actif ; `LocalBusiness` et `Service` gelés tant que les
+  données client manquent, la check-list étant retournée par
+  `missingLocalBusinessData()`.
+- **Pages d'attente sémantiques** : un seul `h1`, hiérarchie continue, `main`
+  unique, texte contextualisé et distinct par page, maillage interne réel.
+  Aucun contenu de remplissage, aucune affirmation commerciale non vérifiée.
+
+**Sortie atteinte :** 16 routes bâties en statique (12 publiques,
+`/style-guide`, `/robots.txt`, `/sitemap.xml`, `/_not-found`), métadonnées
+distinctes et correctes, lint, typecheck et build au vert. Aucune dépendance
+ajoutée.
+
+*Écart assumé avec la phase 1 :* l'arborescence documentée initialement
+(`/prestations/elagage`, `/zone-intervention`,
+`/politique-de-confidentialite`) est remplacée par l'architecture plate
+ci-dessus, sur décision client. `SEO_STRATEGY.md` a été mis à jour.
+
+*Rappel garde-fou :* les pages publiques sont indexables mais portent un
+contenu d'attente. **Pas de mise en ligne avant la phase 18.**
 
 ---
 

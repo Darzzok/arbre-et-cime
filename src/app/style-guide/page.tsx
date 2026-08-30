@@ -20,6 +20,7 @@ import {
   TextLink,
   Title,
 } from "@/components/ui";
+import { buildMetadata } from "@/lib/seo";
 
 /**
  * Page de reference INTERNE du design system.
@@ -28,15 +29,7 @@ import {
  * navigation publique, pas de lien entrant, et exclusion explicite de
  * l'indexation. Elle sera egalement absente du sitemap (phase 14).
  */
-export const metadata: Metadata = {
-  title: "Style guide (interne)",
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-    googleBot: { index: false, follow: false },
-  },
-};
+export const metadata: Metadata = buildMetadata("style-guide");
 
 /* -------------------------------------------------------------------------- */
 /* Aides locales a cette page uniquement — ne pas reutiliser ailleurs.         */

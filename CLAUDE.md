@@ -69,7 +69,13 @@ Documents de référence, à lire selon le sujet traité :
    privée en dur dans le code ni dans un fichier versionné. Les secrets vivent
    dans `.env.local` (ignoré par git) et sont documentés, vides, dans
    `.env.example`.
-10. **Exécuter `npm run lint` puis `npm run build` avant de déclarer une étape
+10. **Ne jamais activer l'indexation avant le lancement définitif.** Le site est
+    déployé publiquement alors que ses pages portent encore un contenu
+    d'attente. `NEXT_PUBLIC_SITE_INDEXABLE` ne passe à `"true"` qu'en phase 18,
+    sur décision explicite du client, et une seule fois. Ne jamais contourner
+    `SITE_INDEXABLE` (`src/lib/seo.ts`) en écrivant des directives `robots`,
+    une `canonical` ou une entrée de sitemap directement dans une page.
+11. **Exécuter `npm run lint` puis `npm run build` avant de déclarer une étape
     terminée.** Une étape n'est pas terminée si l'un des deux échoue.
 
 ---
@@ -97,7 +103,8 @@ Documents de référence, à lire selon le sujet traité :
 - Aucune information ni interaction accessible **uniquement** au survol.
 - Contraste AA minimum sur tout texte ; les combinaisons validées sont listées
   dans `DESIGN_SYSTEM.md`.
-- Navigation clavier complète, focus visible (`--color-safety`).
+- Navigation clavier complète, focus visible (`--focus-ring` : forêt sur surface
+  claire, jaune sécurité sur surface sombre — voir `DESIGN_SYSTEM.md` § 8).
 - `prefers-reduced-motion: reduce` neutralise animations et transitions — la
   règle globale est déjà en place dans `globals.css`, ne pas la contourner.
 - Cibles tactiles ≥ 44 × 44 px.
