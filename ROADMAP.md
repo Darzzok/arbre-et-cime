@@ -185,9 +185,36 @@ contraste qu'à 1,96 sur ivoire : ses accents y auraient été illisibles.
 
 ---
 
-## Phase 5 — Hero ⬜
+## Phase 5A — Photothèque ✅
 
-**Dépend de la réception des photos client.**
+Constitution d'une photothèque réelle et exploitable **avant** de développer le
+hero, pour ne pas concevoir à vide.
+
+- **18 photographies** sous licence Pexels, téléchargées dans le projet et
+  rangées dans `public/images/` : `hero` (4), `services` (9), `details` (2),
+  `realisations` (3). Aucune URL de banque n'est utilisée dans le code.
+- **`MEDIA_SOURCES.md`** créé comme registre permanent : fichier, dimensions,
+  usage prévu, auteur, URL de page source, licence, date, remarques sur logos et
+  personnes identifiables.
+- **9 images écartées** et le motif du rejet consignés, pour qu'elles ne
+  reviennent pas : logo de marque lisible, EPI absents, contexte non européen,
+  colorimétrie hors charte, personne face à l'objectif.
+- Lisibilité du texte sur les candidates hero **mesurée** et non estimée :
+  contraste de l'ivoire sur la zone de titre, avec et sans voile, et variation
+  de luminance de la zone.
+
+**Sortie atteinte :** photothèque cohérente en lumière et en colorimétrie,
+11,5 Mo au total, licences toutes vérifiables. Lint, typecheck et build au vert.
+
+*Ces images restent un repli :* elles sont à remplacer par les photos du client
+dès réception. Aucune n'est légendable avec une commune ou une date.
+
+---
+
+## Phase 5B — Hero ⬜
+
+**Les candidates sont prêtes** (`public/images/hero/`). Le choix final entre les
+trois revient au client.
 
 - Photo réelle plein écran, cadrage vertical sur mobile
 - `h1` court, chapô d'une phrase, double CTA visible sans défiler à 390 px
@@ -346,7 +373,7 @@ homepage et une page service.
 
 | Bloque | En attente de |
 | --- | --- |
-| Phases 5, 9 | Photothèque client |
+| Qualité finale des phases 5B et 9 | Photothèque client — un repli libre est en place depuis la phase 5A |
 | Phases 4, 14, 18 | Téléphone, e-mail, domaine définitifs |
 | Phase 13 | Hébergement, fournisseur d'envoi, adresse de réception |
 | Phases 14, 18 | Raison sociale, SIREN, mentions légales, assurances |

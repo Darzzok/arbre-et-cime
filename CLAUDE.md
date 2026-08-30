@@ -22,6 +22,7 @@ Documents de référence, à lire selon le sujet traité :
 | `CONVERSION_STRATEGY.md` | Parcours, CTA, preuves, mesure |
 | `QUOTE_FLOW.md` | Configurateur de devis en 5 étapes |
 | `CONTENT_STRATEGY.md` | Ton, rédaction, photographie, nommage des médias |
+| `MEDIA_SOURCES.md` | Registre des médias : source, auteur, licence, usage |
 | `ROADMAP.md` | Découpage en 18 phases et critères de sortie |
 
 ---

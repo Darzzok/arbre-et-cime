@@ -85,14 +85,37 @@ Consignes de prise de vue : format horizontal **et** vertical pour chaque sujet
 (le vertical sert le mobile), lumière naturelle, pas de zoom numérique, JPEG
 d'origine sans filtre, fichier le plus lourd possible transmis tel quel.
 
-### Repli si la photothèque est insuffisante
+### Repli — en place depuis la phase 5A
 
-Banques d'images libres uniquement, et seulement si le visuel est **réellement
-cohérent** : arboriculture européenne, essences et paysages plausibles en
-Normandie, EPI conformes. Une photo générique de forêt tropicale ou de
-bûcheronnage nord-américain est refusée. Toute photo de repli est notée dans le
-tableau de suivi des médias afin d'être remplacée par une photo client dès que
-possible.
+**18 photographies libres sont en place**, sous licence Pexels, dans
+`public/images/` (`hero`, `services`, `details`, `realisations`). Chacune est
+consignée dans **`MEDIA_SOURCES.md`** : fichier, usage, auteur, URL de la page
+source, licence, date, et remarques sur les logos ou personnes identifiables.
+
+Ce sont des **sources temporaires**, à remplacer par les photos client dès
+réception. Le registre indique pour chacune quelle photo client la remplacera.
+
+Critères appliqués à la sélection, et à réappliquer pour tout ajout :
+
+- banques d'images **libres** uniquement — jamais Unsplash+, ni image payante,
+  ni filigrane, ni Google Images, ni Pinterest ;
+- **aucune image générée** ;
+- arboriculture européenne : essences, paysages et EPI plausibles en Normandie —
+  une rue pavillonnaire nord-américaine ou une forêt tropicale est refusée ;
+- **aucun logo de marque ou d'entreprise tierce lisible** ;
+- **aucune situation de sécurité irréaliste** : une tronçonneuse tenue sans EPI
+  ruinerait l'argument « travail sécurisé » ;
+- aucune personne posant face à l'objectif — elle serait prise pour le dirigeant
+  d'Arbre et Cime ;
+- cohérence chromatique avec la charte : verts, bois, pierre. Les bleus saturés
+  et les vêtements criards cassent l'ensemble.
+
+`MEDIA_SOURCES.md` § 7 consigne aussi les **images écartées et le motif du
+rejet**, pour qu'elles ne reviennent pas par inadvertance.
+
+> **Légendes des réalisations.** Tant que les photos sont des replis, aucune
+> légende ne doit mentionner une commune, une date ou un client : ce serait une
+> fausse affirmation. Légendes neutres jusqu'au remplacement.
 
 ### Traitement et intégration
 
@@ -100,9 +123,11 @@ possible.
   les visuels pleine largeur.
 - `next/image` systématique, `sizes` explicite, `priority` réservé au seul
   visuel LCP du hero.
-- Nommage : `prestation-lieu-detail.jpg`, en minuscules, sans accent
-  (`elagage-rouen-demontage-tilleul.jpg`).
-- Stockage : `public/photos/`.
+- Nommage : descriptif, en minuscules, sans accent, sans identifiant de source
+  (`abattage-arbre-tombe-intervention-urgence.jpg`). Jamais `pexels-photo-123`.
+- Stockage : `public/images/`, en quatre dossiers — `hero`, `services`,
+  `details`, `realisations`.
+- Toute image y figurant doit avoir sa ligne dans `MEDIA_SOURCES.md`.
 
 ---
 
