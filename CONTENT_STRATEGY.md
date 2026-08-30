@@ -53,8 +53,8 @@ Sept sections `VERROUILLÉES` (cf. `PROJECT.md`). Intentions rédactionnelles :
 | Section | Ce que le texte doit faire |
 | --- | --- |
 | **Hero** ✅ | Dire le métier, la ville, et proposer les deux actions. Un `h1` court, un chapô d'une phrase. Rien d'autre. **Livré en phase 5B** — voir ci-dessous. |
-| **Preuves** | Aligner des faits vérifiables : années d'expérience, qualifications, sécurité, propreté, devis gratuit. Formulation brève, sans phrase de liaison marketing. |
-| **Prestations** | Les 8 prestations dans l'ordre de référence, chacune avec une ligne qui dit à qui elle s'adresse et ce qu'elle règle. Lien vers la page dédiée. |
+| **Preuves** ✅ | Aligner des faits vérifiables : années d'expérience, qualifications, sécurité, propreté, devis gratuit. Formulation brève, sans phrase de liaison marketing. **Livré en phase 6.** |
+| **Prestations** ✅ | **Quatre** prestations principales, chacune avec une ligne qui dit ce qu'elle règle, et un lien vers sa page. Les quatre secondaires sont traitées dans leur page parente. **Livré en phase 6.** |
 | **Pourquoi Arbre et Cime** | Trois à quatre différenciateurs argumentés (méthode de grimpe, sécurité, propreté, réactivité) — pas une liste d'adjectifs. |
 | **Réalisations** | Photos réelles, légendes factuelles : commune, prestation, contrainte particulière. La légende fait le travail. |
 | **Zone d'intervention** | Rouen et la métropole nommément, puis la mention du rayon jusqu'à 100 km. |
@@ -84,6 +84,48 @@ Chaque terme SEO n'apparaît **qu'une fois** : élagueur-grimpeur, Rouen,
 Les quatre preuves sont toutes vérifiables dans `PROJECT.md`. « Diplômé »
 renvoie au CS Taille et soins des arbres — à ne pas transformer en
 « certifié » ou « agréé », qui seraient des affirmations différentes.
+
+### Textes des preuves et des prestations — livrés
+
+**Bande de preuves** (section 2), quatre repères et pas un de plus :
+
+```
+10 ans          d'expérience du métier
+Diplômé         CS Taille et soins des arbres
+Devis gratuit   et sans engagement
+100 km          de rayon d'intervention
+```
+
+**Prestations** (section 3) :
+
+```
+Surtitre  PRESTATIONS
+Titre     Nos interventions
+Chapô     Quatre interventions, quatre pages : la méthode, les cas traités
+          et ce qui fait varier un devis.
+
+01 Élagage             Préserver, équilibrer et sécuriser les arbres.
+02 Abattage            Abattage et démontage lorsque l'arbre doit être
+                       retiré, y compris en situation complexe.
+03 Dessouchage         Retirer ou réduire une souche pour libérer et
+                       remettre en état la zone.
+04 Entretien extérieur Taille de haies, débroussaillage et entretien des
+                       espaces extérieurs.
+```
+
+Titre volontairement court et direct (phase 6B, décision client) : ce sont les
+cartes photographiques qui portent la section, pas le titre. Le clivage
+éditorial de `SEO_STRATEGY.md` — **conserver / retirer / dessoucher /
+entretenir** — reste porté par les quatre descriptions.
+
+**Rouen n'apparaît pas dans cette section.** Les quatre intitulés portent déjà
+les intentions (élagage, abattage, dessouchage, entretien extérieur) ; ajouter
+la ville à chaque ligne serait de la répétition mécanique. L'ancrage local est
+porté par le hero, le pied de page et les pages services.
+
+Une phrase de bas de section rattache explicitement les quatre prestations
+secondaires — abattage difficile, débroussaillage, taille de haies,
+évacuation — à leur page parente, pour qu'aucune ne semble oubliée.
 
 ---
 

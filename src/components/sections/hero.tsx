@@ -61,17 +61,6 @@ const HERO_MEDIA_MOBILE = "(max-width: 63.999rem)";
 
 const devis = getRoute("devis");
 
-/**
- * Quatre preuves, pas une de plus, et aucune carte : des colonnes séparées par
- * des filets. Toutes vérifiables dans `PROJECT.md`.
- */
-const proofs = [
-  { value: `${site.experienceYears} ans`, label: "d’expérience du métier" },
-  { value: "Diplômé", label: "CS Taille et soins des arbres" },
-  { value: "Devis", label: "gratuit et sans engagement" },
-  { value: `${area.maxRadiusKm} km`, label: "de rayon d’intervention" },
-];
-
 /** Style en ligne portant l'échelonnement de l'entrée. */
 function step(index: number): CSSProperties {
   return { "--hero-index": index } as CSSProperties;
@@ -281,46 +270,6 @@ export function Hero() {
         </Container>
       </div>
 
-      {/* ---------------------------------------------------------------
-          Bande de preuves. Sur mobile elle passe volontairement sous la ligne
-          de flottaison : le premier écran doit rester la photographie, le
-          titre et le CTA.
-          --------------------------------------------------------------- */}
-      <div
-        data-surface="dark"
-        className="border-t border-(--surface-rule) bg-(--surface-bg) text-(--surface-fg)"
-      >
-        <Container>
-          <ul className="grid grid-cols-2 lg:grid-cols-4">
-            {proofs.map((proof, index) => (
-              <li
-                key={proof.value}
-                data-hero
-                style={step(5 + index)}
-                className={cn(
-                  "py-5 pr-5 lg:py-7",
-                  "border-(--surface-rule)",
-                  // Filets mobiles : entre les deux colonnes, et entre les
-                  // deux rangées.
-                  "[&:nth-child(even)]:border-l [&:nth-child(even)]:pl-5",
-                  "[&:nth-child(n+3)]:border-t",
-                  // Desktop : quatre colonnes, un seul filet vertical entre
-                  // chaque, aucun filet horizontal.
-                  "lg:border-l lg:pl-7 lg:[&:nth-child(n+3)]:border-t-0",
-                  "lg:first:border-l-0 lg:first:pl-0",
-                )}
-              >
-                <p className="font-display text-subtitle leading-none text-(--surface-heading)">
-                  {proof.value}
-                </p>
-                <p className="mt-2 font-sans text-caption text-(--surface-fg-muted)">
-                  {proof.label}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </div>
     </section>
   );
 }

@@ -64,6 +64,10 @@
   --radius-none: 0px;
   --radius-edge: 2px;
   --radius-soft: 8px;
+  /* Cartes photographiques uniquement — decision client, phase 6B.
+     Ne pas etendre a d'autres composants : le reste du site reste a angles
+     francs (voir DESIGN_SYSTEM.md § 4). */
+  --radius-card: 16px;
 
   /* --- Points de rupture -------------------------------------------------- */
   /* Alignes sur les largeurs de recette : 320 / 390 / 768 / 1024 / 1440. */

@@ -172,6 +172,35 @@ grid grid-cols-4 gap-(--gutter) md:grid-cols-8 lg:grid-cols-12
 Les blocs s'appuient sur des empans **inégaux** (7/5, 8/4, 5/7) et alternent le
 côté d'ancrage d'une section à l'autre.
 
+### Cartes photographiques — exception encadrée
+
+**Décision client, phase 6B.** Le traitement éditorial de la phase 6 a été
+jugé trop « magazine » ; la section Prestations passe en cartes
+photographiques. Cette section est la **seule** du site où le motif « carte »
+est autorisé, et la seule où le rayon dépasse 8 px.
+
+Anatomie :
+
+- photographie **plein fond** en `object-cover`, jamais de cadre blanc ;
+- rayon `rounded-card` (16 px), réservé à ce composant ;
+- dégradé forêt progressif de bas en haut, plus un voile de 22 % qui s'ajoute
+  au survol — l'image s'enfonce, elle ne s'éclaircit jamais ;
+- contenu ancré en bas : index `01`–`04` en jaune sécurité, titre Fraunces
+  `text-subtitle`, description en `text-caption`, mention « Voir le service »
+  et flèche ;
+- filet d'accent jaune à 45 % révélé au survol et au focus.
+
+**Ce qui reste interdit**, y compris ici : carte blanche à icône, grosse
+bordure, ombre portée, glassmorphism, fond flouté.
+
+Le lien enveloppe la carte entière : le nom accessible est l'intitulé du
+service, et tout le contenu reste visible sans survol.
+
+> **Note système.** Cette exception contredit deux règles générales — « très
+> peu de cartes » (§ 4) et « rayons de 0 à 8 px ». Elle est encadrée par un
+> jeton dédié, `--radius-card`, et par ce paragraphe : **ne pas l'étendre à
+> d'autres sections** sans nouvelle décision.
+
 ### Interdits de composition
 
 - **Très peu de cartes.** Quand une répétition est nécessaire (les 8
@@ -179,7 +208,9 @@ côté d'ancrage d'une section à l'autre.
   numérotation, typographie hiérarchisée — pas huit rectangles à ombre portée.
 - **Ombres portées : interdites** en décor. La profondeur vient du contraste de
   fond (forêt / ivoire) et des photos.
-- **Rayons de bordure : 0 à 8 px.** `rounded-edge` (2 px) par défaut,
+- **Rayons de bordure : 0 à 8 px**, à la seule exception des cartes
+  photographiques de la section Prestations (`--radius-card`, 16 px — voir
+  ci-dessus). `rounded-edge` (2 px) par défaut,
   `rounded-soft` (8 px) pour les cadres média. Rien au-delà n'existe.
 - Aucune esthétique SaaS, IA ou glassmorphism : ni flou d'arrière-plan, ni
   dégradé décoratif, ni bordure lumineuse.
@@ -630,6 +661,8 @@ Déclarés dans `src/app/globals.css` :
   `--duration-signature`
 - **Menu mobile** (style en ligne) : `--menu-index`, pour l'échelonnement de
   l'apparition en cascade
+- **Exception** : `--radius-card` (16 px), réservé aux cartes photographiques
+  de la section Prestations
 
 Toute évolution de cette liste implique une mise à jour de ce document.
 

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
 import { Hero } from "@/components/sections/hero";
+import { ProofBand } from "@/components/sections/proof-band";
+import { Services } from "@/components/sections/services";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata("home");
@@ -11,8 +13,8 @@ export const metadata: Metadata = buildMetadata("home");
  *
  * Structure VERROUILLÉE à 7 sections + footer (voir PROJECT.md) :
  *   1. Hero photo plein écran            — livré en phase 5B
- *   2. Preuves                           — phase 6
- *   3. Prestations                       — phase 7
+ *   2. Preuves                           — livré en phase 6
+ *   3. Prestations                       — livré en phase 6
  *   4. Pourquoi Arbre et Cime            — phase 8
  *   5. Réalisations                      — phase 9
  *   6. Zone d'intervention               — phase 10
@@ -24,6 +26,8 @@ export default function Home() {
   return (
     <main id={MAIN_CONTENT_ID} tabIndex={-1}>
       <Hero />
+      <ProofBand />
+      <Services />
     </main>
   );
 }

@@ -253,20 +253,78 @@ site déployé (phase 15).
 
 ---
 
-## Phase 6 — Preuves ⬜
+## Phase 6 — Preuves et Prestations ✅
 
-- Expérience, qualifications, sécurité, chantier propre, devis gratuit
-- Traitement éditorial : filets et hiérarchie typographique, pas de cartes
+Sections 2 et 3 des 7 sections verrouillées.
 
-**Sortie :** section validée à 390 px, aucun fait non vérifié affiché.
+**Bande de preuves** (`src/components/sections/proof-band.tsx`) — quatre
+repères, tous vérifiables dans `PROJECT.md` : 10 ans d'expérience, diplômé,
+devis gratuit, 100 km. Posée sur la même surface forêt que le hero, elle s'y
+rattache visuellement. **Aucune carte, aucun pictogramme, aucune ombre** : des
+filets d'un pixel et de la typographie. Quatre colonnes au-delà de 1024 px,
+2 × 2 en dessous. Rendue en `<div>` et non en `<section>` : sans titre
+visible, un point de repère anonyme n'aiderait personne.
+
+**Prestations** (`src/components/sections/services.tsx`) — les quatre pages
+services, index `01`–`04`, grandes photographies, texte très court, lien
+éditorial à flèche. Les quatre prestations secondaires sont explicitement
+rattachées à leur page parente par une phrase de bas de section.
+
+- **Composition asymétrique** : empans 5/7 puis 7/5, second bloc de chaque
+  rangée décalé vers le bas. Motif désormais documenté dans
+  `DESIGN_SYSTEM.md` § 4.
+- **Cadrages choisis par photographie** (portrait 4/5, paysage 3/2) : aucun
+  recadrage fort, et l'alternance des proportions fait le rythme.
+- **Images** : les quatre retenues sont celles de `public/images/services/`
+  les plus lisibles et les plus cohérentes chromatiquement. Écartées : la
+  tronçonneuse à marque lisible et l'arbre en têtard au ciel bleu saturé.
+- **Lien étiré** : bloc entièrement cliquable, nom accessible réduit à
+  l'intitulé plus « voir la prestation ».
+
+**Sortie atteinte :** aucun débordement horizontal de 320 à 1440 px,
+hiérarchie `h1 > h2 > h3 ×4` sans saut, une seule image en `eager` (le hero)
+et quatre en `lazy`, liens descriptifs, animations au niveau Reveal
+neutralisées sous `prefers-reduced-motion`. Lint, typecheck et build au vert.
+Aucune dépendance ajoutée.
+
+### Phase 6B — Reprise en style premium moderne ✅
+
+Le traitement éditorial de la phase 6 a été jugé trop « magazine », la bande
+de preuves trop massive. Reprise des deux seules sections concernées :
+
+- **Bande de preuves compacte** : hauteur ramenée de 240 à **120 px** sur
+  desktop, valeurs passées de Fraunces 46 px à **Manrope 26 px** (20 px sur
+  mobile), accent jaune réduit à un trait de 16 px. Une réglure, plus une
+  section.
+- **Cartes photographiques** : photo plein fond, rayon 16 px, dégradé
+  progressif, contenu ancré en bas, index en jaune sécurité. Grille 2 × 2 au
+  delà de 1024 px, une carte par ligne en dessous (336 px de haut).
+- **Interactions au survol** : image à `scale 1.03` en 520 ms, voile qui
+  s'ajoute, filet d'accent révélé, titre remonté de 2 px et flèche avancée de
+  4 px en 180 ms. Tout sous `motion-safe`, rien d'essentiel au survol.
+- **Titre de section** ramené de 46 à **36 px**, chapô raccourci, ton plus
+  direct.
+
+**Sortie atteinte :** aucun débordement de 320 à 1440 px, rayon 16 px partout,
+quatre images en `lazy`, hiérarchie de titres inchangée. Lint, typecheck et
+build au vert. Aucune dépendance ajoutée.
+
+*Deux règles générales assouplies sur cette seule section*, sur décision
+client et documentées comme exception dans `DESIGN_SYSTEM.md` § 4 : « très peu
+de cartes » et « rayons de 0 à 8 px ». Le jeton `--radius-card` isole la
+dérogation.
 
 ---
 
-## Phase 7 — Prestations ⬜
+## Phase 7 — Contenu des pages services ⬜
 
-- Les 8 prestations dans l'ordre de référence, en liste éditoriale
-- Lien vers chaque page service
-- Contenu des pages services rédigé selon le gabarit de `SEO_STRATEGY.md`
+La section Prestations de la homepage est livrée en phase 6. Reste le contenu
+des quatre pages elles-mêmes.
+
+- Rédaction selon le gabarit de `SEO_STRATEGY.md` § 5
+- Traitement des prestations secondaires en sections internes : abattage
+  difficile, débroussaillage, taille de haies, évacuation des déchets
+- Photographies de `public/images/services/` non encore utilisées
 
 **Sortie :** parcours homepage → page service → CTA fonctionnel de bout en bout.
 
