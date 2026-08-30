@@ -78,9 +78,11 @@
   --container-content: 77.5rem; /* 1240 — largeur de contenu de reference */
   --container-wide: 90rem; /* 1440 — bandeaux quasi pleine largeur */
 
-  /* --- Mouvement — sobre et technique ------------------------------------- */
-  --ease-cime: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --duration-cime: 320ms;
+  /* --- Mouvement — trois niveaux, sobre et technique ---------------------- */
+  /* Voir DESIGN_SYSTEM.md § 6. Toute animation du site releve d'un de ces
+     trois niveaux : aucune duree n'est ecrite a la main dans un composant. */
+  --ease-cime: cubic-bezier(0.22, 0.61, 0.36, 1); /* sortie, general */
+  --ease-line: cubic-bezier(0.65, 0, 0.35, 1); /* trace de filet */
 }
 
 @layer base {
@@ -92,6 +94,16 @@
     --gutter: 1.25rem; /* 20 — mobile, reference 390 px */
     --section-space: 4.5rem; /* 72 — mobile */
     --reveal-shift: 0.375rem; /* 6 — amplitude reduite sur mobile */
+
+    /* --- Mouvement : trois niveaux — voir DESIGN_SYSTEM.md § 6 -------------
+       Declares ici et non dans `@theme` : Tailwind elague les variables de
+       `@theme` qu'aucun utilitaire ne consomme, et `--duration-signature`
+       n'est pas encore utilisee (hero, carte et devis arrivent plus tard).
+       Dans `:root`, les trois niveaux existent toujours et forment un systeme
+       lisible. Consommees via `duration-(--duration-micro)`. */
+    --duration-micro: 180ms; /* liens, boutons, navigation */
+    --duration-reveal: 520ms; /* apparition de contenu */
+    --duration-signature: 900ms; /* hero, carte, devis — plus tard */
   }
 
   @media (width >= 48rem) {
@@ -225,6 +237,32 @@
    le script echoue — le contenu est de toute facon toujours present dans le
    HTML. L'animation est purement decorative et ne porte aucune information.
    --------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+   Menu mobile — apparition en cascade (niveau Reveal).
+   Le panneau passe de `display: none` a visible : l'animation redemarre donc
+   d'elle-meme a chaque ouverture, sans etat supplementaire ni JavaScript.
+   L'echelonnement est porte par `--menu-index`, pose en style en ligne.
+   --------------------------------------------------------------------------- */
+
+@keyframes cime-menu-item {
+  from {
+    opacity: 0;
+    transform: translateY(0.875rem); /* 14 px */
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-menu-item] {
+    animation: cime-menu-item var(--duration-reveal) var(--ease-cime) both;
+    animation-delay: calc(var(--menu-index, 0) * 45ms);
+  }
+}
 
 @keyframes cime-reveal {
   from {

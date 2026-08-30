@@ -109,15 +109,79 @@ contenu d'attente. **Pas de mise en ligne avant la phase 18.**
 
 ---
 
-## Phase 4 — Navigation, header, footer ⬜
+## Phase 4 — Navigation, header, footer ✅
 
-- En-tête compact : logotype, bouton d'appel, ouverture du menu
-- Menu mobile pleine hauteur, fermeture au clavier et à l'`Échap`
-- Barre d'action mobile persistante (appeler / devis), `safe-area` respectée
-- Footer : NAP, prestations, zone, mentions, rappel CTA
-- Lien d'évitement vers le contenu principal
+Livré (voir `DESIGN_SYSTEM.md` § 8) :
 
-**Sortie :** châssis complet, navigable au clavier, sans dépendance au survol.
+- **En-tête à deux variantes**, pilotées par `headerVariant` dans
+  `src/lib/routes.ts` : `overlay` transparent sur la page d'accueil (en
+  prévision du hero photo), `solid` collant sur les pages internes.
+- **Navigation desktop** : Prestations (sous-menu de 4 services), Réalisations,
+  Zone d'intervention, À propos, CTA « Devis gratuit ». Sous-menu ouvert au clic
+  et au clavier, jamais au seul survol. Pas de méga-menu.
+- **Menu mobile** plein écran sous 1024 px : `role="dialog"`, `aria-modal`,
+  `Échap`, focus piégé puis rendu, défilement du corps verrouillé, fermeture
+  au changement de page y compris via les boutons précédent/suivant.
+- **Barre d'action mobile** fixe, marge de sécurité iOS respectée, cale de même
+  hauteur en fin de flux pour ne jamais recouvrir le contenu. Désactivable page
+  par page via `HIDDEN_ON`. **Aucun numéro inventé** : l'action « Appeler »
+  n'apparaît que si `NEXT_PUBLIC_PHONE` est renseignée.
+- **Pied de page** serveur : identité, prestations, zone, CTA devis, liens
+  légaux. Aucune coordonnée ni adresse fictive.
+- **Lien d'évitement** vers `#contenu`, présent sur toutes les pages.
+- **Logotype typographique temporaire** — aucun symbole d'arbre inventé.
+
+**Sortie atteinte :** châssis complet, navigable au clavier, sans dépendance au
+survol. 25 combinaisons largeur x page vérifiées sans débordement horizontal
+(320 / 390 / 768 / 1024 / 1440 px). Lint, typecheck et build au vert. Aucune
+dépendance ajoutée.
+
+*Ajustements dans `src/lib/routes.ts` :* ajout du champ `headerVariant`,
+remplacement de `primaryNavIds` par `primaryNav` (routes et groupes) et
+`ctaRouteId`, libellé « Zones d'intervention » ramené au singulier « Zone
+d'intervention » pour coller à la section verrouillée de `PROJECT.md`.
+
+### Phase 4B — Raffinement premium de la navigation ✅
+
+La navigation de la phase 4 était fonctionnelle mais trop institutionnelle.
+Reprise du seul châssis, sans toucher aux autres sections :
+
+- **Système de mouvement à trois niveaux** documenté et outillé : Micro
+  (180 ms), Reveal (520 ms), Signature (900 ms, réservé au hero, à la carte et
+  au devis). Vocabulaire arrêté : filets qui se tracent, masques, translations
+  contrôlées ; rebond, zoom, flou et rotation exclus.
+- **Logotype renforcé** : « Arbre & Cime » avec esperluette en italique, et
+  « ÉLAGAGE · ROUEN » en surtitre au point médian jaune. Toujours aucun symbole
+  inventé. Trois tailles.
+- **En-tête toujours sur surface sombre**, `fixed`, qui se compacte au
+  défilement (112 → 80 px sur desktop) avec fond forêt à 95 % et filet
+  inférieur. Les pages internes reçoivent une cale de la hauteur dépliée, donc
+  aucun décalage de mise en page.
+- **Indicateur de lien** : filet de 1 px tracé depuis la gauche, sans
+  déplacement du libellé.
+- **Sous-menu Prestations éditorial** : index `01`–`04`, intitulés en Fraunces,
+  sous-libellés (`navTagline` ajouté aux routes services).
+- **CTA `NavCta`** en remplacement de l'aplat jaune : le jaune sécurité ne
+  subsiste qu'en filet de 2 px et en flèche. Permanent dans le menu mobile, où
+  il n'y a pas de survol.
+- **Menu mobile repensé** : entrées numérotées `01`–`04` en grand, Prestations
+  dépliable, CTA pleine largeur, rappel de la zone. Apparition en cascade
+  entièrement CSS, relancée à chaque ouverture, neutralisée sous
+  `prefers-reduced-motion`.
+- **Barre d'action affinée** : 60 px, séparateur vertical, et **apparition
+  différée après le hero** sur les routes `overlay`. Cale rendue en permanence
+  pour que la hauteur du document reste stable.
+
+**Sortie atteinte :** 25 combinaisons largeur × page sans débordement
+horizontal. Lint, typecheck et build au vert. Aucune dépendance ajoutée.
+
+*Correctif technique :* les trois durées ont dû quitter `@theme` pour `:root` —
+Tailwind élague les variables de `@theme` qu'aucun utilitaire ne consomme, et
+`--duration-signature` n'était pas émise.
+
+*Décision à confirmer :* l'en-tête est désormais **sombre sur toutes les
+pages**, et non plus ivoire sur les pages internes. Le jaune sécurité ne
+contraste qu'à 1,96 sur ivoire : ses accents y auraient été illisibles.
 
 ---
 

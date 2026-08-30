@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 
+import { MobileActionBar } from "@/components/layout/mobile-action-bar";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SkipLink } from "@/components/layout/skip-link";
 import { area, site } from "@/lib/site";
 
 import "./globals.css";
@@ -41,7 +45,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr" className={`${fraunces.variable} ${manrope.variable}`}>
-      <body className="min-h-dvh antialiased">{children}</body>
+      <body className="min-h-dvh antialiased">
+        <SkipLink />
+        <SiteHeader />
+        {children}
+        <SiteFooter />
+        {/* Dernier element du flux : sa cale se place apres le footer. */}
+        <MobileActionBar />
+      </body>
     </html>
   );
 }

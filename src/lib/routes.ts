@@ -39,6 +39,12 @@ export type RouteDefinition = {
   path: string;
   /** Libelle court, pour la navigation et le fil d'Ariane. */
   navLabel: string;
+  /**
+   * Sous-libelle de navigation, 2 a 4 mots. Sert uniquement au sous-menu
+   * Prestations : il dit ce que la page resout, pour departager quatre
+   * intitules metier proches. Purement editorial, sans effet SEO.
+   */
+  navTagline?: string;
   /** Titre de page. Passe dans le gabarit `%s | Arbre et Cime Élagage`. */
   title: string;
   /** Titre non gabarise — reserve a la racine. */
@@ -52,6 +58,13 @@ export type RouteDefinition = {
    */
   intent: string;
   group: RouteGroup;
+  /**
+   * Contexte visuel de l'en-tete.
+   * - `overlay` : en-tete transparent pose SUR un visuel sombre plein ecran
+   *   (le futur hero photo de la page d'accueil) ;
+   * - `solid`   : en-tete opaque, colle en haut des pages internes.
+   */
+  headerVariant: "overlay" | "solid";
   /** Exclut la route du sitemap (page interne, ou contenu non encore publie). */
   inSitemap: boolean;
   /** Emet `noindex, nofollow`. Bascule centralisee, route par route. */
@@ -74,6 +87,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     intent:
       "élagueur Rouen / élagueur-grimpeur Rouen / élagage Rouen / abattage d’arbres Rouen",
     group: "preuve",
+    headerVariant: "overlay",
     inSitemap: true,
     noindex: false,
     priority: 1,
@@ -84,11 +98,13 @@ const definitions: Record<RouteId, RouteDefinition> = {
     id: "elagage",
     path: "/elagage",
     navLabel: "Élagage",
+    navTagline: "Tailler et conserver",
     title: "Élagage d’arbres à Rouen",
     description:
       "Élagage et taille douce d’arbres à Rouen et dans la métropole rouennaise. Intervention en grimpe, respect de l’arbre, chantier propre. Devis gratuit.",
     intent: "élagage Rouen — taille et entretien d’un arbre que l’on conserve",
     group: "service",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.9,
@@ -99,12 +115,14 @@ const definitions: Record<RouteId, RouteDefinition> = {
     id: "abattage",
     path: "/abattage",
     navLabel: "Abattage",
+    navTagline: "Supprimer, même en accès difficile",
     title: "Abattage d’arbres à Rouen",
     description:
       "Abattage et démontage d’arbres à Rouen, y compris en accès difficile ou dangereux : travail par cordes, en rétention. Devis gratuit, urgences.",
     intent:
       "abattage d’arbres Rouen — y compris abattage difficile et dangereux (arbre à supprimer)",
     group: "service",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.9,
@@ -115,11 +133,13 @@ const definitions: Record<RouteId, RouteDefinition> = {
     id: "dessouchage",
     path: "/dessouchage",
     navLabel: "Dessouchage",
+    navTagline: "Retirer la souche",
     title: "Dessouchage à Rouen",
     description:
       "Dessouchage et rognage de souches à Rouen et dans la métropole rouennaise, après abattage ou avant un projet d’aménagement. Devis gratuit.",
     intent: "dessouchage Rouen — suppression de la souche après coupe",
     group: "service",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.9,
@@ -130,12 +150,14 @@ const definitions: Record<RouteId, RouteDefinition> = {
     id: "entretien-exterieur",
     path: "/entretien-exterieur",
     navLabel: "Entretien extérieur",
+    navTagline: "Haies et débroussaillage",
     title: "Taille de haies et entretien extérieur à Rouen",
     description:
       "Taille de haies, débroussaillage et entretien extérieur à Rouen et dans la métropole rouennaise. Évacuation des déchets comprise. Devis gratuit.",
     intent:
       "taille de haies et débroussaillage Rouen — entretien récurrent d’un terrain",
     group: "service",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.9,
@@ -152,6 +174,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     intent:
       "preuve par l’exemple — faible volume de recherche, fort effet sur la conversion",
     group: "preuve",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.7,
@@ -161,13 +184,14 @@ const definitions: Record<RouteId, RouteDefinition> = {
   "zones-intervention": {
     id: "zones-intervention",
     path: "/zones-intervention",
-    navLabel: "Zones d’intervention",
+    navLabel: "Zone d’intervention",
     title: "Zones d’intervention autour de Rouen",
     description:
       "Rouen et la Métropole Rouen Normandie en zone principale, et déplacement possible jusqu’à 100 km selon les chantiers. Devis gratuit.",
     intent:
       "élagueur métropole rouennaise — répondre à « intervenez-vous chez moi ? »",
     group: "preuve",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.7,
@@ -183,6 +207,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
       "Décrivez votre chantier à Rouen ou dans la métropole, ajoutez des photos et recevez un devis gratuit et sans engagement, établi rapidement.",
     intent: "devis élagage Rouen — intention commerciale la plus qualifiée",
     group: "conversion",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.9,
@@ -199,6 +224,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     intent:
       "requêtes de marque et vérification de confiance avant prise de contact",
     group: "entreprise",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.5,
@@ -214,6 +240,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
       "Joindre Arbre et Cime Élagage pour un chantier à Rouen ou dans la métropole rouennaise, y compris pour une intervention en urgence.",
     intent: "contact et urgence — intention immédiate, souvent au téléphone",
     group: "conversion",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.7,
@@ -229,6 +256,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
       "Informations légales relatives à l’entreprise Arbre et Cime Élagage et au présent site.",
     intent: "obligation légale — aucune intention de recherche",
     group: "legal",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.1,
@@ -244,6 +272,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
       "Données collectées par le formulaire de devis, finalité, durée de conservation et exercice des droits.",
     intent: "obligation légale — aucune intention de recherche",
     group: "legal",
+    headerVariant: "solid",
     inSitemap: true,
     noindex: false,
     priority: 0.1,
@@ -259,6 +288,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
       "Référence interne du design system. Sans vocation commerciale ni SEO.",
     intent: "aucune — page de développement",
     group: "interne",
+    headerVariant: "solid",
     inSitemap: false,
     noindex: true,
     priority: 0,
@@ -296,17 +326,32 @@ export const serviceRoutes: readonly RouteDefinition[] = [
   definitions["entretien-exterieur"],
 ];
 
-/** Navigation principale. Le CTA « Devis gratuit » est traite a part. */
-export const primaryNavIds: readonly RouteId[] = [
-  "elagage",
-  "abattage",
-  "dessouchage",
-  "entretien-exterieur",
-  "realisations",
-  "zones-intervention",
-  "a-propos",
-  "contact",
+/**
+ * Un element de navigation principale : soit une route, soit un groupe
+ * deroulant. Un seul niveau de profondeur — pas de mega-menu.
+ */
+export type NavItem =
+  | { kind: "route"; id: RouteId }
+  | { kind: "group"; label: string; ids: readonly RouteId[] };
+
+/**
+ * Navigation principale, identique au desktop et au mobile.
+ * `Contact` n'y figure pas : la prise de contact passe par le CTA devis, la
+ * barre d'action mobile et le footer (cf. CONVERSION_STRATEGY.md).
+ */
+export const primaryNav: readonly NavItem[] = [
+  {
+    kind: "group",
+    label: "Prestations",
+    ids: ["elagage", "abattage", "dessouchage", "entretien-exterieur"],
+  },
+  { kind: "route", id: "realisations" },
+  { kind: "route", id: "zones-intervention" },
+  { kind: "route", id: "a-propos" },
 ];
+
+/** Route du CTA primaire, traitee a part de la navigation. */
+export const ctaRouteId: RouteId = "devis";
 
 export type FooterGroup = {
   title: string;

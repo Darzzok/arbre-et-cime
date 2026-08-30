@@ -1,3 +1,4 @@
+import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
   ArrowLink,
@@ -55,7 +56,7 @@ export function PlaceholderPage({
     <>
       <JsonLd data={breadcrumbSchema(id)} />
 
-      <main>
+      <main id={MAIN_CONTENT_ID} tabIndex={-1}>
         <Section
           surface="dark"
           spacing="loose"

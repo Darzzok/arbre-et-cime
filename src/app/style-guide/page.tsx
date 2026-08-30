@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { NavCta } from "@/components/layout/nav-cta";
+import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
+import { Wordmark } from "@/components/layout/wordmark";
 import {
   ArrowLink,
   Body,
@@ -49,7 +52,7 @@ function Block({
   return (
     <section aria-labelledby={id} className="scroll-mt-24">
       <div className="flex items-baseline gap-4">
-        <SectionIndex value={index} total={11} />
+        <SectionIndex value={index} total={12} />
         <Rule width="full" className="translate-y-[-0.35em]" />
       </div>
       <Title as="h2" id={id} className="mt-4">
@@ -121,6 +124,60 @@ const typeScale = [
   { token: "text-eyebrow", usage: "Surtitre", size: "12 px fixe", font: "Manrope" },
 ];
 
+const chrome = [
+  {
+    element: "En-tête — variante overlay",
+    behaviour: "Transparent sur la photographie, 112 px de haut au repos",
+    where: "Page d’accueil",
+  },
+  {
+    element: "En-tête — au défilement",
+    behaviour: "Se compacte à 80 px, fond forêt à 95 %, filet inférieur",
+    where: "Toutes les pages",
+  },
+  {
+    element: "Sous-menu Prestations",
+    behaviour: "Index 01–04, sous-libellés, ouverture au clic et au clavier",
+    where: "≥ 1024 px",
+  },
+  {
+    element: "Menu mobile",
+    behaviour: "Plein écran, liens numérotés, apparition en cascade",
+    where: "< 1024 px",
+  },
+  {
+    element: "Barre d’action",
+    behaviour: "Apparaît après le hero, marge de sécurité iOS",
+    where: "< 1024 px",
+  },
+  {
+    element: "Pied de page",
+    behaviour: "Sans état, aucune coordonnée inventée",
+    where: "Toutes les pages",
+  },
+];
+
+const motionTiers = [
+  {
+    tier: "Micro",
+    duration: "120–220 ms (180 par défaut)",
+    usage: "Liens, boutons, navigation, filets qui se tracent",
+    token: "--duration-micro",
+  },
+  {
+    tier: "Reveal",
+    duration: "400–650 ms (520 par défaut)",
+    usage: "Apparition de contenu, menu mobile, compactage de l’en-tête",
+    token: "--duration-reveal",
+  },
+  {
+    tier: "Signature",
+    duration: "700–1200 ms (900 par défaut)",
+    usage: "Réservé au hero, à la carte de zone et au devis",
+    token: "--duration-signature",
+  },
+];
+
 const spacingScale = [
   { token: "--gutter", value: "20 / 32 / 48 px", usage: "Gouttiere laterale" },
   { token: "--section-space", value: "72 / 96 / 128 px", usage: "Rythme vertical" },
@@ -133,7 +190,7 @@ const spacingScale = [
 
 export default function StyleGuidePage() {
   return (
-    <main>
+    <main id={MAIN_CONTENT_ID} tabIndex={-1}>
       {/* ---------------------------------------------------------------- */}
       <Section surface="dark" spacing="tight" aria-labelledby="sg-titre">
         <Container>
@@ -635,9 +692,136 @@ export default function StyleGuidePage() {
                   </Reveal>
                 ))}
               </div>
+              <Label>Trois niveaux de mouvement</Label>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[34rem] border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-(--surface-rule)">
+                      <th className="py-3 pr-4 font-sans text-caption font-semibold uppercase tracking-wider">
+                        Niveau
+                      </th>
+                      <th className="py-3 pr-4 font-sans text-caption font-semibold uppercase tracking-wider">
+                        Durée
+                      </th>
+                      <th className="py-3 font-sans text-caption font-semibold uppercase tracking-wider">
+                        Usage
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {motionTiers.map((row) => (
+                      <tr
+                        key={row.tier}
+                        className="border-b border-(--surface-rule)"
+                      >
+                        <td className="py-3 pr-4 font-sans text-body">
+                          <strong>{row.tier}</strong>
+                          <br />
+                          <code className="text-caption text-(--surface-fg-muted)">
+                            {row.token}
+                          </code>
+                        </td>
+                        <td className="py-3 pr-4 font-sans text-body">
+                          {row.duration}
+                        </td>
+                        <td className="py-3 font-sans text-caption text-(--surface-fg-muted)">
+                          {row.usage}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <Small className="mt-6 max-w-reading">
+                Vocabulaire retenu : filets qui se tracent, masques, translations
+                contrôlées, progression directionnelle. Exclus : rebond, zoom,
+                flou décoratif, rotation. Activer « réduire les animations » dans
+                le système d’exploitation doit supprimer entièrement l’effet.
+              </Small>
+            </Block>
+
+            {/* 12 — Chassis ------------------------------------------- */}
+            <Block index={12} title="Châssis du site">
+              <Body className="max-w-reading">
+                Le logotype est <strong>typographique et temporaire</strong> :
+                aucun symbole d’arbre n’est inventé tant qu’un logo réel n’est
+                pas fourni. Fraunces pour le nom, Manrope en surtitre pour
+                l’activité.
+              </Body>
+
+              <div className="mt-8 grid gap-6 md:grid-cols-2">
+                <Frame surface="dark">
+                  <Label>Taille en-tête (md)</Label>
+                  <Wordmark />
+                </Frame>
+                <Frame surface="dark">
+                  <Label>Taille pied de page (lg)</Label>
+                  <Wordmark size="lg" />
+                </Frame>
+              </div>
+
+              <Label>CTA éditorial de navigation</Label>
+              <div className="grid gap-6 md:grid-cols-2">
+                <Frame surface="dark">
+                  <Label>En-tête — survol / focus trace l’accent</Label>
+                  <NavCta />
+                </Frame>
+                <Frame surface="dark">
+                  <Label>Menu mobile — accent permanent</Label>
+                  <NavCta layout="row" />
+                </Frame>
+              </div>
               <Small className="mt-4 max-w-reading">
-                Activer « reduire les animations » dans le systeme d’exploitation
-                doit supprimer entierement l’effet.
+                Le jaune sécurité n’est plus un aplat plein : il ne reste que le
+                filet de 2 px et la flèche. L’en-tête étant toujours sur surface
+                sombre, l’accent conserve un contraste de 7,16 — impossible sur
+                un en-tête ivoire, où il tomberait à 1,96.
+              </Small>
+
+              <Label>Éléments de châssis</Label>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[34rem] border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-(--surface-rule)">
+                      <th className="py-3 pr-4 font-sans text-caption font-semibold uppercase tracking-wider">
+                        Élément
+                      </th>
+                      <th className="py-3 pr-4 font-sans text-caption font-semibold uppercase tracking-wider">
+                        Comportement
+                      </th>
+                      <th className="py-3 font-sans text-caption font-semibold uppercase tracking-wider">
+                        Où le vérifier
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {chrome.map((row) => (
+                      <tr
+                        key={row.element}
+                        className="border-b border-(--surface-rule)"
+                      >
+                        <td className="py-3 pr-4 font-sans text-body">
+                          {row.element}
+                        </td>
+                        <td className="py-3 pr-4 font-sans text-body">
+                          {row.behaviour}
+                        </td>
+                        <td className="py-3 font-sans text-caption text-(--surface-fg-muted)">
+                          {row.where}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <Small className="mt-6 max-w-reading">
+                L’en-tête, le menu mobile et la barre d’action ne sont pas
+                reproduits ici : ils sont collants ou fixes, porteurs d’état et
+                d’identifiants uniques. Les dupliquer dans cette page créerait
+                de faux repères de navigation et un rendu trompeur. Ils se
+                valident sur les pages réelles, à ~390 px.
               </Small>
             </Block>
           </div>

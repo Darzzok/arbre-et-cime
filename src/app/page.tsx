@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
 import { Container, Display, Eyebrow, Lead, Section, Small } from "@/components/ui";
 import { buildMetadata } from "@/lib/seo";
 import { area, site } from "@/lib/site";
@@ -14,7 +15,7 @@ export const metadata: Metadata = buildMetadata("home");
  */
 export default function Home() {
   return (
-    <main>
+    <main id={MAIN_CONTENT_ID} tabIndex={-1}>
       <Section
         surface="dark"
         spacing="loose"

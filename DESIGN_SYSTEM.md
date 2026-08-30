@@ -7,7 +7,8 @@ Implémentation : Tailwind CSS v4, jetons déclarés dans `@theme` de
 `src/app/globals.css`. **Pas de `tailwind.config.js`.** Aucune couleur
 hexadécimale ne doit être écrite directement dans un composant.
 
-**État : livré en phase 2.** Référence visuelle vivante sur la route interne
+**État : jetons et primitives livrés en phase 2, châssis en phase 4.**
+Référence visuelle vivante sur la route interne
 [`/style-guide`](src/app/style-guide/page.tsx) (`noindex, nofollow`, hors
 navigation publique).
 
@@ -206,20 +207,42 @@ Voir aussi `CONTENT_STRATEGY.md`, section photographie.
 
 ---
 
-## 6. Mouvement — sobre et technique
+## 6. Mouvement — système à trois niveaux
 
-- Durée par défaut **320 ms** (`--duration-cime`), courbe
-  `cubic-bezier(0.22, 0.61, 0.36, 1)` (`--ease-cime`).
-- **Une seule primitive d'animation existe : `Reveal`** — opacité plus montée de
-  6 px sur mobile, 12 px au-delà de 768 px.
+Toute animation du site relève d'un de ces trois niveaux. **Aucune durée n'est
+écrite à la main dans un composant.**
+
+| Niveau | Jeton | Durée | Usage |
+| --- | --- | --- | --- |
+| **Micro** | `--duration-micro` | 180 ms (plage 120–220) | Liens, boutons, navigation, filets qui se tracent |
+| **Reveal** | `--duration-reveal` | 520 ms (plage 400–650) | Apparition de contenu, menu mobile, compactage de l'en-tête |
+| **Signature** | `--duration-signature` | 900 ms (plage 700–1200) | **Réservé** au hero, à la carte de zone et au devis |
+
+Courbes : `--ease-cime` `cubic-bezier(0.22, 0.61, 0.36, 1)` pour les sorties,
+`--ease-line` `cubic-bezier(0.65, 0, 0.35, 1)` pour le tracé des filets.
+
+Les trois durées sont déclarées dans `:root` et **non dans `@theme`** :
+Tailwind élague les variables de `@theme` qu'aucun utilitaire ne consomme, et
+`--duration-signature` n'est pas encore utilisée. Dans `:root`, les trois
+niveaux existent toujours et forment un système lisible. Elles se consomment
+via `duration-(--duration-micro)`.
+
+### Vocabulaire
+
+**Retenu :** filets qui se tracent depuis un bord, masques et révélations,
+translations contrôlées (6 à 20 px), progression directionnelle, compactage.
+
+**Exclu :** rebond, zoom, flou décoratif, rotation, compteurs animés, effets de
+particules, carrousels automatiques, cascades de plus de quelques éléments.
+
+### Reveal
+
+**`Reveal`** — opacité plus montée de 6 px sur mobile, 12 px au-delà de 768 px.
 - Implémentation : **100 % CSS, zéro JavaScript, zéro dépendance**, via
   `animation-timeline: view()`. Le masquage initial est enfermé dans
   `@supports (animation-timeline: view())` : un navigateur sans timelines de
   scroll affiche simplement le contenu, sans clignotement et sans risque de bloc
   invisible. Le contenu est de toute façon toujours présent dans le HTML.
-- Interdits : rebonds, rotations décoratives, compteurs animés, effets de
-  particules, carrousels automatiques, apparitions en cascade sur plus de trois
-  éléments.
 - **Aucun effet dépendant exclusivement du survol.** Tout état de survol a son
   équivalent au focus clavier, et le survol ne révèle jamais une information ou
   un contrôle.
@@ -274,9 +297,175 @@ relève d'une variante à ajouter au composant.
 
 ---
 
-## 8. Accessibilité
+## 8. Châssis du site — livré en phase 4, affiné en phase 4B
+
+Composants dans `src/components/layout/`, montés une seule fois dans
+`src/app/layout.tsx` : ils encadrent toutes les pages.
+
+| Composant | Nature | Rôle |
+| --- | --- | --- |
+| `SkipLink` | serveur | Lien d'évitement vers `#contenu`, visible au premier `Tab` |
+| `Wordmark` | serveur | Logotype typographique temporaire |
+| `SiteHeader` | **client** | En-tête, navigation desktop, sous-menu, menu mobile |
+| `MobileActionBar` | **client** | Barre d'action persistante, mobile uniquement |
+| `SiteFooter` | serveur | Pied de page |
+
+### Logotype — temporaire
+
+**Aucun symbole ni faux logo n'est inventé.** Tant qu'un logo réel n'est pas
+fourni, l'identité repose entièrement sur la typographie :
+
+```
+Arbre & Cime          Fraunces, esperluette en italique
+ÉLAGAGE · ROUEN       Manrope, surtitre interlettré, point médian jaune
+```
+
+L'esperluette et l'ancrage géographique font le travail d'un logotype : ils
+donnent une signature reconnaissable et disent le métier et le lieu. Trois
+tailles : `sm` (en-tête compacté), `md` (en-tête), `lg` (pied de page et menu
+mobile). À remplacer dès réception du logo réel.
+
+### En-tête
+
+**Toujours sur surface sombre**, y compris sur les pages internes. Deux
+raisons : le jaune sécurité ne contraste qu'à **1,96 sur ivoire**, donc les
+accents du CTA seraient illisibles sur un en-tête clair ; et un bandeau forêt en
+haut, un pied de page forêt en bas, du contenu ivoire entre les deux, donne une
+reliure éditoriale nette.
+
+`position: fixed` dans les deux cas. Deux variantes, pilotées par le champ
+`headerVariant` de `src/lib/routes.ts`, jamais codées dans une page :
+
+- **`overlay`** — fond transparent au repos, posé sur la photographie plein
+  écran. Réservé à la page d'accueil.
+- **`solid`** — fond forêt dès le chargement. Toutes les pages internes.
+  Une **cale** de la hauteur dépliée rend au flux la place que l'en-tête fixe ne
+  prend pas ; elle est en forêt, donc indiscernable de l'en-tête, et ne bouge pas
+  quand celui-ci se compacte — aucun décalage de mise en page.
+
+**Au défilement** (au-delà de 24 px), quelle que soit la variante : la hauteur
+passe de 112 à 80 px sur desktop (72 → 56 px sur mobile), le fond devient forêt
+à 95 %, un filet inférieur apparaît, et le logotype passe en taille `sm`.
+Transition au niveau Reveal. Pas de capsule flottante.
+
+Navigation : **Prestations** (sous-menu de 4), Réalisations, Zone
+d'intervention, À propos, puis le CTA. Pas de méga-menu. La page courante porte
+`aria-current="page"`.
+
+**Indicateur de lien** : un filet de 1 px qui se trace depuis la gauche, au
+niveau Micro. Permanent sur la page active, tracé au survol et au focus sinon.
+Le libellé ne bouge pas — tout le mouvement est dans le filet.
+
+Le **sous-menu Prestations s'ouvre au clic et au clavier, jamais au seul
+survol** : un menu déclenché au passage de la souris est inutilisable au doigt
+comme au clavier, et la charte interdit toute interaction dépendant
+exclusivement du survol. Présentation éditoriale — index `01`–`04`, intitulé en
+Fraunces, sous-libellé (`navTagline`) — plutôt qu'une grille de cartes : c'est
+ce qui le distingue d'un méga-menu.
+
+### CTA de navigation
+
+`NavCta` remplace l'aplat jaune plein dans l'en-tête et le menu mobile. Sur un
+en-tête posé au-dessus d'une photographie, un gros rectangle saturé écrase
+l'image et fait « bandeau marketing ».
+
+Le jaune sécurité n'apparaît plus que par touches : un filet de 2 px sous le
+libellé, et la flèche. Le libellé reste dans la couleur de la surface. La règle
+de parcimonie de la charte est donc respectée à la lettre.
+
+- `layout="bar"` (en-tête) : le filet se trace au survol et au focus.
+- `layout="row"` (menu mobile) : filet **permanent** — un écran tactile n'a pas
+  de survol, un accent conditionné au hover n'y existerait jamais.
+
+Le CTA plein (`Button variant="primary"`) reste la référence dans le **corps**
+des pages, où il doit dominer.
+
+### Menu mobile
+
+Sous 1024 px. Panneau plein écran, surface `dark`, `role="dialog"` +
+`aria-modal`.
+
+Composition : logotype et bouton « Fermer » en tête, puis quatre grandes entrées
+numérotées `01`–`04` en Fraunces séparées par des filets — `01 Prestations` se
+déplie sur les quatre pages services avec leurs sous-libellés — puis le CTA
+éditorial pleine largeur, puis un rappel de la zone d'intervention et un lien
+« Nous joindre ».
+
+**Apparition en cascade** : chaque entrée monte de 14 px en fondu, avec 45 ms
+d'écart, au niveau Reveal. L'animation est **entièrement CSS** : le panneau
+passe de `display: none` à visible, ce qui relance l'animation à chaque
+ouverture sans état ni JavaScript supplémentaire. L'échelonnement est porté par
+`--menu-index`, posé en style en ligne. Neutralisée sous
+`prefers-reduced-motion`.
+
+`Échap` ferme, le défilement du corps est verrouillé, le focus est piégé dans le
+panneau puis rendu au bouton d'ouverture. La fermeture au changement de page est
+un **ajustement d'état pendant le rendu**, ce qui couvre aussi les boutons
+précédent/suivant du navigateur.
+
+Le bouton d'ouverture n'est pas un « hamburger » : deux traits, dont le plus
+court s'allonge au survol et au focus.
+
+### Barre d'action mobile
+
+Fixe en bas, sous 1024 px, surface `dark`, fond forêt à 95 %, filet supérieur,
+séparateur vertical entre les deux actions, respecte
+`env(safe-area-inset-bottom)`. Hauteur compacte : 60 px.
+
+**Apparition différée sur les pages à hero** : sur une route `overlay`, la barre
+ne se montre qu'une fois les trois quarts du premier écran franchis, pour ne pas
+recouvrir la photographie dès l'arrivée. Sur les pages internes, qui n'ont pas de
+hero, elle est présente immédiatement. La **cale est rendue en permanence**, même
+quand la barre est encore masquée : la hauteur du document reste stable et
+l'apparition ne provoque aucun saut de défilement.
+
+Le jaune sécurité y reste une **touche** — le libellé et la flèche du devis — et
+non un aplat de bord à bord, qui écraserait le contenu autant que la charte.
+
+**Aucun numéro n'est inventé.** Tant que `NEXT_PUBLIC_PHONE` est vide,
+l'action « Appeler » n'existe pas et « Devis gratuit » occupe toute la largeur ;
+renseigner la variable la fait apparaître, sans autre modification.
+
+Désactivation page par page : ajouter la `RouteId` au tableau `HIDDEN_ON` de
+`mobile-action-bar.tsx`. Prévu pour `/devis`, où le configurateur portera
+lui-même son action principale.
+
+### Pourquoi l'en-tête est un composant client
+
+Quatre besoins réels imposent l'état côté navigateur : le menu mobile, le
+sous-menu, **l'état de défilement**, et la lecture du chemin courant (variante
+d'en-tête et `aria-current`). Les regrouper dans **une seule** frontière cliente
+coûte moins de JavaScript que quatre îlots séparés. Le balisage complet reste
+rendu côté serveur au premier chargement : la navigation est dans le HTML
+initial.
+
+`useScrollPast` pose un unique écouteur passif et ne lit que `scrollY` (aucune
+lecture de géométrie, donc aucun recalcul de mise en page forcé), au plus une
+fois par image, et ne provoque un rendu que lorsque le booléen change.
+
+### Pied de page
+
+Composant serveur, sans JavaScript. Identité, prestations, zone d'intervention,
+CTA devis, liens légaux. **Aucune donnée inventée** : téléphone, e-mail et
+adresse ne s'affichent que s'ils existent réellement dans l'environnement.
+
+> **Piège à connaître.** `cn()` ne fusionne pas les classes Tailwind
+> concurrentes. Passer `hidden` en `className` à un `ButtonLink` dont la
+> base contient `inline-flex` ne masque rien : les deux règles coexistent et
+> l'ordre de la feuille de style tranche. La visibilité et le partage de largeur
+> se portent donc sur une **enveloppe**, jamais sur la primitive. Le cas s'est
+> réellement produit en phase 4 sur le CTA de l'en-tête.
+
+---
+
+## 9. Accessibilité
 
 - Contraste AA minimum sur tout texte (tableaux des sections 1 et 2).
+- Lien d'évitement vers `#contenu` en tête de page, révélé au premier `Tab`.
+- Menu mobile : `role="dialog"`, `aria-modal`, `aria-expanded` / `aria-controls`,
+  fermeture par `Échap`, focus piégé puis rendu au bouton d'ouverture,
+  défilement du corps verrouillé pendant l'ouverture.
+- Page courante signalée par `aria-current="page"` dans toutes les navigations.
 - **Focus visible : contour 2 px, offset 2 px, couleur `--focus-ring`** — forêt
   sur surface claire, jaune sécurité sur surface sombre.
   *Correction apportée en phase 2 :* le jaune sécurité ne contraste qu'à **1,96
@@ -296,7 +485,7 @@ relève d'une variante à ajouter au composant.
 
 ---
 
-## 9. Jetons implémentés
+## 10. Jetons implémentés
 
 Déclarés dans `src/app/globals.css` :
 
@@ -318,16 +507,22 @@ Déclarés dans `src/app/globals.css` :
   `--surface-fg-muted`, `--surface-heading`, `--surface-rule`,
   `--surface-inset`, `--focus-ring`, `--btn-solid-bg`, `--btn-solid-fg`,
   `--btn-outline-border`
-- **Mouvement** : `--ease-cime`, `--duration-cime`
+- **Mouvement** — courbes dans `@theme` : `--ease-cime`, `--ease-line` ;
+  durées dans `:root` : `--duration-micro`, `--duration-reveal`,
+  `--duration-signature`
+- **Menu mobile** (style en ligne) : `--menu-index`, pour l'échelonnement de
+  l'apparition en cascade
 
 Toute évolution de cette liste implique une mise à jour de ce document.
 
 ---
 
-## 10. Recette responsive — phase 2
+## 11. Recette responsive
 
-Vérifié sur `/style-guide` et `/`, **aucun débordement horizontal** à aucune
-largeur (`documentElement.scrollWidth` égal à la largeur du viewport) :
+**Aucun débordement horizontal** : 25 combinaisons vérifiées en phase 4
+(5 largeurs x 5 pages : `/`, `/elagage`, `/devis`, `/mentions-legales`,
+`/style-guide`), `documentElement.scrollWidth` toujours égal à la largeur du
+viewport.
 
 | Largeur | Gouttière | Rythme | `h1` | Texte courant |
 | --- | --- | --- | --- | --- |

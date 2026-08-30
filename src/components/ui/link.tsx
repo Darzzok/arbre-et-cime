@@ -42,7 +42,7 @@ export function TextLink({ className, children, ...rest }: BaseLinkProps) {
       className={cn(
         "font-sans font-medium text-(--surface-fg) underline",
         "decoration-1 underline-offset-[0.25em] decoration-(--surface-rule)",
-        "transition-[text-decoration-color] duration-(--duration-cime) ease-cime",
+        "transition-[text-decoration-color] duration-(--duration-micro) ease-cime",
         "hover:decoration-(--surface-fg) focus-visible:decoration-(--surface-fg)",
         className,
       )}
@@ -73,7 +73,7 @@ export function ArrowLink({ className, children, ...rest }: BaseLinkProps) {
         className={cn(
           "underline decoration-1 underline-offset-[0.25em]",
           "decoration-(--surface-rule)",
-          "transition-[text-decoration-color] duration-(--duration-cime) ease-cime",
+          "transition-[text-decoration-color] duration-(--duration-micro) ease-cime",
           "group-hover:decoration-(--surface-fg)",
           "group-focus-visible:decoration-(--surface-fg)",
         )}
@@ -85,7 +85,7 @@ export function ArrowLink({ className, children, ...rest }: BaseLinkProps) {
         viewBox="0 0 16 16"
         className={cn(
           "size-4 shrink-0",
-          "motion-safe:transition-transform motion-safe:duration-(--duration-cime)",
+          "motion-safe:transition-transform motion-safe:duration-(--duration-micro)",
           "motion-safe:ease-cime",
           "motion-safe:group-hover:translate-x-0.5",
           "motion-safe:group-focus-visible:translate-x-0.5",

@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 
 import { cn } from "@/lib/cn";
@@ -17,7 +18,7 @@ const base =
   "inline-flex items-center justify-center gap-2.5 rounded-edge font-sans " +
   "font-semibold tracking-tight text-body no-underline " +
   "transition-[background-color,border-color,color,opacity] " +
-  "duration-(--duration-cime) ease-cime " +
+  "duration-(--duration-micro) ease-cime " +
   "disabled:pointer-events-none disabled:opacity-50";
 
 const variantClasses: Record<ButtonVariant, string> = {
@@ -90,20 +91,39 @@ export function Button({
   );
 }
 
-type ButtonLinkProps = SharedProps &
-  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "className" | "children">;
+type ButtonLinkProps = SharedProps & { href: string } & Omit<
+    AnchorHTMLAttributes<HTMLAnchorElement>,
+    "href" | "className" | "children"
+  >;
 
-/** NAVIGATION ou `tel:` / `mailto:` presente avec l'apparence d'un bouton. */
+/**
+ * NAVIGATION ou `tel:` / `mailto:` presente avec l'apparence d'un bouton.
+ *
+ * Comme `TextLink`, les routes internes passent par `next/link` (navigation
+ * cliente, prefetch) tandis que `tel:`, `mailto:` et l'externe restent des
+ * ancres simples.
+ */
 export function ButtonLink({
   variant,
   size,
   block,
   className,
   children,
+  href,
   ...rest
 }: ButtonLinkProps) {
+  const classes = classesFor({ variant, size, block, className });
+
+  if (href.startsWith("/") || href.startsWith("#")) {
+    return (
+      <NextLink href={href} className={classes} {...rest}>
+        {children}
+      </NextLink>
+    );
+  }
+
   return (
-    <a className={classesFor({ variant, size, block, className })} {...rest}>
+    <a href={href} className={classes} {...rest}>
       {children}
     </a>
   );
