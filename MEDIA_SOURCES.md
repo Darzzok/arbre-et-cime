@@ -38,12 +38,16 @@ Date de récupération de l'ensemble : **30 août 2026**.
 
 ## 3. Hero — `public/images/hero/`
 
+Le hero utilise **deux sources**, servies par direction artistique selon la
+largeur (voir `DESIGN_SYSTEM.md` § 5). Les deux autres restent des
+alternatives disponibles.
+
 | Fichier | Dimensions | Usage prévu | Auteur | Page source | Remarques |
 | --- | --- | --- | --- | --- | --- |
-| `elagueur-grimpeur-arbre-mature.jpg` | 2400×1800 | **Hero — candidate recommandée.** Grimpeur sur cordes dans un arbre feuillu mature. | Zak Bentley | [pexels.com/photo/…-2902892](https://www.pexels.com/photo/photo-of-man-climbing-on-tree-2902892/) | Grimpeur de dos, visage non identifiable. Aucun logo. |
-| `elagueur-ascension-arbre-hiver.jpg` | 2400×1350 | Hero — alternative 1. Ascension d'un arbre nu en hiver, forte respiration. | Dmytro Glazunov | [pexels.com/photo/…-35089307](https://www.pexels.com/photo/arborist-climbing-tall-bare-tree-in-winter-35089307/) | Grimpeur très petit dans le cadre. Aucune personne identifiable, aucun logo. |
-| `demontage-arbre-tronconneuse-sciure.jpg` | 2400×1600 | Hero — alternative 2. Démontage d'un tronc par sections, projection de sciure. | Henk Schuurmans | [pexels.com/photo/…-31127615](https://www.pexels.com/photo/arborist-cutting-down-tree-trunk-safely-with-chainsaw-31127615/) | EPI haute visibilité vert. Visage non identifiable, aucun logo lisible. |
-| `elagueur-ascension-tronc-vertical.jpg` | 1400×2094 | Hero — cadrage vertical pour le plein écran mobile. | John Robertson | [pexels.com/photo/…-34674271](https://www.pexels.com/photo/professional-arborist-climbing-tree-for-maintenance-34674271/) | Visage non identifiable, aucun logo. |
+| `elagueur-grimpeur-arbre-mature.jpg` | 2400×1800 | **EN PRODUCTION — hero desktop (≥ 1024 px).** Grimpeur sur cordes dans un arbre feuillu mature. | Zak Bentley | [pexels.com/photo/…-2902892](https://www.pexels.com/photo/photo-of-man-climbing-on-tree-2902892/) | Grimpeur de dos, visage non identifiable. Aucun logo. |
+| `elagueur-ascension-arbre-hiver.jpg` | 2400×1350 | Hero — alternative desktop, non retenue. Ascension d'un arbre nu en hiver, forte respiration. | Dmytro Glazunov | [pexels.com/photo/…-35089307](https://www.pexels.com/photo/arborist-climbing-tall-bare-tree-in-winter-35089307/) | Grimpeur très petit dans le cadre. Aucune personne identifiable, aucun logo. |
+| `demontage-arbre-tronconneuse-sciure.jpg` | 2400×1600 | Hero — alternative desktop, non retenue. Démontage d'un tronc par sections, projection de sciure. | Henk Schuurmans | [pexels.com/photo/…-31127615](https://www.pexels.com/photo/arborist-cutting-down-tree-trunk-safely-with-chainsaw-31127615/) | EPI haute visibilité vert. Visage non identifiable, aucun logo lisible. |
+| `elagueur-ascension-tronc-vertical.jpg` | 1400×2094 | **EN PRODUCTION — hero mobile et tablette (< 1024 px).** Cadrage vertical natif. | John Robertson | [pexels.com/photo/…-34674271](https://www.pexels.com/photo/professional-arborist-climbing-tree-for-maintenance-34674271/) | Visage non identifiable, aucun logo. |
 
 ---
 

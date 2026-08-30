@@ -7,7 +7,8 @@ Implémentation : Tailwind CSS v4, jetons déclarés dans `@theme` de
 `src/app/globals.css`. **Pas de `tailwind.config.js`.** Aucune couleur
 hexadécimale ne doit être écrite directement dans un composant.
 
-**État : jetons et primitives livrés en phase 2, châssis en phase 4.**
+**État : jetons et primitives livrés en phase 2, châssis en phase 4,
+hero photographique en phase 5B.**
 Référence visuelle vivante sur la route interne
 [`/style-guide`](src/app/style-guide/page.tsx) (`noindex, nofollow`, hors
 navigation publique).
@@ -205,6 +206,98 @@ Voir aussi `CONTENT_STRATEGY.md`, section photographie.
   `portrait` (4/5, format de référence mobile), `landscape` (3/2), `wide`
   (16/9), `square`, `free`.
 
+### Hero photographique — livré en phase 5B
+
+Le hero est le seul endroit du site où du texte est posé **sur** une
+photographie. Le motif est donc codifié une fois pour toutes.
+
+**Surface.** Le bloc porte `data-surface="dark"`. Ce n'est pas décoratif :
+sans lui, les primitives typographiques résolvent `--surface-heading` sur le
+jeu clair et rendent un titre **vert forêt sur une photo sombre**. L'oubli
+s'est réellement produit en phase 5B.
+
+**Plein cadre, sans compromis.** `object-cover` à toutes les largeurs : la
+photographie remplit toujours la section entière. Aucune image contenue au
+milieu, aucune bande, aucun fond dupliqué.
+
+> Une tentative intermédiaire avait utilisé `object-contain` par-dessus une
+> copie floutée de la même image, pour montrer la photo entière partout. Le
+> résultat était une image encadrée au centre d'un faux fond : la puissance du
+> hero s'effondrait. **Abandonné.** Sur un hero, remplir le cadre prime sur
+> montrer l'intégralité du fichier.
+
+### Direction artistique — deux sources, un seul téléchargement
+
+Une photographie en 4:3 (1,333) ne peut pas remplir un viewport mobile en 0,46
+sans en perdre 65 % de la largeur : le sujet devient un gros plan et le
+chantier disparaît. Le recadrage ne se règle donc pas en rétrécissant l'image,
+**mais en changeant de source**.
+
+| | Source | Format | Recadrage |
+| --- | --- | --- | --- |
+| < 1024 px | `elagueur-ascension-tronc-vertical.jpg` | 1400 × 2094 (portrait) | `object-[32%_center]` |
+| ≥ 1024 px | `elagueur-grimpeur-arbre-mature.jpg` | 2400 × 1800 (paysage) | `object-[center_36%]` |
+
+Mise en œuvre : un vrai `<picture>` avec un `<source media>`, alimenté par
+**`getImageProps()`** de `next/image`. On garde ainsi le `srcSet` optimisé, les
+formats modernes et les tailles de `next.config.ts`, tout en laissant le
+navigateur ne télécharger **qu'une seule** des deux sources. Vérifié par
+Resource Timing : une requête, et c'est la bonne, à chaque format.
+
+`getImageProps` ne pose en revanche **ni `fetchpriority` ni lien de
+préchargement** — c'est le composant `<Image>` qui s'en charge, et on ne
+l'utilise pas ici. Le hero étant l'élément LCP, les deux sont rétablis à la
+main : `fetchPriority="high"` et `loading="eager"` sur l'`<img>`, plus deux
+`preload()` de `react-dom` **portés par la même requête média**. Les deux
+requêtes étant strictement complémentaires, une seule image est préchargée.
+
+**Un seul texte alternatif**, valable pour les deux fichiers : ils montrent la
+même chose — un élagueur-grimpeur au travail dans un arbre, sur cordes.
+
+**Hauteur.** `min-h-svh`, jamais `dvh` : sur Safari mobile, `dvh` change de
+valeur quand la barre d'URL se rétracte et la mise en page saute en cours de
+défilement. `svh` est la plus petite hauteur de viewport — le hero tient
+toujours et ne bouge jamais. Sur desktop, `min(100svh, 56rem)` : un vrai plein
+écran, borné pour ne pas devenir absurde sur un très grand moniteur. La bande
+de preuves reste ainsi sous la ligne de flottaison à toutes les largeurs, et le
+pied de page n'apparaît jamais dans le premier écran.
+
+**Voiles — un dégradé directionnel, pas un filtre.** Un aplat uniforme
+écraserait la photographie ; un filtre vert la teinterait. On pose un dégradé
+opaque **là où le texte se trouve** et nul ailleurs :
+
+- mobile — texte en bas : `to top`, 0,94 → 0, éteint avant le tiers supérieur ;
+- desktop — texte à droite : `to left`, 0,93 → 0,04, quasi nul sur le grimpeur ;
+- plus un dégradé haut de 160 px, sur les deux, pour que l'en-tête overlay
+  reste lisible au-dessus des trouées de ciel.
+
+**Composition asymétrique.** Le texte occupe la zone calme et ne recouvre
+jamais le sujet : colonne de droite (62 %) sur desktop, bloc ancré en bas sur
+mobile.
+
+**Contrastes mesurés** sur la composition réelle (photo recadrée + dégradé),
+et non estimés :
+
+| Élément | 320 px | 390 px | 1440 px |
+| --- | --- | --- | --- |
+| Titre (ivoire) | 8,71 | 9,64 | 9,16 |
+| Chapô (pierre) | 8,13 | 8,07 | 7,08 |
+| Surtitre (pierre) | 5,05 | 4,93 | 5,53 |
+
+Le surtitre est le point le plus tendu de la composition : il se trouve en
+haut du bloc de texte, là où le dégradé s'éteint. C'est lui qui fixe la limite
+basse des paliers — le calibrer au jugé donnait 3,54, sous le seuil AA.
+
+**Césure du titre.** `text-balance` coupe volontiers au trait d'union
+(« Élagueur- / grimpeur à Rouen »), ce qui hache le mot composé. Un
+`lg:whitespace-nowrap` sur « Élagueur-grimpeur » impose la seule césure
+acceptable, après le métier. Restreint à `lg` : sous 1024 px le titre a besoin
+de pouvoir se couper au trait d'union pour tenir à 320 px.
+
+**Bande de preuves.** Quatre colonnes séparées par des filets, deux colonnes
+sur mobile. **Aucune carte.** Elle est entièrement sous la ligne de
+flottaison : le premier écran reste la photographie, le titre et le CTA.
+
 ---
 
 ## 6. Mouvement — système à trois niveaux
@@ -249,6 +342,31 @@ particules, carrousels automatiques, cascades de plus de quelques éléments.
 - **`prefers-reduced-motion: reduce` neutralise tout** — règle globale dans
   `globals.css`. Ne pas la contourner ; une animation ne doit jamais porter
   d'information seule.
+
+### Hero — entrée au chargement
+
+Le hero est visible dès le chargement : `Reveal`, déclenché à l'entrée dans le
+viewport, n'y produirait aucun effet. L'entrée est donc portée par des
+keyframes CSS jouées au chargement, sans JavaScript ni bibliothèque.
+
+| Élément | Effet | Niveau | Décalage |
+| --- | --- | --- | --- |
+| Surtitre | montée 12 px + opacité | Reveal | 0 ms |
+| Titre | **démasquage** : monte depuis sous son propre masque | Signature | 90 ms |
+| Filet jaune | tracé depuis la gauche | Signature | 240 ms |
+| Texte | montée + opacité | Reveal | 270 ms |
+| CTA | montée + opacité | Reveal | 360 ms |
+| Preuves | montée + opacité, une par une | Reveal | 450 à 720 ms |
+
+**La photographie n'est jamais animée** : elle est visible immédiatement, ce
+qui protège le LCP.
+
+Les trois règles (`[data-hero]`, `[data-hero-mask]`, `[data-hero-trace]`) sont
+**entièrement enfermées** dans `@media (prefers-reduced-motion: no-preference)`.
+Sous « réduire les animations », aucune animation n'est déclarée du tout : le
+hero est lisible instantanément, sans dépendre de la règle globale
+d'annulation. Vérifié sur la feuille compilée — trois occurrences, trois dans
+le garde-fou.
 
 ---
 

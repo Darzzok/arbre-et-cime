@@ -239,6 +239,72 @@
    --------------------------------------------------------------------------- */
 
 /* ---------------------------------------------------------------------------
+   Hero — entree au chargement (niveaux Reveal et Signature).
+
+   Contrairement a `Reveal`, qui se declenche a l'entree dans le viewport, le
+   hero est deja visible au chargement : l'animation part donc du chargement de
+   la page, sans JavaScript ni observateur.
+
+   Tout est enferme dans `prefers-reduced-motion: no-preference` : sous
+   « reduire les animations », AUCUNE animation n'est posee et le hero est
+   lisible instantanement — pas de dependance a la regle globale d'annulation.
+   La photographie, elle, n'est jamais animee : elle est visible d'emblee.
+   --------------------------------------------------------------------------- */
+
+@keyframes cime-hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Le titre monte depuis sous son propre masque. */
+@keyframes cime-hero-unmask {
+  from {
+    opacity: 0;
+    transform: translateY(105%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cime-hero-trace {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-hero] {
+    animation: cime-hero-rise var(--duration-reveal) var(--ease-cime) both;
+    animation-delay: calc(var(--hero-index, 0) * 90ms);
+  }
+
+  [data-hero-mask] {
+    animation: cime-hero-unmask var(--duration-signature) var(--ease-cime) both;
+    animation-delay: 90ms;
+  }
+
+  [data-hero-trace] {
+    animation: cime-hero-trace var(--duration-signature) var(--ease-line) both;
+    animation-delay: 240ms;
+    transform-origin: left center;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Menu mobile — apparition en cascade (niveau Reveal).
    Le panneau passe de `display: none` a visible : l'animation redemarre donc
    d'elle-meme a chaque ouverture, sans etat supplementaire ni JavaScript.

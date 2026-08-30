@@ -211,16 +211,45 @@ dès réception. Aucune n'est légendable avec une commune ou une date.
 
 ---
 
-## Phase 5B — Hero ⬜
+## Phase 5B — Hero ✅
 
-**Les candidates sont prêtes** (`public/images/hero/`). Le choix final entre les
-trois revient au client.
+Section 1 des 7 sections verrouillées. Photographie n°1 de
+`MEDIA_SOURCES.md` (`elagueur-grimpeur-arbre-mature.jpg`), imposée par le
+client.
 
-- Photo réelle plein écran, cadrage vertical sur mobile
-- `h1` court, chapô d'une phrase, double CTA visible sans défiler à 390 px
-- `priority` + `sizes` maîtrisés, aucun décalage de mise en page
+- **Plein cadre à toutes les largeurs** (`object-cover`), et **direction
+  artistique** : source verticale sous 1024 px, source paysage au-dessus,
+  servies par un `<picture>` alimenté par `getImageProps()`. Une seule des deux
+  est téléchargée.
+- **Composition asymétrique** : texte dans la zone calme — colonne de droite
+  sur desktop, bloc ancré en bas sur mobile. Le sujet n'est jamais recouvert.
+- **`min-h-svh`** et non `dvh` : pas de saut de mise en page quand la barre
+  d'URL de Safari mobile se rétracte. `min(100svh, 56rem)` sur desktop, la
+  bande de preuves restant sous la ligne de flottaison.
+- **Entrée au chargement 100 % CSS** — surtitre, démasquage du titre, filet
+  tracé, texte, CTA, preuves — entièrement enfermée dans
+  `prefers-reduced-motion: no-preference`. La photographie n'est jamais
+  animée.
+- **Bande de preuves** en quatre colonnes filetées, aucune carte, sous la
+  ligne de flottaison sur mobile.
+- **Aucun numéro inventé** : l'action « Appeler » n'est pas rendue tant que
+  `NEXT_PUBLIC_PHONE` est vide.
 
-**Sortie :** LCP mesuré sous 2,5 s en 4G simulée sur mobile.
+**Sortie atteinte :** hero plein cadre de 320 à 1440 px, aucun débordement
+horizontal, CTA dans le premier écran partout, pied de page jamais visible
+dans le premier écran, contrastes mesurés sur la composition réelle (titre
+8,71 à 9,64 ; chapô 7,08 à 8,13 ; surtitre 4,93 à 5,53), préchargements
+d'image portés par requête média et une seule image téléchargée par format,
+un seul `h1`. Lint, typecheck et build au vert. Aucune dépendance ajoutée.
+
+*Correctif en cours de phase :* une première version recadrait trop sur
+mobile ; une seconde, en `object-contain` sur fond flouté, montrait la photo
+entière mais donnait une image encadrée au milieu d'un faux fond et cassait
+l'impact du hero. Les deux ont été abandonnées au profit de la direction
+artistique à deux sources.
+
+*Reste à faire :* mesurer le LCP réel en 4G simulée sur appareil, une fois le
+site déployé (phase 15).
 
 ---
 

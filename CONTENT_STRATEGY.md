@@ -52,7 +52,7 @@ Sept sections `VERROUILLÉES` (cf. `PROJECT.md`). Intentions rédactionnelles :
 
 | Section | Ce que le texte doit faire |
 | --- | --- |
-| **Hero** | Dire le métier, la ville, et proposer les deux actions. Un `h1` court, un chapô d'une phrase. Rien d'autre. |
+| **Hero** ✅ | Dire le métier, la ville, et proposer les deux actions. Un `h1` court, un chapô d'une phrase. Rien d'autre. **Livré en phase 5B** — voir ci-dessous. |
 | **Preuves** | Aligner des faits vérifiables : années d'expérience, qualifications, sécurité, propreté, devis gratuit. Formulation brève, sans phrase de liaison marketing. |
 | **Prestations** | Les 8 prestations dans l'ordre de référence, chacune avec une ligne qui dit à qui elle s'adresse et ce qu'elle règle. Lien vers la page dédiée. |
 | **Pourquoi Arbre et Cime** | Trois à quatre différenciateurs argumentés (méthode de grimpe, sécurité, propreté, réactivité) — pas une liste d'adjectifs. |
@@ -60,6 +60,30 @@ Sept sections `VERROUILLÉES` (cf. `PROJECT.md`). Intentions rédactionnelles :
 | **Zone d'intervention** | Rouen et la métropole nommément, puis la mention du rayon jusqu'à 100 km. |
 | **Devis interactif** | Une promesse simple : décrire le besoin, joindre des photos, être rappelé. Lever la friction avant l'entrée dans le parcours. |
 | **Footer** | NAP, prestations, zone, mentions, rappel des deux CTA. |
+
+### Texte du hero — livré
+
+```
+Surtitre  01 — ÉLAGAGE · ABATTAGE · ENTRETIEN
+Titre     Élagueur-grimpeur à Rouen
+Chapô     Arbre et Cime Élagage intervient sur l'élagage, l'abattage et
+          l'entretien des arbres à Rouen et dans la Métropole Rouen
+          Normandie, pour les particuliers, les professionnels et les
+          collectivités.
+CTA       Demander un devis   ·   Appeler (masqué tant que le téléphone
+                                   n'est pas confirmé)
+Preuves   10 ans · Diplômé · Devis gratuit · 100 km
+```
+
+Sous 480 px, la clause « pour les particuliers… » est masquée : le chapô
+tient alors en trois lignes sans repousser le CTA hors du premier écran.
+
+Chaque terme SEO n'apparaît **qu'une fois** : élagueur-grimpeur, Rouen,
+élagage, abattage, entretien. Aucune répétition mécanique.
+
+Les quatre preuves sont toutes vérifiables dans `PROJECT.md`. « Diplômé »
+renvoie au CS Taille et soins des arbres — à ne pas transformer en
+« certifié » ou « agréé », qui seraient des affirmations différentes.
 
 ---
 
