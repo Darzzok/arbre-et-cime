@@ -3,10 +3,19 @@
 /* ---------------------------------------------------------------------------
    Arbre et Cime Elagage — jetons de design
    Charte VERROUILLEE : voir DESIGN_SYSTEM.md avant toute modification.
+
+   Les espaces de noms `--color-*`, `--text-*`, `--radius-*` et `--breakpoint-*`
+   sont volontairement REINITIALISES : seules les valeurs de la charte existent.
+   Consequence recherchee : `bg-white`, `text-blue-500`, `text-9xl` ou
+   `rounded-3xl` n'existent pas et ne peuvent pas s'inviter dans le projet.
    --------------------------------------------------------------------------- */
 
 @theme {
-  /* Couleurs */
+  /* --- Couleurs — VERROUILLE ---------------------------------------------- */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
   --color-forest: #14251e; /* vert foret profond — fonds sombres, dominante */
   --color-ivory: #f3f0e8; /* ivoire naturel — fonds clairs, texte sur foret */
   --color-charcoal: #171918; /* charbon — texte principal sur ivoire */
@@ -14,16 +23,62 @@
   --color-stone: #cbc8bd; /* pierre — texte secondaire, filets, separateurs */
   --color-safety: #d8a62a; /* jaune securite — CTA / focus, avec parcimonie */
 
-  /* Typographies (variables injectees par next/font dans layout.tsx) */
+  /* --- Typographies (variables injectees par next/font) -------------------- */
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
 
-  /* Rythme editorial */
-  --spacing-gutter: 1.25rem; /* marge laterale mobile de reference (390 px) */
-  --spacing-section: 4.5rem; /* respiration verticale entre blocs, mobile */
+  /* --- Echelle typographique fluide --------------------------------------- */
+  /* Interpolation lineaire entre 390 px (24.375rem) et 1440 px (90rem).
+     En dessous de 390 px la valeur est bornee au minimum : le rendu a 320 px
+     est donc identique a celui de 390 px, sans debordement. */
+  --text-*: initial;
 
-  /* Mouvement — sobre et technique */
+  --text-display: clamp(2.5rem, 1.664rem + 3.429vw, 4.75rem); /* 40 → 76 */
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-title: clamp(1.875rem, 1.504rem + 1.524vw, 2.875rem); /* 30 → 46 */
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.015em;
+
+  --text-subtitle: clamp(1.375rem, 1.282rem + 0.381vw, 1.625rem); /* 22 → 26 */
+  --text-subtitle--line-height: 1.2;
+  --text-subtitle--letter-spacing: -0.01em;
+
+  --text-lead: clamp(1.0625rem, 1.016rem + 0.19vw, 1.1875rem); /* 17 → 19 */
+  --text-lead--line-height: 1.55;
+
+  --text-body: clamp(1rem, 0.977rem + 0.095vw, 1.0625rem); /* 16 → 17 */
+  --text-body--line-height: 1.65;
+
+  --text-caption: clamp(0.8125rem, 0.789rem + 0.095vw, 0.875rem); /* 13 → 14 */
+  --text-caption--line-height: 1.5;
+
+  --text-eyebrow: 0.75rem; /* 12 — fixe, jamais fluide */
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.24em;
+
+  /* --- Rayons — 0 a 8 px, angles francs ----------------------------------- */
+  --radius-*: initial;
+  --radius-none: 0px;
+  --radius-edge: 2px;
+  --radius-soft: 8px;
+
+  /* --- Points de rupture -------------------------------------------------- */
+  /* Alignes sur les largeurs de recette : 320 / 390 / 768 / 1024 / 1440. */
+  --breakpoint-*: initial;
+  --breakpoint-sm: 30rem; /* 480 */
+  --breakpoint-md: 48rem; /* 768 */
+  --breakpoint-lg: 64rem; /* 1024 */
+  --breakpoint-xl: 90rem; /* 1440 */
+
+  /* --- Largeurs maximales de contenu -------------------------------------- */
+  --container-reading: 42rem; /* 672 — colonne de lecture, 60-75 caracteres */
+  --container-content: 77.5rem; /* 1240 — largeur de contenu de reference */
+  --container-wide: 90rem; /* 1440 — bandeaux quasi pleine largeur */
+
+  /* --- Mouvement — sobre et technique ------------------------------------- */
   --ease-cime: cubic-bezier(0.22, 0.61, 0.36, 1);
   --duration-cime: 320ms;
 }
@@ -31,17 +86,82 @@
 @layer base {
   :root {
     color-scheme: light;
+
+    /* Gouttiere laterale et rythme vertical : responsives, pas des jetons
+       statiques. Consommes via `px-(--gutter)` et `py-(--section-space)`. */
+    --gutter: 1.25rem; /* 20 — mobile, reference 390 px */
+    --section-space: 4.5rem; /* 72 — mobile */
+    --reveal-shift: 0.375rem; /* 6 — amplitude reduite sur mobile */
+  }
+
+  @media (width >= 48rem) {
+    :root {
+      --gutter: 2rem; /* 32 — tablette */
+      --section-space: 6rem; /* 96 */
+      --reveal-shift: 0.75rem; /* 12 */
+    }
+  }
+
+  @media (width >= 64rem) {
+    :root {
+      --gutter: 3rem; /* 48 — desktop */
+      --section-space: 8rem; /* 128 */
+    }
+  }
+
+  /* --- Surfaces ------------------------------------------------------------
+     Une surface expose un jeu de variables semantiques. Les composants ne
+     referencent JAMAIS une couleur de charte directement : ils lisent ces
+     variables, ce qui rend chaque primitive utilisable sur fond clair comme
+     sur fond sombre sans prop conditionnelle.
+     Contrastes verifies dans DESIGN_SYSTEM.md. */
+  :root,
+  [data-surface="light"] {
+    --surface-bg: var(--color-ivory);
+    --surface-fg: var(--color-charcoal); /* 15,51 sur ivoire */
+    --surface-fg-muted: var(--color-moss); /* 5,15 sur ivoire — AA */
+    --surface-heading: var(--color-forest); /* 14,04 sur ivoire */
+    --surface-rule: color-mix(in oklab, var(--color-moss) 30%, transparent);
+    --surface-inset: color-mix(in oklab, var(--color-moss) 8%, transparent);
+    --focus-ring: var(--color-forest); /* 14,04 sur ivoire */
+    --btn-solid-bg: var(--color-forest);
+    --btn-solid-fg: var(--color-ivory);
+    --btn-outline-border: color-mix(
+      in oklab,
+      var(--color-forest) 45%,
+      transparent
+    );
+  }
+
+  [data-surface="dark"] {
+    --surface-bg: var(--color-forest);
+    --surface-fg: var(--color-ivory); /* 14,04 sur foret */
+    --surface-fg-muted: var(--color-stone); /* 9,55 sur foret */
+    --surface-heading: var(--color-ivory);
+    --surface-rule: color-mix(in oklab, var(--color-stone) 32%, transparent);
+    --surface-inset: color-mix(in oklab, var(--color-ivory) 7%, transparent);
+    --focus-ring: var(--color-safety); /* 7,16 sur foret */
+    --btn-solid-bg: var(--color-ivory);
+    --btn-solid-fg: var(--color-forest);
+    --btn-outline-border: color-mix(
+      in oklab,
+      var(--color-ivory) 45%,
+      transparent
+    );
   }
 
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
 
   body {
-    background-color: var(--color-ivory);
-    color: var(--color-charcoal);
+    background-color: var(--surface-bg);
+    color: var(--surface-fg);
     font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.65;
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -51,6 +171,8 @@
   h2,
   h3 {
     font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--surface-heading);
     text-wrap: balance;
   }
 
@@ -58,14 +180,71 @@
     text-wrap: pretty;
   }
 
-  /* Cible tactile confortable : jamais d'interaction dependante du hover. */
-  :where(a, button, [role="button"]) {
+  /* Aucun media ne deborde de sa colonne, quelle que soit la largeur. */
+  img,
+  svg,
+  video,
+  canvas,
+  picture {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Cible tactile confortable : jamais d'interaction dependante du survol. */
+  :where(a, button, [role="button"], input, select, textarea) {
     touch-action: manipulation;
   }
 
+  /* Focus visible : la couleur s'adapte a la surface pour garantir >= 3:1
+     contre le fond adjacent. Le jaune securite echoue sur ivoire (1,96) :
+     il est donc reserve aux surfaces sombres. */
   :focus-visible {
-    outline: 2px solid var(--color-safety);
-    outline-offset: 3px;
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Le navigateur ne doit jamais poser son propre anneau par-dessus. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: var(--color-safety);
+    color: var(--color-charcoal);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reveal — unique primitive d'animation.
+   100 % CSS, zero JavaScript, zero dependance.
+
+   Le masquage initial est enferme dans `@supports (animation-timeline: view())`:
+   un navigateur sans timelines de scroll (Safari, Firefox a ce jour) affiche
+   simplement le contenu, sans clignotement et sans risque de bloc invisible si
+   le script echoue — le contenu est de toute facon toujours present dans le
+   HTML. L'animation est purement decorative et ne porte aucune information.
+   --------------------------------------------------------------------------- */
+
+@keyframes cime-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-shift));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      animation: cime-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
   }
 }
 

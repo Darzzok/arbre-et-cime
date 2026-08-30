@@ -26,16 +26,40 @@ Socle technique et documents de référence.
 
 ---
 
-## Phase 2 — Design system ⬜
+## Phase 2 — Design system ✅
 
-- Échelle typographique complète appliquée (mobile → large)
-- Primitives : `Section`, `Container`, `Overline`, `Rule`, `CtaPrimary`,
-  `CtaPhone`, `Figure`
-- Utilitaires de révélation à l'apparition, avec repli `prefers-reduced-motion`
-- Page de démonstration interne des jetons et primitives (non indexée)
+Livré (voir `DESIGN_SYSTEM.md` pour le détail) :
 
-**Sortie :** toutes les primitives visibles côte à côte à 390 px et en large,
-contrastes conformes au tableau de `DESIGN_SYSTEM.md`.
+- **Jetons** : palette, échelle typographique fluide en `clamp()` (390 → 1440
+  px), rayons 0–8 px, points de rupture alignés sur les largeurs de recette
+  (480 / 768 / 1024 / 1440), largeurs maximales, gouttières et rythme vertical
+  responsives. Les espaces de noms Tailwind par défaut (`--color-*`, `--text-*`,
+  `--radius-*`, `--breakpoint-*`) sont réinitialisés : la charte est rendue
+  impossible à contourner.
+- **Surfaces** `light` / `dark` pilotées par `data-surface`, avec bascule
+  complète des jetons sémantiques (fond, texte, texte secondaire, filets,
+  focus, boutons).
+- **Primitives** (`src/components/ui/`, toutes composants serveur) :
+  `Container`, `Section`, `Display` / `Title` / `Subtitle` / `Lead` / `Body` /
+  `Small`, `Button`, `ButtonLink`, `TextLink`, `ArrowLink`, `Eyebrow`,
+  `SectionIndex`, `Rule`, `Figure`, `Reveal`.
+- **Animation** : `Reveal`, unique primitive, 100 % CSS via
+  `animation-timeline: view()`, sans JavaScript ni dépendance, neutralisée sous
+  `prefers-reduced-motion`.
+- **Accessibilité** : focus visible adapté à la surface (le jaune sécurité
+  échouant à 1,96 sur ivoire est réservé aux fonds sombres), cibles tactiles
+  ≥ 44 px, boutons et liens strictement distingués, liens soulignés en
+  permanence.
+- **Route interne `/style-guide`** : palette, contrastes, typographies,
+  hiérarchie, boutons, liens, surtitres, surfaces, séparateurs, espacements,
+  grille et mouvement. `noindex, nofollow`, hors navigation publique.
+
+**Sortie atteinte :** aucun débordement horizontal à 320 / 390 / 768 / 1024 /
+1440 px, contrastes conformes au tableau de `DESIGN_SYSTEM.md`, lint, typecheck
+et build au vert. Aucune dépendance ajoutée.
+
+*Reste rattaché à des phases ultérieures :* le lien d'évitement et la barre
+d'action mobile sont livrés avec le châssis en phase 4.
 
 ---
 
