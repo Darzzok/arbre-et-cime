@@ -118,7 +118,13 @@ question qu'un client se pose vraiment.
 ## 5. Métadonnées
 
 - `metadataBase` alimenté par `NEXT_PUBLIC_SITE_URL` — déjà en place dans
-  `layout.tsx`.
+  `layout.tsx`. La variable est **la seule source de vérité** de l'URL publique.
+  Elle est validée et normalisée en origine (sans chemin ni slash final) par
+  `resolveSiteOrigin()` dans `src/lib/site.ts` ; si elle est absente ou
+  invalide, `metadataBase` n'est simplement **pas émis** plutôt que de produire
+  une base vide ou `localhost` en production. **Elle doit impérativement être
+  définie dans l'environnement de production** : sans elle, pas d'URL absolue
+  pour les canoniques, le sitemap, Open Graph et le JSON-LD.
 - Gabarit de titre : `%s | Arbre et Cime Élagage`, titre par défaut incluant
   « Élagueur-grimpeur à Rouen ».
 - `title` de page : 55–60 caractères, **la ville dans les 40 premiers**.

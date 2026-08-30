@@ -18,7 +18,10 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  // Omis volontairement lorsque `NEXT_PUBLIC_SITE_URL` est absente ou invalide :
+  // mieux vaut aucune metadataBase qu'une base vide ou localhost servant de
+  // canonique en production (cf. resolveSiteOrigin dans src/lib/site.ts).
+  ...(site.url ? { metadataBase: new URL(site.url) } : {}),
   title: {
     default: `${site.name} — Élagueur-grimpeur à ${area.city}`,
     template: `%s | ${site.name}`,

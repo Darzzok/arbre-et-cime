@@ -5,11 +5,75 @@
  * Profile et les annuaires (cf. SEO_STRATEGY.md).
  */
 
+/** Origine de repli, reservee au developpement local. */
+const DEV_FALLBACK_ORIGIN = "http://localhost:3000";
+
+/**
+ * Resout l'origine publique du site a partir de `NEXT_PUBLIC_SITE_URL`, seule
+ * source de verite pour l'URL du site.
+ *
+ * Retourne une origine normalisee (`https://exemple.fr`, sans chemin, sans
+ * query, sans slash final) ou `null` si aucune valeur exploitable n'est
+ * disponible en production.
+ *
+ * Cette fonction ne leve JAMAIS : une variable absente, vide ou malformee ne
+ * doit pas casser le build (le rendu statique evalue `metadata` a
+ * l'import du layout, une exception ici ferait echouer toutes les routes).
+ *
+ * Consequence pour les consommateurs (sitemap, canoniques, JSON-LD en phase
+ * 14) : la valeur peut etre `null`, ce cas doit etre traite explicitement.
+ */
+function resolveSiteOrigin(): string | null {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const isProduction = process.env.NODE_ENV === "production";
+  const fallback = isProduction ? null : DEV_FALLBACK_ORIGIN;
+
+  if (!raw) {
+    if (isProduction) {
+      warnOnServer(
+        "NEXT_PUBLIC_SITE_URL est absente ou vide : metadataBase, les URLs canoniques et le sitemap seront omis.",
+      );
+    }
+    return fallback;
+  }
+
+  let parsed: URL;
+  try {
+    parsed = new URL(raw);
+  } catch {
+    warnOnServer(
+      `NEXT_PUBLIC_SITE_URL invalide (${JSON.stringify(raw)}) : attendu une origine absolue, par exemple https://exemple.fr`,
+    );
+    return fallback;
+  }
+
+  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+    warnOnServer(
+      `NEXT_PUBLIC_SITE_URL utilise un protocole non supporte (${parsed.protocol}) : attendu http ou https.`,
+    );
+    return fallback;
+  }
+
+  // `origin` retire d'office le chemin, la query, le fragment et le slash final.
+  return parsed.origin;
+}
+
+/** Avertit cote serveur uniquement : ces variables sont inlinees cote client. */
+function warnOnServer(message: string): void {
+  if (typeof window === "undefined") {
+    console.warn(`[site] ${message}`);
+  }
+}
+
 export const site = {
   name: "Arbre et Cime Élagage",
   legalName: "Arbre et Cime Élagage",
   trade: "Élagueur-grimpeur",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.arbre-et-cime.fr",
+  /**
+   * Origine publique validee, ou `null` si aucune URL exploitable.
+   * Ne jamais passer directement a `new URL()` sans verifier la nullite.
+   */
+  url: resolveSiteOrigin(),
   phone: process.env.NEXT_PUBLIC_PHONE ?? "",
   phoneDisplay: process.env.NEXT_PUBLIC_PHONE_DISPLAY ?? "",
   email: process.env.NEXT_PUBLIC_EMAIL ?? "",

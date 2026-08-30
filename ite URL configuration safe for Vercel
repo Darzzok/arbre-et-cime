@@ -1,0 +1,145 @@
+warning: in the working copy of '.env.example', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SEO_STRATEGY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/app/layout.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/lib/site.ts', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/.env.example b/.env.example[m
+[1mindex 4157898..4eb303b 100644[m
+[1m--- a/.env.example[m
+[1m+++ b/.env.example[m
+[36m@@ -5,9 +5,17 @@[m
+ # ---------------------------------------------------------------------------[m
+ [m
+ # --- Site -------------------------------------------------------------------[m
+[31m-# URL canonique absolue, sans slash final. Sert au metadataBase, au sitemap,[m
+[31m-# aux URLs canoniques et au JSON-LD.[m
+[31m-NEXT_PUBLIC_SITE_URL=https://www.arbre-et-cime.fr[m
+[32m+[m[32m# Origine publique COMPLETE du site : protocole + domaine, sans chemin.[m
+[32m+[m[32m#   Exemple valide   : https://example.com[m
+[32m+[m[32m#   Exemples refuses : example.com  |  https://example.com/accueil  |  (vide)[m
+[32m+[m[32m# Un eventuel slash final ou chemin est ignore automatiquement.[m
+[32m+[m[32m# Sert au metadataBase, au sitemap, aux URLs canoniques et au JSON-LD.[m
+[32m+[m[32m#[m
+[32m+[m[32m# En developpement, si la variable est absente, http://localhost:3000 est[m
+[32m+[m[32m# utilise. En production, si elle est absente ou invalide, metadataBase n'est[m
+[32m+[m[32m# pas emis (le build reussit, mais les URLs absolues sont perdues) :[m
+[32m+[m[32m# elle DOIT donc etre definie dans l'environnement de production (Vercel).[m
+[32m+[m[32mNEXT_PUBLIC_SITE_URL=[m
+ [m
+ # --- Coordonnees publiques (NAP — doivent etre identiques partout) ----------[m
+ # Telephone au format international pour les liens tel:[m
+[1mdiff --git a/SEO_STRATEGY.md b/SEO_STRATEGY.md[m
+[1mindex 407ba60..22187d1 100644[m
+[1m--- a/SEO_STRATEGY.md[m
+[1m+++ b/SEO_STRATEGY.md[m
+[36m@@ -118,7 +118,13 @@[m [mquestion qu'un client se pose vraiment.[m
+ ## 5. Métadonnées[m
+ [m
+ - `metadataBase` alimenté par `NEXT_PUBLIC_SITE_URL` — déjà en place dans[m
+[31m-  `layout.tsx`.[m
+[32m+[m[32m  `layout.tsx`. La variable est **la seule source de vérité** de l'URL publique.[m
+[32m+[m[32m  Elle est validée et normalisée en origine (sans chemin ni slash final) par[m
+[32m+[m[32m  `resolveSiteOrigin()` dans `src/lib/site.ts` ; si elle est absente ou[m
+[32m+[m[32m  invalide, `metadataBase` n'est simplement **pas émis** plutôt que de produire[m
+[32m+[m[32m  une base vide ou `localhost` en production. **Elle doit impérativement être[m
+[32m+[m[32m  définie dans l'environnement de production** : sans elle, pas d'URL absolue[m
+[32m+[m[32m  pour les canoniques, le sitemap, Open Graph et le JSON-LD.[m
+ - Gabarit de titre : `%s | Arbre et Cime Élagage`, titre par défaut incluant[m
+   « Élagueur-grimpeur à Rouen ».[m
+ - `title` de page : 55–60 caractères, **la ville dans les 40 premiers**.[m
+[1mdiff --git a/src/app/layout.tsx b/src/app/layout.tsx[m
+[1mindex 1a34177..63aab1a 100644[m
+[1m--- a/src/app/layout.tsx[m
+[1m+++ b/src/app/layout.tsx[m
+[36m@@ -18,7 +18,10 @@[m [mconst manrope = Manrope({[m
+ });[m
+ [m
+ export const metadata: Metadata = {[m
+[31m-  metadataBase: new URL(site.url),[m
+[32m+[m[32m  // Omis volontairement lorsque `NEXT_PUBLIC_SITE_URL` est absente ou invalide :[m
+[32m+[m[32m  // mieux vaut aucune metadataBase qu'une base vide ou localhost servant de[m
+[32m+[m[32m  // canonique en production (cf. resolveSiteOrigin dans src/lib/site.ts).[m
+[32m+[m[32m  ...(site.url ? { metadataBase: new URL(site.url) } : {}),[m
+   title: {[m
+     default: `${site.name} — Élagueur-grimpeur à ${area.city}`,[m
+     template: `%s | ${site.name}`,[m
+[1mdiff --git a/src/lib/site.ts b/src/lib/site.ts[m
+[1mindex 78d15c1..ca62379 100644[m
+[1m--- a/src/lib/site.ts[m
+[1m+++ b/src/lib/site.ts[m
+[36m@@ -5,11 +5,75 @@[m
+  * Profile et les annuaires (cf. SEO_STRATEGY.md).[m
+  */[m
+ [m
+[32m+[m[32m/** Origine de repli, reservee au developpement local. */[m
+[32m+[m[32mconst DEV_FALLBACK_ORIGIN = "http://localhost:3000";[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Resout l'origine publique du site a partir de `NEXT_PUBLIC_SITE_URL`, seule[m
+[32m+[m[32m * source de verite pour l'URL du site.[m
+[32m+[m[32m *[m
+[32m+[m[32m * Retourne une origine normalisee (`https://exemple.fr`, sans chemin, sans[m
+[32m+[m[32m * query, sans slash final) ou `null` si aucune valeur exploitable n'est[m
+[32m+[m[32m * disponible en production.[m
+[32m+[m[32m *[m
+[32m+[m[32m * Cette fonction ne leve JAMAIS : une variable absente, vide ou malformee ne[m
+[32m+[m[32m * doit pas casser le build (le rendu statique evalue `metadata` a[m
+[32m+[m[32m * l'import du layout, une exception ici ferait echouer toutes les routes).[m
+[32m+[m[32m *[m
+[32m+[m[32m * Consequence pour les consommateurs (sitemap, canoniques, JSON-LD en phase[m
+[32m+[m[32m * 14) : la valeur peut etre `null`, ce cas doit etre traite explicitement.[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction resolveSiteOrigin(): string | null {[m
+[32m+[m[32m  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();[m
+[32m+[m[32m  const isProduction = process.env.NODE_ENV === "production";[m
+[32m+[m[32m  const fallback = isProduction ? null : DEV_FALLBACK_ORIGIN;[m
+[32m+[m
+[32m+[m[32m  if (!raw) {[m
+[32m+[m[32m    if (isProduction) {[m
+[32m+[m[32m      warnOnServer([m
+[32m+[m[32m        "NEXT_PUBLIC_SITE_URL est absente ou vide : metadataBase, les URLs canoniques et le sitemap seront omis.",[m
+[32m+[m[32m      );[m
+[32m+[m[32m    }[m
+[32m+[m[32m    return fallback;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  let parsed: URL;[m
+[32m+[m[32m  try {[m
+[32m+[m[32m    parsed = new URL(raw);[m
+[32m+[m[32m  } catch {[m
+[32m+[m[32m    warnOnServer([m
+[32m+[m[32m      `NEXT_PUBLIC_SITE_URL invalide (${JSON.stringify(raw)}) : attendu une origine absolue, par exemple https://exemple.fr`,[m
+[32m+[m[32m    );[m
+[32m+[m[32m    return fallback;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {[m
+[32m+[m[32m    warnOnServer([m
+[32m+[m[32m      `NEXT_PUBLIC_SITE_URL utilise un protocole non supporte (${parsed.protocol}) : attendu http ou https.`,[m
+[32m+[m[32m    );[m
+[32m+[m[32m    return fallback;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  // `origin` retire d'office le chemin, la query, le fragment et le slash final.[m
+[32m+[m[32m  return parsed.origin;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/** Avertit cote serveur uniquement : ces variables sont inlinees cote client. */[m
+[32m+[m[32mfunction warnOnServer(message: string): void {[m
+[32m+[m[32m  if (typeof window === "undefined") {[m
+[32m+[m[32m    console.warn(`[site] ${message}`);[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+ export const site = {[m
+   name: "Arbre et Cime Élagage",[m
+   legalName: "Arbre et Cime Élagage",[m
+   trade: "Élagueur-grimpeur",[m
+[31m-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.arbre-et-cime.fr",[m
+[32m+[m[32m  /**[m
+[32m+[m[32m   * Origine publique validee, ou `null` si aucune URL exploitable.[m
+[32m+[m[32m   * Ne jamais passer directement a `new URL()` sans verifier la nullite.[m
+[32m+[m[32m   */[m
+[32m+[m[32m  url: resolveSiteOrigin(),[m
+   phone: process.env.NEXT_PUBLIC_PHONE ?? "",[m
+   phoneDisplay: process.env.NEXT_PUBLIC_PHONE_DISPLAY ?? "",[m
+   email: process.env.NEXT_PUBLIC_EMAIL ?? "",[m
