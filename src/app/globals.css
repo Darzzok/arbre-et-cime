@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Arbre et Cime Elagage — jetons de design
+   Charte VERROUILLEE : voir DESIGN_SYSTEM.md avant toute modification.
+   --------------------------------------------------------------------------- */
+
+@theme {
+  /* Couleurs */
+  --color-forest: #14251e; /* vert foret profond — fonds sombres, dominante */
+  --color-ivory: #f3f0e8; /* ivoire naturel — fonds clairs, texte sur foret */
+  --color-charcoal: #171918; /* charbon — texte principal sur ivoire */
+  --color-moss: #516b54; /* vert mousse — accents calmes, bordures, etats */
+  --color-stone: #cbc8bd; /* pierre — texte secondaire, filets, separateurs */
+  --color-safety: #d8a62a; /* jaune securite — CTA / focus, avec parcimonie */
+
+  /* Typographies (variables injectees par next/font dans layout.tsx) */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+
+  /* Rythme editorial */
+  --spacing-gutter: 1.25rem; /* marge laterale mobile de reference (390 px) */
+  --spacing-section: 4.5rem; /* respiration verticale entre blocs, mobile */
+
+  /* Mouvement — sobre et technique */
+  --ease-cime: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration-cime: 320ms;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Cible tactile confortable : jamais d'interaction dependante du hover. */
+  :where(a, button, [role="button"]) {
+    touch-action: manipulation;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-safety);
+    outline-offset: 3px;
+  }
+}
+
+/* Accessibilite : respect strict de prefers-reduced-motion. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
