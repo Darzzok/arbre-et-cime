@@ -57,7 +57,7 @@ Sept sections `VERROUILLÉES` (cf. `PROJECT.md`). Intentions rédactionnelles :
 | **Prestations** ✅ | **Quatre** prestations principales, chacune avec une ligne qui dit ce qu'elle règle, et un lien vers sa page. Les quatre secondaires sont traitées dans leur page parente. **Livré en phase 6.** |
 | **Pourquoi Arbre et Cime** ✅ | Texte d'introduction, puis quatre différenciateurs argumentés de trois lignes — pas une liste d'adjectifs. **Livré en phase 8, réécrit au correctif.** |
 | **Réalisations** ✅ | Trois **types d'intervention**, légende sous la photographie. **Livré en phase 9, revu au correctif 9B** — sans commune ni date, faute de chantiers client documentés. |
-| **Zone d'intervention** | Rouen et la métropole nommément, puis la mention du rayon jusqu'à 100 km. |
+| **Zone d'intervention** ✅ | Rouen et la métropole nommément, puis le rayon de 100 km **présenté comme une possibilité, jamais comme une couverture**. **Livré en phase 10, recomposé au correctif.** |
 | **Devis interactif** | Une promesse simple : décrire le besoin, joindre des photos, être rappelé. Lever la friction avant l'entrée dans le parcours. |
 | **Footer** | NAP, prestations, zone, mentions, rappel des deux CTA. |
 
@@ -387,6 +387,121 @@ photographies du client ne sont pas livrées.
 `commune`, `contexte`, `contraintes` et un avant/après, la mention de
 transparence disparaîtra, et `CONVERSION_STRATEGY.md` § 4.3 — « chantiers
 datés et situés » — deviendra enfin applicable. Il ne l'est pas aujourd'hui.
+
+---
+
+## 5 quinquies. Zone d'intervention — livrée en phase 10
+
+**Le piège de cette page est le cercle.** Un rayon de 100 km dessiné sur une
+carte se lit spontanément comme une promesse : « tout ce qui est dedans est
+desservi ». C'est faux, et le client l'a explicitement exclu.
+
+La correction ne peut pas être seulement graphique — un dessin est plus fort
+qu'une note de bas de page. Elle est donc **répétée à trois endroits**, dans
+trois registres :
+
+| Où | Formulation |
+| --- | --- |
+| Chapô de la page | « des déplacements possibles jusqu'à 100 km selon le type et les contraintes du chantier » |
+| Bloc dédié | « Le rayon de 100 km est une possibilité, pas une couverture automatique. Toutes les adresses qu'il contient ne sont pas desservies d'office. » |
+| Chaque repère de la carte | « À 72 km de Rouen · déplacement possible selon le chantier » |
+| Sous le cercle, sur la carte | « Portée maximale indicative — selon le chantier » |
+
+Aucune commune n'est jamais écrite comme desservie. La formule interdite est
+**« nous intervenons à X »** ; la formule employée est **« à X km de Rouen,
+selon le chantier »**.
+
+### Les communes de la métropole sont enfin SUR la carte
+
+Contrainte d'échelle, longtemps insoluble : Rouen, Mont-Saint-Aignan,
+Bois-Guillaume, Sotteville-lès-Rouen et Le Grand-Quevilly tiennent dans dix
+kilomètres. Sur une carte qui montrait 100 km, cela faisait une vingtaine de
+pixels — sept étiquettes au même endroit.
+
+Le correctif 10C règle le problème par le **changement de sujet** : la carte
+cadre le territoire — ±112 km autour de Rouen — et non plus le rayon. La
+métropole y est dessinée commune par commune, et les cinq communes du cœur
+sont étiquetées avec des **lignes de rappel**. Elles sont lisibles sur la
+carte, et reprises en liste sous elle avec leur distance.
+
+### Trois niveaux, un vocabulaire
+
+| Niveau | Formulation |
+| --- | --- |
+| Cœur de zone | « Rouen et les 71 communes de la Métropole Rouen Normandie » |
+| Zone principale | « Seine-Maritime, de la vallée de Seine au littoral » |
+| Déplacements | « Jusqu'à 100 km selon le chantier » |
+
+### Le cercle est revenu — ce qui l'empêche de mentir
+
+La règle précédente était : *le troisième niveau n'est jamais dessiné, il est
+écrit*. **Le client a demandé un cercle d'intervention animé.** La règle
+change donc, mais pas l'exigence qu'elle servait : le cercle ne doit pas se
+lire comme une promesse de couverture.
+
+Quatre garde-fous, tous en place :
+
+- **Le trait est pointillé, jamais plein.** Un trait continu est une frontière ;
+  un pointillé est une indication. La différence est lue avant d'être pensée.
+- **Il n'y a qu'un cercle.** Les quatre anneaux concentriques des versions
+  précédentes dessinaient un service gradué qui n'existe pas.
+- **Une mention l'accompagne sur la plaque même** — « Portée maximale
+  indicative — selon le chantier » — et non dans une légende séparée que
+  personne ne relie au dessin.
+- **Aucune commune à l'intérieur n'est dite desservie.** Chaque repère porte sa
+  distance et la formule « déplacement possible selon le chantier ».
+
+Le cercle dit **jusqu'où**, jamais **partout**. La formule interdite reste
+« nous intervenons à X ».
+
+### Le bloc « secteurs » n'est pas une liste SEO
+
+Quatre secteurs, pas cinquante fiches communales. Chacun porte une plage de
+distance, une phrase de contexte et quelques communes **de repère** — le
+chapeau du bloc le dit en toutes lettres : « Les communes citées servent à
+situer les distances. Elles ne constituent pas une liste de secteurs
+desservis d'office. »
+
+Toutes les communes nommées ont des coordonnées vérifiées dans
+`src/lib/map-data.ts`. Aucune n'est ajoutée pour le volume.
+
+### Exactitude administrative
+
+Barentin, Louviers et Yvetot sont proches de Rouen mais **ne font pas partie**
+de la Métropole Rouen Normandie. Le code le vérifie commune par commune
+(`METROPOLE_CODES` dans `src/lib/map-content.ts`) et ne les qualifie jamais de
+« métropole ». C'est le genre d'approximation qu'un lecteur local repère
+immédiatement, et qui coûte plus cher que le temps gagné.
+
+### Textes livrés
+
+**Correctif de la phase 10.** Le titre `h1` de la page est passé de « Zone
+d'intervention d'Arbre & Cime » à **« Zone d'intervention »** : le nom de
+l'entreprise figure déjà dans le surtitre, dans le pied de page et dans
+l'en-tête. Le répéter dans le `h1` allongeait sans rien apporter.
+
+```
+ACCUEIL — « Jusqu'à 100 km autour de Rouen »
+  Arbre & Cime intervient principalement dans la Métropole Rouen Normandie,
+  et peut se déplacer plus largement selon les besoins du chantier.
+
+  Zone principale  Rouen et la Métropole Rouen Normandie
+  Rayon maximal    Jusqu'à 100 km selon le chantier
+  Département      Seine-Maritime, et communes limitrophes
+
+/ZONES-INTERVENTION
+  H1   Zone d'intervention d'Arbre & Cime
+  Carte  « Rouen au centre, 100 km au plus loin »
+  H2   Rouen et sa métropole
+  H2   Jusqu'à 100 km, selon le chantier  — quatre facteurs
+  H2   Quelques repères de distance       — quatre secteurs
+  CTA  Votre chantier est dans la zone ?
+```
+
+Les trois lignes « Zone principale / Rayon maximal / Département » sont le
+**repli textuel de la carte**. Ce n'est pas une redite décorative : c'est ce
+qui rend l'information disponible sans le dessin, pour un lecteur d'écran, une
+impression, ou un navigateur sans SVG.
 
 ---
 

@@ -577,15 +577,255 @@ absente de la collection.
 en `priority`. Lint, typecheck et build au vert. Aucune dépendance ajoutée.
 ---
 
-## Phase 10 — Carte de zone d'intervention ⬜
+## Phase 10 — Zone d'intervention et carte ✅
 
-- Rouen et la métropole en cœur de cible, rayon jusqu'à 100 km en secondaire
-- Carte animée : tracé progressif du rayon, sobre, sans bibliothèque lourde —
-  SVG maîtrisé plutôt qu'un fond de carte tiers
-- Repli textuel complet : liste des communes principales, lisible sans script
-- Animation désactivée sous `prefers-reduced-motion`
+Section 6 des 7 sections verrouillées (`src/components/sections/zone.tsx`),
+page `/zones-intervention`, et la carte elle-même
+(`src/components/map/zone-map.tsx`).
 
-**Sortie :** information de zone complète et compréhensible même sans animation.
+### Données : réelles, publiques, figées dans le dépôt
+
+Aucun tracé n'est dessiné à la main. Contours de la Normandie et de ses cinq
+départements depuis **france-geojson** (d'après l'IGN, licence ODbL) ;
+coordonnées des 18 communes depuis **`geo.api.gouv.fr`** (Étalab, Licence
+Ouverte 2.0). Sources, licences et obligations : `MAP_DATA_SOURCES.md`.
+
+Les sources brutes restent versionnées dans `data/geo/` : le pipeline demeure
+reproductible même si un dépôt tiers disparaît.
+
+### Zéro dépendance, et comment
+
+Projeter du GeoJSON en SVG appelle `d3-geo`. Elle n'a pas été installée : la
+projection tient en quinze lignes et s'exécute **à l'écriture**, pas au
+runtime (`scripts/build-map-data.mjs`). Le site n'embarque que des chaînes `d`
+figées — **273 Ko de GeoJSON réduits à 12 Ko de TypeScript**, sans perte
+visible au-delà de 300 px.
+
+Aucun appel réseau, aucune clé d'API, aucun fond de tuiles. Le coût réseau de
+la carte est nul au-delà du HTML.
+
+### Projection azimutale équidistante centrée sur Rouen
+
+Choix imposé par ce que la carte affirme. En Mercator, un « cercle de 100 km »
+n'en est pas un : la distance réelle varie de plusieurs kilomètres selon la
+direction, et la carte mentirait discrètement. Dans cette projection, toute
+distance depuis le centre est exacte — les quatre rayons sont de vrais
+`<circle>` et chaque distance affichée est la bonne.
+
+### Architecture : deux couches
+
+SVG pour la géométrie, **HTML pour les points et les étiquettes**. Un `<text>`
+SVG grandirait avec la `viewBox` ; un point HTML devient un vrai `<button>`,
+avec focus clavier natif et cible tactile de 44 px. Détail dans
+`DESIGN_SYSTEM.md` § 8 bis.
+
+### Ce qui a été corrigé en cours de route, par la mesure
+
+- **Bulles flottantes** sortant du panneau pour les communes de bord.
+  Remplacées par une **ligne contextuelle unique** sous la carte, alimentée par
+  le survol, le focus et le tap, annoncée en `aria-live`.
+- **Étiquette du Havre hors cadre à 320 px.** Les étiquettes latérales
+  basculent désormais sous le point en dessous de 480 px.
+- **Paliers 25 et 50 km** tombant sur Elbeuf, Yvetot et Barentin. Ils ne sont
+  plus étiquetés ; la légende et la ligne contextuelle portent l'information.
+- **Le piège `cn()`, une seconde fois.** `"hidden"` et `"hidden lg:block"` en
+  deux entrées ne masquent rien : `lg:block` l'emporte. La visibilité se
+  calcule maintenant en une seule expression.
+- **`overflow-visible` sur le SVG**, qui laissait la Manche déborder du
+  panneau. Retiré : c'est la `viewBox` qui rogne, volontairement.
+
+### Honnêteté du rayon
+
+Un cercle de 100 km se lit comme une promesse de couverture. Le contraire est
+écrit à **trois endroits** — chapô, bloc dédié, et chaque repère de la carte.
+Aucune commune n'est présentée comme desservie. Caen, à 110 km, est chargée
+dans les données mais jamais affichée.
+
+Barentin, Louviers et Yvetot ne sont **pas** dans la Métropole Rouen
+Normandie : le code le vérifie par code INSEE et ne les qualifie jamais ainsi.
+
+**Sortie atteinte :** aucun débordement et **aucune collision d'étiquette** de
+320 à 1440 px, vérifié par mesure des rectangles. Information de zone complète
+en HTML — zone principale, rayon, département, distances — donc lisible sans
+la carte. Repères navigables au clavier, `aria-live` sur la ligne
+contextuelle. Séquence d'animation entièrement neutralisée sous
+`prefers-reduced-motion`, avec l'état final comme défaut. Aucune dépendance
+ajoutée. Lint, typecheck et build au vert.
+
+*Aucune page locale créée*, conformément au § 3 de `SEO_STRATEGY.md` :
+l'architecture les permet, aucune des quatre conditions n'est remplie.
+
+### Phase 10B — Refonte visuelle de la carte et de la page ✅
+
+Correctif client sur la seule section Zone et la page `/zones-intervention`.
+La géographie de la phase 10 était juste ; sa **présentation** ne l'était pas.
+Neuf griefs, tous fondés : rendu technique, carte trop petite, Normandie peu
+lisible, quatre cercles concentriques dominants, étiquettes tassées, absence
+de relief, section enfermée dans un panneau sombre, mobile compact, faible
+sensation premium.
+
+#### Ce qui a été refait
+
+- **Sortie du panneau sombre.** La carte est posée sur l'ivoire, sans cadre.
+  C'était le grief central : enfermée, elle passait pour une capture technique.
+- **Un seul cercle de portée** au lieu de quatre anneaux de force égale, plus
+  un palier pointillé presque invisible et un cœur de zone teinté. La zone se
+  lit comme une étendue, pas comme un radar.
+- **La Seine**, ajoutée depuis Natural Earth (domaine public). C'est elle qui
+  rend Rouen identifiable au premier coup d'œil — un point sur un aplat vert
+  ne dit rien à personne. Fondu radial pour que le fleuve ne pendouille pas
+  aux bords du cadre.
+- **Seine-Maritime appuyée**, les quatre autres départements en fond.
+- **Cadre resserré de ±160 à ±120 km** : la portée occupe 83 % de la largeur
+  contre 62 %.
+- **Carte agrandie** : 641 px sur l'accueil et 736 px sur la page en 1440,
+  contre 588 et 672. Sur mobile, 350 px contre 302.
+- **Étiquettes réduites** de 6 à 5 sur l'accueil, de 11 à 8 sur la page.
+  Légende supprimée : la carte se lit sans mode d'emploi.
+- **Séquence d'animation réordonnée** : la géographie s'installe d'abord, la
+  portée arrive en dernier. L'ancienne faisait naître quatre anneaux l'un
+  après l'autre, soit exactement l'effet radar exclu par le brief.
+- **Composition d'accueil ouverte** : texte sur cinq colonnes, carte sur sept,
+  repères en lignes à filet au lieu d'un tableau à trois colonnes.
+- **Page recomposée** autour de la carte, avec les communes de la métropole en
+  **puces nominatives** — elles tiennent dans six kilomètres et ne peuvent pas
+  être étiquetées sur une carte qui montre 100 km.
+
+#### Correction de fidélité
+
+La tolérance de simplification est passée de 1,1 à 0,7 km pour les
+départements : à 1,1 km le littoral était rogné au point que **Le Havre,
+pourtant en Seine-Maritime, tombait visuellement en mer**. Coût : 12 → 18 Ko
+de données. La côte est un repère fort de cette carte.
+
+**Sortie atteinte :** zéro collision d'étiquette et zéro débordement de 320 à
+1440 px, vérifié par comparaison des rectangles à chaque largeur. Aucune
+dépendance ajoutée, aucun appel réseau. Lint, typecheck et build au vert.
+
+### Phase 10C — Refonte totale de la carte ✅
+
+Deuxième rejet de la carte. Cette fois la consigne était explicite : **repartir
+de zéro sur la conception**, sans amélioration incrémentale.
+
+#### Le diagnostic
+
+Les deux versions précédentes avaient la même faute : **le sujet était le
+cercle de 100 km**, le territoire n'en était que le fond. D'où, mécaniquement,
+les dix défauts listés par le client — territoire méconnaissable, villes dans
+le vide, cercle dominant, rendu administratif, densité mobile catastrophique.
+
+Aucun réglage ne pouvait corriger ça : à l'échelle du rayon, les communes de
+la métropole sont à vingt pixels les unes des autres.
+
+#### Le changement de sujet
+
+| | Avant | Maintenant |
+| --- | --- | --- |
+| Cadre | cercle de 100 km | **la Seine-Maritime entière** |
+| Cœur de zone | disque de 25 km inventé | **les 71 communes réelles de la métropole** |
+| Couverture | 4 anneaux | **3 surfaces emboîtées** |
+| Mer | inexistante | **aplat pierre, trait de côte réel** |
+| 100 km | cercle dominant | **mention en bas de plaque** |
+| Communes | tassées ou lointaines | **5, avec lignes de rappel** |
+
+#### Deux sources géographiques ajoutées
+
+- **Les 71 communes de la Métropole Rouen Normandie** (`geo.api.gouv.fr`,
+  EPCI 200023414, Licence Ouverte). Dessinées séparément plutôt qu'unies : le
+  filet interne donne la texture d'un vrai découpage administratif, là où un
+  disque ne disait rien.
+- **Les dix-neuf départements qui touchent le cadre**, et non les cinq normands.
+  C'est ce qui permet la distinction terre/mer : sans eux, l'espace non
+  couvert mélangeait la Manche et l'Oise.
+
+#### Ce qui a débloqué le rendu
+
+Le client a signalé en cours de route que la section « manquait de couleur et
+de relief ». La cause était identifiable : **la terre avait la couleur exacte
+du fond de page**. Le couple **mer pierre / terre ivoire**, plus la plaque à
+coins arrondis, donne enfin un contraste figure/fond et quatre niveaux de
+lecture.
+
+#### Les lignes de rappel
+
+Cinq communes dans dix kilomètres : leurs étiquettes sont déportées en étoile
+et reliées par une ligne de rappel. C'est la seule façon de tenir « cinq
+communes lisibles » et « aucune collision » ensemble. La longueur du rappel
+est mise à l'échelle (`--map-leader` : 0,36 / 0,72 / 1) — mesuré, un rappel
+pleine longueur poussait Mont-Saint-Aignan 11 px hors du cadre à 320 px.
+
+Mont-Saint-Aignan a aussi vu son rappel redressé vers le nord, ce qui est
+géographiquement plus juste **et** résout le débordement.
+
+#### Reprise après retours client
+
+Quatre demandes, toutes traitées :
+
+- **« Des villes pour remplir l'espace »** — le cadre s'élargit à ±112 km et
+  la carte passe de 5 à **16 communes** (21 après la seconde reprise) : la
+  grappe de la métropole plus une couronne de repères choisis par **azimut**,
+  pas par notoriété. Six
+  communes ont été ajoutées aux données (Bolbec, Pont-Audemer, Vernon,
+  Le Tréport, Lillebonne, Forges-les-Eaux).
+- **« Un cercle d'intervention animé »** — la portée de 100 km revient, mais
+  en **un seul cercle**, pointillé, tracé au `stroke-dashoffset` en dernier,
+  par-dessus le territoire. Le cadre a été élargi exprès pour qu'il tienne
+  entier : un cercle rogné aux quatre coins se lit comme une carte coupée.
+- **« Des couleurs moins fades »** — la palette d'opacités empilées (3 à 16 %)
+  cède la place à **quatre aplats opaques** déclarés en jetons
+  (`--map-sea`, `--map-land`, `--map-region`, `--map-core`), dérivés des six
+  couleurs de la charte. L'échelle de valeurs porte enfin la lisibilité.
+- **« Des villes dans l'eau »** — Le Havre tombait en mer. Cause : le trait de
+  côte était **doublement simplifié**, la version amont de france-geojson puis
+  la nôtre à 0,7 km. Correction en deux temps : source pleine précision, et
+  tolérance **par département** — 0,3 km pour la Seine-Maritime qui porte le
+  littoral, 1 km pour les autres qui ne sont qu'un fond. Vérifié par test
+  point-dans-polygone : Le Havre, Dieppe, Fécamp et Le Tréport sont tous à
+  l'intérieur du tracé.
+- **« Titre et texte au-dessus de la carte »** — la section d'accueil passe en
+  bandeau : en-tête centré, trois colonnes de niveaux, puis la carte sur
+  **toute la largeur du conteneur** (1 144 px en 1440, contre 715 en deux
+  colonnes). Accueil et page partagent désormais le même jeu de repères.
+
+#### Seconde reprise après retours client
+
+Deux demandes de plus, et une correction qu'elles ont révélée :
+
+- **« Les points de ville sont encore dans la mer »** — cette fois le reproche
+  était **faux au sens strict et juste visuellement**. Le test
+  point-dans-polygone, relancé sur les trente communes chargées, renvoyait
+  **zéro commune hors terre** : la correction du trait de côte tenait. Mais
+  les étiquettes du Havre, de Fécamp et du Tréport étaient posées **côté
+  large**, et une étiquette en mer se lit comme une ville en mer. D'où la
+  règle inscrite dans `map-content.ts` : *une commune littorale porte son
+  étiquette vers l'intérieur des terres*. Le Havre est le cas limite — son
+  étiquette part vers l'est, parce qu'au sud il y a l'estuaire.
+- **« Encore de la couleur, c'est fade »** — seconde passe de saturation. Le
+  cœur de zone passe d'un mélange à base de mousse à un mélange à base de
+  **forêt** (62 % + mousse), la mer de 30 à 44 % de forêt. Surtout, le cercle
+  de 100 km passe du vert au **jaune sécurité** : en forêt à 45 % il se
+  confondait avec les limites départementales, alors que c'est l'élément que
+  la section annonce dans son titre.
+- **« Des villes dans le cercle des 100 km »** — la couronne, qui bordait la
+  portée, la **remplit** désormais : Louviers (25), Yvetot (30), Pont-Audemer
+  (42), Évreux (47), Vernon (48), Gisors (52) et six autres sont à l'intérieur
+  du cercle. Vingt et un repères au total, tous à moins de 100 km. Caen
+  (110 km) a été retirée des données : la montrer laisserait croire qu'elle
+  est dans la portée annoncée.
+
+Deux communes ont été **retirées de l'affichage** à la mesure, non à l'œil :
+Gournay-en-Bray (même azimut que Beauvais) et Honfleur (coincée entre
+Pont-Audemer et Lisieux). Aucun placement ne les libérait.
+
+La cadence de pose des repères est passée de 110 à **60 ms** : à 21 repères,
+110 ms faisait durer la seule pose 3,3 s et le semis devenait un égrenage.
+
+**Sortie atteinte :** zéro collision et zéro débordement sur les **deux
+pages**, aux six largeurs 320 / 390 / 430 / 768 / 1024 / 1440, vérifié par
+comparaison deux à deux des rectangles de toutes les étiquettes et par test de
+contenance dans la plaque. Carte de 280 px (mobile) à 1 144 px (accueil,
+1440 px) ; 960 px sur la page. Animation de 2,9 s, sans boucle. Aucune
+dépendance ajoutée, aucun appel réseau. Lint, typecheck et build au vert.
 
 ---
 

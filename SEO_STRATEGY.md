@@ -10,8 +10,9 @@ rassurante, mais il n'est ni un mot-clé cible, ni un prétexte à multiplier de
 pages villes.
 
 **État : architecture livrée en phase 3, pages services rédigées en phase 7,
-`/a-propos` puis `/realisations` rédigées ensuite.** Reste le contenu de
-`/zones-intervention` (phase 10).
+`/a-propos`, `/realisations` puis `/zones-intervention` rédigées ensuite.**
+Toutes les pages publiques ont désormais leur contenu, hors configurateur de
+devis (phases 11 à 13).
 
 ---
 
@@ -261,6 +262,51 @@ Sortant : `/devis` (panneau de conversion) et les quatre pages services.
 L'intention reste la **preuve**, pas le volume : cette page ne vise pas
 « élagueur Rouen ». Elle sert la conversion du visiteur prévoyant décrit dans
 `CONVERSION_STRATEGY.md` § 2, celui qui compare trois à cinq prestataires.
+
+---
+
+## 5 quinquies. `/zones-intervention` — livrée en phase 10
+
+Six blocs : hero clair, carte, zone principale, rayon de 100 km, secteurs,
+conversion. Intention inchangée : **répondre à « intervenez-vous chez moi ? »**.
+
+### Ce qui n'a PAS été fait, et c'est le point important
+
+Une page de zone est l'endroit où la tentation du bourrage est la plus forte :
+citer cinquante communes coûte cinq minutes et semble gratuit. Ce n'est pas le
+cas — c'est la page mince que le § 1 interdit, et elle dilue l'autorité du
+site sur ses vraies pages.
+
+Onze communes apparaissent sur la carte, quinze dans le texte des secteurs.
+Toutes ont des coordonnées vérifiées, toutes servent à **situer une
+distance**. Aucune page locale n'est créée : les quatre conditions cumulatives
+du § 3 restent inapplicables tant qu'aucun chantier n'est documenté.
+
+Caen est chargée dans les données mais **jamais affichée** : à 110 km, elle
+sort du rayon annoncé.
+
+### Champ lexical, sans forçage
+
+Rouen, métropole rouennaise, Seine-Maritime, zone d'intervention, élagage,
+abattage — chacun présent là où il est factuellement nécessaire, jamais
+répété mécaniquement. « Rouen » apparaît dans le `h1`, le chapô, les titres de
+section et les libellés de la carte, parce que c'est le centre du sujet.
+
+### Aucune donnée structurée de zone
+
+Ni `GeoCircle`, ni `areaServed`, ni `GeoShape`. Ces propriétés appartiennent à
+`LocalBusiness`, gelé faute de domaine, téléphone et adresse (§ 7). Émises
+seules, elles ne décriraient rien.
+
+**À rouvrir en phase 14, avec `LocalBusiness` :** `areaServed` est justement
+le champ qui donnera sa valeur à cette page. Attention à ne pas y déclarer un
+`GeoCircle` de 100 km — ce serait affirmer en données structurées exactement ce
+que le texte de la page prend soin de ne pas promettre.
+
+### Maillage
+
+Entrant : section Zone de l'accueil, pied de page, navigation principale.
+Sortant : `/devis` (deux fois) et les quatre pages services.
 
 ---
 

@@ -23,6 +23,7 @@ Documents de référence, à lire selon le sujet traité :
 | `QUOTE_FLOW.md` | Configurateur de devis en 5 étapes |
 | `CONTENT_STRATEGY.md` | Ton, rédaction, photographie, nommage des médias |
 | `MEDIA_SOURCES.md` | Registre des médias : source, auteur, licence, usage |
+| `MAP_DATA_SOURCES.md` | Registre des données cartographiques : source, licence, projection |
 | `ROADMAP.md` | Découpage en 18 phases et critères de sortie |
 
 ---

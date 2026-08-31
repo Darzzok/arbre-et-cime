@@ -6,6 +6,7 @@ import { ProofBand } from "@/components/sections/proof-band";
 import { Realisations } from "@/components/sections/realisations";
 import { Services } from "@/components/sections/services";
 import { Why } from "@/components/sections/why";
+import { Zone } from "@/components/sections/zone";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata("home");
@@ -19,7 +20,7 @@ export const metadata: Metadata = buildMetadata("home");
  *   3. Prestations                       — livré en phase 6
  *   4. Pourquoi Arbre et Cime            — livré en phase 8
  *   5. Réalisations                      — livré en phase 9
- *   6. Zone d'intervention               — phase 10
+ *   6. Zone d’intervention               — livré en phase 10
  *   7. Devis interactif                  — phases 11 à 13
  *
  * N'ajouter aucune autre section sans demande explicite du client.
@@ -32,6 +33,7 @@ export default function Home() {
       <Services />
       <Why />
       <Realisations />
+      <Zone />
     </main>
   );
 }

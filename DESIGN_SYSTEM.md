@@ -805,6 +805,189 @@ aplats coup sur coup enfreindraient la règle de parcimonie du § 1.
 
 ---
 
+## 8 bis. Carte de couverture — refaite au correctif 10C
+
+Pièce signature du site. Sources et licences : `MAP_DATA_SOURCES.md`.
+
+### L'erreur des deux premières versions
+
+Elles partageaient la même faute de conception : **le sujet de la carte était
+le cercle de 100 km**, et le territoire n'en était que le fond. Deux
+conséquences, toutes deux reprochées par le client :
+
+- le territoire devenait méconnaissable — un aplat vert sans trait de côte ;
+- les communes de la métropole, distantes de trois kilomètres, tombaient sur
+  le même pixel. Impossible de les étiqueter, donc soit elles disparaissaient,
+  soit on affichait des villes lointaines qui « flottaient dans le vide ».
+
+**Le sujet est maintenant le territoire.** Le rayon est devenu une mention.
+
+| | Avant | Maintenant |
+| --- | --- | --- |
+| Cadre | rayon dimensionnant la carte | **±112 km : le territoire ET la portée entière** |
+| Cœur de zone | disque de 25 km inventé | **les 71 communes réelles de la métropole** |
+| Couverture | 4 anneaux concentriques | **3 surfaces emboîtées** |
+| Mer | inexistante | **aplat pierre, trait de côte réel** |
+| 100 km | quatre anneaux dominants | **un seul cercle, pointillé, tracé en dernier** |
+| Communes | tassées ou lointaines | **jusqu'à 21, grappe en étoile + couronne d'azimuts** |
+
+### Une échelle de valeurs, pas des opacités empilées
+
+La première palette empilait des opacités de 3 à 16 % : tout se valait, rien ne
+ressortait, et le rendu paraissait délavé. Elle est remplacée par des **aplats
+opaques** déclarés en jetons dans `globals.css`, dérivés des six couleurs de la
+charte — aucune couleur nouvelle.
+
+```css
+--map-sea:       forêt 44 % + pierre     /* Manche : plus froid, plus sombre */
+--map-land:      ivoire                  /* terre ferme */
+--map-region:    mousse 64 % + ivoire    /* Seine-Maritime */
+--map-core:      forêt 62 % + mousse     /* métropole */
+--map-line:      forêt 72 %              /* limites structurantes */
+--map-line-soft: forêt 34 %              /* limites de fond */
+```
+
+L'ordre du plus clair au plus sombre porte toute la lisibilité :
+**terre < département < mer < cœur de zone**. L'écart entre deux niveaux
+voisins est franc, jamais graduel.
+
+> **Deux passes de saturation ont été nécessaires.** Les valeurs d'origine
+> (mer 30 %, région 46 %, cœur 82 % de mousse) ont été jugées fades une fois
+> en place. Le cœur de zone est passé d'un mélange à base de mousse à un
+> mélange à base de **forêt**, ce qui lui donne la densité d'un vrai centre ;
+> la mer a été assombrie de 30 à 44 %. C'est l'écart entre les niveaux, pas
+> leur teinte, qui a réglé le problème.
+
+### Quatre niveaux de contraste
+
+| Couche | Traitement | Rôle |
+| --- | --- | --- |
+| Mer | `--map-sea` | fond, donne le trait de côte |
+| Terre (19 départements) | `--map-land` | figure contre le fond |
+| Seine-Maritime | `--map-region`, contour forêt | zone principale |
+| Métropole (71 communes) | `--map-core`, filet ivoire interne | cœur de zone |
+| Seine | forêt 55 %, 1,5 px, fondu radial | repère qui situe Rouen |
+| **Portée de 100 km** | **jaune sécurité 85 %**, pointillé `7 5` | limite, tracée en dernier |
+| Rouen | **jaune sécurité**, anneau ivoire | le centre, une seule fois |
+
+C'est le couple **mer pierre / terre ivoire** qui a débloqué le rendu. Sans
+lui, la terre avait la couleur exacte du fond de page et la carte paraissait
+vide. Il a fallu charger les dix-neuf départements du cadre, et non les cinq
+normands, pour que l'espace restant soit réellement la mer.
+
+Le cercle de portée est passé du vert au **jaune sécurité** : en forêt à 45 %
+il se confondait avec les limites départementales, alors que c'est l'élément
+que la section entière annonce. Le jaune est la couleur d'accent de la charte,
+déjà portée par Rouen ; l'employer ici relie le centre à sa portée. Il n'est
+utilisé nulle part ailleurs sur la carte.
+
+La plaque porte `rounded-card` et `overflow-hidden` : elle se lit comme une
+carte posée, pas comme un dessin qui déborde.
+
+### Les lignes de rappel
+
+Cinq communes dans dix kilomètres, soit une vingtaine de pixels. Leurs
+étiquettes sont **déportées en étoile** et reliées à leur point par une ligne
+de rappel — le procédé cartographique classique pour une grappe dense, et la
+seule façon de tenir « cinq communes lisibles » et « aucune collision »
+ensemble.
+
+Les angles suivent la position réelle : Bois-Guillaume au nord-est part vers
+le nord-est, Le Grand-Quevilly au sud-ouest vers le sud-ouest. Aucune ligne
+n'en croise une autre.
+
+> **La longueur du rappel est mise à l'échelle**, pas le texte : la variable
+> `--map-leader` vaut 0,36 sous 480 px, 0,72 jusqu'à 1024, puis 1. Mesuré à
+> 320 px, un rappel pleine longueur poussait Mont-Saint-Aignan hors du cadre.
+> Le texte, lui, garde sa taille à toutes les largeurs.
+>
+> **L'alignement de l'étiquette dépend de l'inclinaison du rappel.** Un rappel
+> majoritairement vertical porte une étiquette **centrée** ; l'aligner sur un
+> bord la décalerait d'une demi-largeur vers l'extérieur, ce qui suffit à la
+> sortir du cadre. Un rappel horizontal, lui, s'aligne du côté opposé au point,
+> sinon l'étiquette recouvre son propre trait.
+
+### La règle du littoral
+
+Les repères de la couronne n'ont pas de rappel : leur étiquette est collée au
+point, d'un côté choisi commune par commune. Une règle prime sur toutes les
+autres :
+
+> **Une commune littorale porte son étiquette vers l'intérieur des terres.**
+
+Une étiquette posée côté large se lit comme **une ville en pleine mer**, même
+quand le point, lui, est parfaitement sur la terre — c'est exactement le
+défaut signalé sur Le Havre, Fécamp et Le Tréport, alors qu'un test
+point-dans-polygone ne trouvait aucune commune hors terre. Le défaut était
+typographique, pas géographique.
+
+Le Havre en est le cas limite : son étiquette part vers l'**est**, pas vers le
+sud, parce qu'au sud du Havre il y a l'estuaire.
+
+### Deux couches, et pourquoi
+
+SVG pour la géométrie, **HTML pour les repères, les rappels et les
+étiquettes**. Un `<text>` SVG grandirait avec la `viewBox` ; un repère HTML
+devient un vrai `<button>`, avec focus clavier natif et cible de 44 px.
+
+> **Contrainte d'alignement.** Le conteneur porte le rapport `MAP_ASPECT`
+> **généré**. Ne jamais le remplacer par une valeur écrite à la main : les
+> deux couches se décaleraient.
+
+### Séquence d'animation — 2,9 s
+
+| t | Étape |
+| --- | --- |
+| 0 | La mer, puis la terre |
+| 120 ms | La Seine-Maritime se détache |
+| 200 ms | Le contour régional se trace |
+| 420 ms | **La Seine se trace** |
+| 760 ms | La métropole se remplit depuis son centre |
+| 1 000 ms | Les communes se posent, Rouen en premier — cadence 60 ms |
+| 1 200 ms | Deux battements sur Rouen, puis plus rien |
+| 1 300 ms | **Le cercle de 100 km se trace**, par-dessus le territoire |
+| 2 450 ms | La pastille « 100 km » |
+| 2 600 ms | La mention « portée maximale indicative » |
+
+Le cercle se **trace** et n'apparaît pas : c'est ce tracé qui donne la
+sensation d'expansion, sans balayage ni halo.
+
+> La cadence des repères est passée de 110 à **60 ms** en même temps que leur
+> nombre passait de 16 à 21. À 110 ms, la pose durait 3,3 s à elle seule et le
+> semis devenait un égrenage. Une animation signature se règle sur sa durée
+> ressentie, pas sur son nombre d'éléments.
+
+Aucune boucle. État par défaut = état final : sans JavaScript ou sous
+`prefers-reduced-motion`, la carte est complète immédiatement.
+
+### Responsive — mesuré
+
+Repères affichés, pastille « 100 km » et mention comprises.
+
+| Largeur | Carte accueil | Carte page | Repères |
+| --- | --- | --- | --- |
+| 320 px | 280 px | 280 px | 7 |
+| 390 px | 350 px | 350 px | 7 |
+| 430 px | 390 px | 390 px | 7 |
+| 768 px | 689 px | 689 px | 23 |
+| 1024 px | 913 px | 913 px | 23 |
+| 1440 px | **1 144 px** | 960 px | 23 |
+
+Sous 768 px la carte ne conserve que **cinq repères** — Rouen,
+Mont-Saint-Aignan, Le Havre, Beauvais, Évreux : mesuré, une grappe de 14 px ne
+porte pas trois étiquettes déportées, quelles que soient les longueurs de
+rappel. Les autres communes du cœur restent listées sous la carte.
+
+À 1440 px la carte d'accueil est **plus large que celle de la page** : la
+section a été recomposée en bandeau et la carte y prend toute la largeur du
+conteneur, quand la page la borne à `60rem` pour préserver sa colonne de
+lecture.
+
+**Zéro collision et zéro débordement** sur les deux pages, aux six largeurs,
+vérifié par comparaison deux à deux des rectangles de toutes les étiquettes et
+par test de contenance dans la plaque.
+
+---
 ## 9. Accessibilité
 
 - Contraste AA minimum sur tout texte (tableaux des sections 1 et 2).
@@ -859,6 +1042,12 @@ Déclarés dans `src/app/globals.css` :
   `--duration-signature`
 - **Menu mobile** (style en ligne) : `--menu-index`, pour l'échelonnement de
   l'apparition en cascade
+- **Carte de zone** (`:root`) : `--map-sea`, `--map-land`, `--map-region`,
+  `--map-core`, `--map-line`, `--map-line-soft` — tous dérivés par `color-mix`
+  des six couleurs de la charte. En style en ligne : `--map-leader`
+  (échelle des lignes de rappel), `--map-marker-index` (cadence de pose),
+  `--map-outline-length`, `--map-seine-length`, `--map-reach-circumference`
+  (longueurs de tracé, **générées**)
 - **Exception** : `--radius-card` (16 px), réservé aux cartes photographiques
   de la section Prestations
 

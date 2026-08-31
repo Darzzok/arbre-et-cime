@@ -388,3 +388,205 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* --- Carte de couverture — palette ----------------------------------------
+   Quatre tons DERIVES des six couleurs de la charte, jamais inventes. Ils sont
+   declares ici plutot que dans le composant pour une raison simple : c'est une
+   echelle de valeurs, elle se lit et se regle d'un bloc.
+
+   L'ordre du plus clair au plus sombre porte toute la lisibilite de la carte :
+
+     terre (ivoire)  <  departement  <  mer  <  coeur de zone
+
+   La premiere version melangeait des opacites de 3 a 16 % : tout se valait,
+   rien ne ressortait, et le rendu paraissait delave. Ici chaque niveau est un
+   aplat opaque, et l'ecart entre deux niveaux voisins est franc.
+   ------------------------------------------------------------------------- */
+
+:root {
+  /* Manche. Melange forêt + pierre : plus froid et plus sombre que la terre,
+     sans introduire de bleu — la charte n'en contient pas. */
+  --map-sea: color-mix(in oklab, var(--color-forest) 44%, var(--color-stone));
+
+  /* Terre ferme. Ivoire plein : c'est le contraste avec la mer qui dessine le
+     trait de côte. */
+  --map-land: var(--color-ivory);
+
+  /* Seine-Maritime, zone principale. */
+  --map-region: color-mix(in oklab, var(--color-moss) 64%, var(--color-ivory));
+
+  /* Métropole Rouen Normandie, cœur de zone. Le ton le plus soutenu de la
+     carte après le jaune de Rouen. */
+  --map-core: color-mix(in oklab, var(--color-forest) 62%, var(--color-moss));
+
+  /* Filets : limites administratives, contour régional, portée. */
+  --map-line: color-mix(in oklab, var(--color-forest) 72%, transparent);
+  --map-line-soft: color-mix(in oklab, var(--color-forest) 34%, transparent);
+}
+
+/* --- Carte de couverture — animation signature ----------------------------
+   Sequence declenchee UNE FOIS a l'entree dans le viewport : le composant pose
+   `data-play` sur la racine (voir zone-map.tsx).
+
+   Etat par defaut = etat FINAL. Rien n'est masque en CSS de base : sans
+   JavaScript, sans IntersectionObserver, ou sous `prefers-reduced-motion`, la
+   carte est complete et lisible immediatement.
+
+   Duree totale ~1,8 s, conformement au brief 10C (1,5 a 2 s). L'ordre suit la
+   lecture : le territoire s'installe, la Seine le situe, la metropole se
+   remplit, les communes se posent, la mention de deplacement arrive en
+   dernier. Aucune boucle.
+   ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-map]:not([data-play]) [data-map-sea],
+  [data-map]:not([data-play]) [data-map-land],
+  [data-map]:not([data-play]) [data-map-main],
+  [data-map]:not([data-play]) [data-map-outline],
+  [data-map]:not([data-play]) [data-map-seine],
+  [data-map]:not([data-play]) [data-map-metropole],
+  [data-map]:not([data-play]) [data-map-marker],
+  [data-map]:not([data-play]) [data-map-reach],
+  [data-map]:not([data-play]) [data-map-reach-label],
+  [data-map]:not([data-play]) [data-map-reach-note] {
+    opacity: 0;
+  }
+
+  /* 1. La mer, la terre, puis le departement apparaissent. */
+  [data-map][data-play] [data-map-sea] {
+    animation: cime-map-fade 500ms var(--ease-cime) both;
+  }
+
+  [data-map][data-play] [data-map-land] {
+    animation: cime-map-fade 620ms var(--ease-cime) both;
+  }
+
+  [data-map][data-play] [data-map-main] {
+    animation: cime-map-fade 700ms var(--ease-cime) 120ms both;
+  }
+
+  /* 2. Le contour regional se trace derriere. */
+  [data-map][data-play] [data-map-outline] {
+    stroke-dasharray: var(--map-outline-length);
+    animation: cime-map-trace 900ms var(--ease-line) 200ms both;
+  }
+
+  /* 3. La Seine se trace. C'est elle qui situe Rouen. */
+  [data-map][data-play] [data-map-seine] {
+    stroke-dasharray: var(--map-seine-length);
+    animation: cime-map-trace 900ms var(--ease-line) 420ms both;
+  }
+
+  /* 4. La metropole se remplit depuis son centre. */
+  [data-map][data-play] [data-map-metropole] {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: cime-map-zone 700ms var(--ease-cime) 760ms both;
+  }
+
+  /* 6. Les communes se posent, Rouen en premier.
+     Cadence de 60 ms et non 110 : a 21 reperes, la pose durait 3,3 s a elle
+     seule et le semis devenait un egrenage. */
+  [data-map][data-play] [data-map-marker] {
+    animation: cime-map-marker 420ms var(--ease-cime) both;
+    animation-delay: calc(1000ms + var(--map-marker-index) * 60ms);
+  }
+
+  /* 7. Deux battements sur Rouen, puis plus rien. */
+  [data-map][data-play] [data-map-pulse] {
+    animation: cime-map-pulse 2200ms var(--ease-cime) 1200ms 2 both;
+  }
+
+  /* 8. La portee se trace en dernier, par-dessus le territoire. */
+  [data-map][data-play] [data-map-reach] {
+    stroke-dasharray: var(--map-reach-circumference);
+    animation: cime-map-ring 1100ms var(--ease-line) 1300ms both;
+  }
+
+  [data-map][data-play] [data-map-reach-label] {
+    animation: cime-map-fade var(--duration-reveal) var(--ease-cime) 2450ms both;
+  }
+
+  /* 9. La mention arrive tout a la fin. */
+  [data-map][data-play] [data-map-reach-note] {
+    animation: cime-map-fade var(--duration-reveal) var(--ease-cime) 2600ms both;
+  }
+}
+
+@keyframes cime-map-trace {
+  from {
+    stroke-dashoffset: var(--map-outline-length, var(--map-seine-length));
+    opacity: 0.25;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+/* Le cercle se TRACE, il n'apparait pas : c'est ce trace qui donne la
+   sensation d'expansion, sans balayage ni halo. */
+@keyframes cime-map-ring {
+  from {
+    stroke-dashoffset: var(--map-reach-circumference);
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes cime-map-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* La metropole s'ouvre depuis son centre : elle se remplit, elle n'apparait
+   pas. C'est ce qui donne la sensation de zone couverte. */
+@keyframes cime-map-zone {
+  from {
+    opacity: 0;
+    scale: 0.82;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes cime-map-marker {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.75);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes cime-map-pulse {
+  from {
+    opacity: 0.4;
+    scale: 1;
+  }
+
+  to {
+    opacity: 0;
+    scale: 3.4;
+  }
+}
