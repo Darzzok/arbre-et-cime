@@ -9,8 +9,9 @@ Normandie.** Le rayon de 100 km est une **information commerciale**, affichée e
 rassurante, mais il n'est ni un mot-clé cible, ni un prétexte à multiplier des
 pages villes.
 
-**État : architecture livrée en phase 3, pages services rédigées en phase 7.**
-Restent les contenus de `/realisations` et `/zones-intervention` (phases 9 et 10).
+**État : architecture livrée en phase 3, pages services rédigées en phase 7,
+`/a-propos` rédigée ensuite.** Restent les contenus de `/realisations` et
+`/zones-intervention` (phases 9 et 10).
 
 ---
 
@@ -182,6 +183,41 @@ qu'attendent les moteurs d'un ensemble de pages sœurs.
 
 La FAQ et le détail « ce qui fait varier le devis » restent à écrire quand le
 client aura confirmé son matériel et ses cas les plus fréquents.
+
+---
+
+## 5 bis. `/a-propos` — livrée
+
+Six blocs : hero, parcours, qualifications, manière de travailler, zone,
+conversion.
+
+**Cette page ne vise pas « élagueur Rouen ».** Son intention déclarée dans
+`src/lib/routes.ts` est la marque et la vérification de confiance. Deux pages
+qui visent le même mot-clé se cannibalisent, et c'est la page d'accueil qui doit
+gagner celui-là. « Rouen » n'apparaît donc que là où c'est factuellement
+nécessaire : le chapô et la section zone.
+
+La `description` a été réécrite après confirmation du nom du responsable :
+
+> Arbre et Cime Élagage, c'est Cédric Simon : élagueur-grimpeur diplômé, une
+> dizaine d'années de métier, installé dans la métropole rouennaise depuis 2023.
+
+153 caractères, la marque et la personne en tête — c'est ce que cherche
+quelqu'un qui tape le nom de l'entreprise avant d'appeler.
+
+**Maillage sortant :** `/devis` (panneau de conversion), `/zones-intervention`
+(section zone), et les quatre pages services en fin de page.
+
+### Pas de schéma `Person`
+
+La page nomme un responsable, ce qui rend `Person` tentant. Il n'est pas émis,
+pour la raison du § 7 : un `Person` réduit à un nom et un métier, sans
+`LocalBusiness` publiable pour le rattacher — gelé faute de domaine, téléphone,
+adresse et SIREN — ne décrit rien d'exploitable. Il n'ajouterait aucun fait
+vérifiable, seulement du balisage.
+
+À rouvrir en phase 14, **en même temps que `LocalBusiness`** et pas avant : les
+deux n'ont de valeur que liés.
 
 ---
 

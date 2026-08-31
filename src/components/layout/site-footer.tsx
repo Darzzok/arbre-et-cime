@@ -19,7 +19,12 @@ export function SiteFooter() {
   const hasEmail = site.email.length > 0;
 
   return (
-    <footer data-surface="dark" className="bg-(--surface-bg) text-(--surface-fg)">
+    // Filet supérieur : délimite le pied de page quand la section qui le
+    // précède est elle aussi sombre. Invisible sur fond clair.
+    <footer
+      data-surface="dark"
+      className="border-t border-(--surface-rule) bg-(--surface-bg) text-(--surface-fg)"
+    >
       <Container className="py-12 lg:py-16">
         <div className="flex flex-col items-center gap-10 lg:flex-row lg:items-start lg:justify-center lg:gap-24">
           {/* -------- Identite -------- */}

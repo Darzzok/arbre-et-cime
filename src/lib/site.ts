@@ -67,6 +67,12 @@ function warnOnServer(message: string): void {
 
 export const site = {
   name: "Arbre et Cime Élagage",
+  /**
+   * Forme courte, telle que le client l'ecrit lui-meme — esperluette comprise.
+   * A employer dans les titres ou le nom complet serait lourd. Ne remplace pas
+   * `name` dans les metadonnees, le pied de page ni les donnees structurees.
+   */
+  shortName: "Arbre & Cime",
   legalName: "Arbre et Cime Élagage",
   trade: "Élagueur-grimpeur",
   /**
@@ -77,8 +83,29 @@ export const site = {
   phone: process.env.NEXT_PUBLIC_PHONE ?? "",
   phoneDisplay: process.env.NEXT_PUBLIC_PHONE_DISPLAY ?? "",
   email: process.env.NEXT_PUBLIC_EMAIL ?? "",
+  /** Nom du responsable. Confirme par le client en phase 8. */
+  manager: "Cédric Simon",
   experienceYears: 10,
+  /** Annee de creation de l'activite. */
+  foundedYear: 2023,
+  /** Anciennete a son compte, en annees. A relire chaque annee. */
+  selfEmployedYears: 3,
 } as const;
+
+/**
+ * Qualifications reelles, confirmees par le client (`PROJECT.md`).
+ *
+ * Seuls les INTITULES vivent ici : ce sont des faits. Ce que chaque formation
+ * apporte concretement releve de la redaction et reste dans la page qui
+ * l'affiche.
+ *
+ * Ne rien ajouter a cette liste sans document du client. Une certification
+ * inventee est le pire risque de credibilite du projet.
+ */
+export const qualifications = [
+  "CS Taille et soins des arbres",
+  "BP Paysagiste / gestion des milieux naturels",
+] as const;
 
 /** Zone d'intervention. Rouen et sa metropole = coeur SEO local. */
 export const area = {

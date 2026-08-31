@@ -83,8 +83,23 @@ conditionnelle**.
 | `--btn-solid-bg` / `--btn-solid-fg` | forêt / ivoire | ivoire / forêt |
 | `--btn-outline-border` | forêt 45 % | ivoire 45 % |
 
-Les deux colonnes de texte secondaire passent AA ou mieux : c'est le critère qui
-a déterminé le choix mousse / pierre.
+### Deux surfaces, pas trois
+
+Une troisième surface `charcoal` a été introduite en phase 8 pour séparer une
+section sombre d'un pied de page lui aussi sombre, puis **retirée au correctif
+de la même phase** : la section concernée est passée en clair, et le charbon
+n'avait plus d'emploi. Une surface sans usage n'est pas une réserve, c'est de
+la dette.
+
+Elle est documentée ici pour une raison : ne pas la réintroduire par réflexe.
+La règle de clôture du § 8 se satisfait bien plus simplement d'une section
+claire.
+
+Le pied de page porte un **filet supérieur**, qui le délimite si la section qui
+le précède devait un jour être sombre.
+
+Les trois colonnes de texte secondaire passent AA ou mieux : c'est le critère
+qui a déterminé le choix mousse / pierre.
 
 ---
 
@@ -210,6 +225,43 @@ grid grid-cols-4 gap-(--gutter) md:grid-cols-8 lg:grid-cols-12
 Les blocs s'appuient sur des empans **inégaux** (7/5, 8/4, 5/7) et alternent le
 côté d'ancrage d'une section à l'autre.
 
+### Deux colonnes asymétriques — motif « éditorial / arguments »
+
+Livré au correctif de la phase 8, section « Pourquoi Arbre & Cime ». C'est la
+réponse du projet au besoin « présenter trois à cinq arguments » **sans**
+retomber sur une grille de cartes.
+
+Anatomie, sur `lg:grid-cols-12` :
+
+- **colonne éditoriale**, `col-span-6` — surtitre, `h2`, deux paragraphes,
+  puis une photographie ;
+- une colonne entière **laissée vide** ;
+- **colonne d'arguments**, `col-span-5 col-start-8` — les arguments à la
+  suite, séparés par des filets d'un pixel, jamais encadrés.
+
+Trois points font tout le travail :
+
+1. **Le filet sépare, il n'encadre pas.** `border-t` sur chaque entrée,
+   `first:border-t-0`. Aucune bordure verticale, aucun fond, aucune ombre.
+2. **Les hauteurs sont libres.** Elles suivent la longueur du texte (199 à
+   254 px en 1440). C'est exactement ce qui distingue un rythme d'une grille.
+3. **La photographie ferme la colonne.** La rangée est en `items-stretch`
+   (défaut), la colonne éditoriale en `flex flex-col`, l'enveloppe de la photo
+   en `flex-1` et la photo en `aspect-auto h-full`. Son bas s'aligne donc au
+   pixel sur le dernier argument, à toute largeur. Sans cela, la colonne
+   gauche s'arrêtait 166 px trop haut et laissait un vide.
+
+Sous 1024 px le motif s'empile dans l'ordre du DOM : texte, photographie,
+arguments. C'est l'ordre voulu sur mobile — un seul grand visuel, puis la
+liste.
+
+> **Conséquence sur `sizes`.** Une photographie en `aspect-auto h-full` prend
+> un cadre **plus haut que large**. Avec une source en 3:2 et `object-cover`,
+> le navigateur cale sur la hauteur : la largeur réellement rendue dépasse
+> largement celle du cadre. Annoncer la largeur du cadre sert une image trop
+> petite, remontée floue. D'où `sizes="(min-width: 64rem) 60rem, 150vw"`, très
+> au-dessus des dimensions mesurées — et assumé comme tel.
+
 ### Cartes photographiques — exception encadrée
 
 **Décision client, phase 6B.** Le traitement éditorial de la phase 6 a été
@@ -238,6 +290,12 @@ service, et tout le contenu reste visible sans survol.
 > peu de cartes » (§ 4) et « rayons de 0 à 8 px ». Elle est encadrée par un
 > jeton dédié, `--radius-card`, et par ce paragraphe : **ne pas l'étendre à
 > d'autres sections** sans nouvelle décision.
+>
+> Ce qui est encadré ici, c'est le **motif de carte cliquable**, pas le rayon.
+> `--radius-card` (16 px) est depuis la phase 7 le rayon des **grands blocs** —
+> photographie de méthode des pages services, panneau sombre de conversion,
+> photographie de la section « Pourquoi ». `rounded-soft` (8 px) reste celui des
+> **petits cadres** en creux. Le critère est la taille du bloc, pas la section.
 
 ### Interdits de composition
 
@@ -246,10 +304,11 @@ service, et tout le contenu reste visible sans survol.
   numérotation, typographie hiérarchisée — pas huit rectangles à ombre portée.
 - **Ombres portées : interdites** en décor. La profondeur vient du contraste de
   fond (forêt / ivoire) et des photos.
-- **Rayons de bordure : 0 à 8 px**, à la seule exception des cartes
-  photographiques de la section Prestations (`--radius-card`, 16 px — voir
-  ci-dessus). `rounded-edge` (2 px) par défaut,
-  `rounded-soft` (8 px) pour les cadres média. Rien au-delà n'existe.
+- **Rayons de bordure : 0, 2, 8 ou 16 px, rien d'autre.** `rounded-edge` (2 px)
+  par défaut, `rounded-soft` (8 px) pour les petits cadres en creux,
+  `rounded-card` (16 px) pour les grands blocs — photographies de section et
+  panneaux. Rien au-delà n'existe : `rounded-3xl` et `rounded-full` ne sont pas
+  générés.
 - Aucune esthétique SaaS, IA ou glassmorphism : ni flou d'arrière-plan, ni
   dégradé décoratif, ni bordure lumineuse.
 
@@ -294,6 +353,42 @@ milieu, aucune bande, aucun fond dupliqué.
 > résultat était une image encadrée au centre d'un faux fond : la puissance du
 > hero s'effondrait. **Abandonné.** Sur un hero, remplir le cadre prime sur
 > montrer l'intégralité du fichier.
+
+#### Le dégradé se calibre sur la HAUTEUR, pas seulement sur la photo
+
+Règle établie sur `/a-propos`, et le piège le plus coûteux du projet à ce jour.
+
+Le dégradé du hero est ancré **en bas** : son opacité tend vers zéro en haut du
+cadre. Tant que le hero est haut, le bloc de texte occupe le tiers inférieur et
+tombe donc dans la partie dense. **Raccourcir le hero ne déplace pas le
+texte : cela déplace le dégradé sous lui.** Le bloc de texte, lui, garde à peu
+près la même hauteur — il remonte donc mécaniquement vers la zone claire.
+
+Sur `/a-propos`, à 22rem, le surtitre est tombé à **1,92** de contraste avec le
+dégradé des pages services. Le réflexe est d'accuser la photographie. Les
+quatre autres candidates ont été mesurées au même endroit : **1,57 à 1,67**,
+toutes pires. Le paramètre en cause était la hauteur.
+
+**Marche à suivre quand un hero passe sous 26rem :**
+
+1. rallonger d'abord, si la page le permet — c'est gratuit ;
+2. sinon calibrer un dégradé propre à la page, en partant du plus léger et en
+   remontant jusqu'au premier qui tienne AA, **jamais au-delà** ;
+3. mesurer, ne pas estimer — recomposer photo + dégradé dans un canvas et
+   échantillonner le rectangle réel de chaque texte, au **pixel le plus
+   défavorable**.
+
+Un dégradé trop appuyé passe AA et éteint la photographie : le hero devient un
+aplat vert. C'est un échec, pas une réussite.
+
+| Page | Hauteur mobile | Dégradé | Pires contrastes (surtitre / `h1` / chapô) |
+| --- | --- | --- | --- |
+| Pages services | 30rem | partagé | 6,64 à 11,38 |
+| `/a-propos` | 26rem | propre à la page | 5,52 / 5,43 / 9,58 |
+
+**Une photographie à ciel clair coûte un cran de dégradé.** C'est consigné dans
+`MEDIA_SOURCES.md` pour les fichiers concernés : le choix d'une photo de hero
+n'est pas seulement esthétique, il engage la lisibilité.
 
 ### Direction artistique — deux sources, un seul téléchargement
 
@@ -648,6 +743,13 @@ aplats coup sur coup enfreindraient la règle de parcimonie du § 1.
 > écrans mobiles. La solution retenue : une section **claire** contenant un
 > **panneau sombre arrondi**. Le panneau concentre le poids visuel du CTA, la
 > gouttière claire qui l'entoure rend au pied de page sa fonction.
+>
+> La phase 8 a d'abord tenté une **seconde issue** — une surface charbon, marche
+> tonale sans panneau. Rejetée : deux masses sombres consécutives restent deux
+> masses sombres, quelle que soit la nuance. La section « Pourquoi Arbre & Cime »
+> est donc **claire**, ce qui règle la question sans mécanisme. Retenir l'ordre
+> des recours : section claire d'abord, panneau sombre encadré ensuite, nouvelle
+> surface jamais. Le pied de page porte en outre un filet supérieur.
 
 > **Piège à connaître.** `cn()` ne fusionne pas les classes Tailwind
 > concurrentes. Passer `hidden` en `className` à un `ButtonLink` dont la

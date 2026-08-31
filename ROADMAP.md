@@ -358,12 +358,111 @@ de ce qui fait varier un devis.
 
 ---
 
-## Phase 8 — Pourquoi Arbre et Cime ⬜
+## Phase 8 — Pourquoi Arbre et Cime ✅
 
-- Trois à quatre différenciateurs argumentés, composition asymétrique
-- Appui photo sur le matériel et la méthode
+Section 4 des 7 sections verrouillées
+(`src/components/sections/why.tsx`).
 
-**Sortie :** section validée, aucun adjectif non étayé.
+**Livrée une première fois, puis entièrement refaite sur correctif client.**
+Le premier jet a été rejeté en bloc : « la version actuelle ne convient pas du
+tout ». Sept griefs, tous fondés — fond noir trop lourd, photographie hors
+sujet, section froide, quatre cartes identiques trop rigides, manque de
+contenu, manque de respiration, rendu générique.
+
+### Ce qui a été refait
+
+- **Surface claire** au lieu de charbon. La première version posait un aplat
+  sombre plein écran juste avant un pied de page forêt : deux masses sombres
+  consécutives. La surface `charcoal` créée pour l'occasion a été **retirée du
+  système** — plus aucun emploi. Une section claire règle la contrainte de
+  clôture du `DESIGN_SYSTEM.md` § 8 sans mécanisme.
+- **Composition en deux colonnes asymétriques** au lieu d'une grille : à
+  gauche titre, introduction et photographie ; une colonne laissée vide ; à
+  droite les quatre arguments. Motif documenté dans `DESIGN_SYSTEM.md` § 4.
+- **Arguments non encadrés** : des filets d'un pixel qui séparent au lieu de
+  bordures qui entourent, un numéro serti entre deux accents jaunes, des
+  hauteurs libres (199 à 254 px en 1440). C'est ce qui casse l'effet « quatre
+  rectangles clonés ».
+- **Vrai texte d'introduction** — deux paragraphes — là où il n'y avait qu'une
+  ligne de chapô, et arguments passés de deux à trois lignes. Textes fournis
+  par le client, repris mot pour mot.
+- **Photographie changée** : le cordage sur baudrier, jugé hors sujet, cède la
+  place à `hero/demontage-arbre-tronconneuse-sciure.jpg` — un vrai chantier,
+  grimpeur encordé à la tronçonneuse. Jusqu'ici inutilisée sur le site.
+  **Aucune image téléchargée**, `MEDIA_SOURCES.md` n'a changé que sa mention
+  d'usage.
+- **La photographie ferme la colonne** : rangée en `items-stretch`, colonne en
+  `flex-col`, photo en `flex-1` puis `h-full`. Son bas s'aligne au pixel sur le
+  dernier argument. Sans cela la colonne gauche s'arrêtait 166 px trop haut et
+  laissait un vide.
+
+### Ce qui n'a pas bougé
+
+Les quatre arguments restent ceux de `PROJECT.md` : sécurité, flexibilité,
+diplômes, chantier propre. Aucune assurance, certification, garantie ni
+disponibilité n'a été inventée pour « étoffer » la section.
+
+Le **filet supérieur du pied de page**, ajouté au premier jet, reste en place :
+il ne coûte rien et servira si une section sombre devait un jour le précéder.
+
+**Sortie atteinte :** aucun débordement de 320 à 1440 px. Une colonne sous
+1024 px, dans l'ordre texte puis photo puis arguments ; deux colonnes au-delà,
+à hauteurs égales (960/960 en 1024, 922/922 en 1440). Contrastes sur ivoire :
+charbon 15,51 · mousse 5,15. Quatre `h3` sous le `h2` de section, aucun lien
+dans les blocs, seul mouvement l'allongement des filets au survol. Lint,
+typecheck et build au vert. Aucune dépendance ajoutée.
+
+*Hauteurs de section :* 2 059 px en 320, 1 957 en 430, 1 765 en 768, 1 216 en
+1024, 1 178 en 1440. Plus haut que la version rejetée (1 286 / 1 022), et
+c'est assumé — le grief principal était le manque de contenu.
+
+---
+
+## Page `/a-propos` ✅ — hors séquence
+
+**Cette page n'appartient à aucune des 18 phases.** Le découpage d'origine
+traitait les pages d'entreprise en fin de parcours ; le client l'a demandée
+juste après la phase 8. C'est noté ici pour que la numérotation reste lisible :
+il n'y a pas deux phases 8.
+
+Six blocs (`src/app/a-propos/page.tsx`) : hero, parcours, qualifications,
+manière de travailler, zone, conversion. Les types de clients — particuliers,
+professionnels, collectivités — sont intégrés en une phrase à la méthode plutôt
+qu'en septième bloc.
+
+- **Cinq faits nouvellement confirmés** entrent dans `src/lib/site.ts` :
+  `manager`, `foundedYear`, `selfEmployedYears`, `shortName`, et la liste
+  `qualifications`. Rien n'est recopié en dur dans la page.
+- **Trois photographies**, toutes existantes, aucun téléchargement : le hero en
+  fond de section, le harnais et la corde au parcours, le broyage en fin de
+  méthode.
+- **Un seul aplat sombre** en dehors du hero : le panneau de conversion. La
+  page est ivoire, conformément à la consigne.
+- **`qualificationDetails` est indexé par intitulé**, pas par position :
+  ajouter une qualification dans `site.ts` sans écrire son explication devient
+  une erreur de compilation au lieu d'un titre affiché sans texte.
+- **Aucun schéma `Person`** — voir `SEO_STRATEGY.md` § 5 bis.
+
+**Le point qui a coûté le plus de travail : le dégradé du hero.** Le dégradé
+partagé des pages services laissait le surtitre à 1,92 de contraste et le `h1`
+à 2,11 — très en dessous d'AA. Diagnostic : ce n'est pas la photographie, c'est
+la **hauteur**. Un hero court est presque entièrement rempli par son texte, qui
+remonte donc dans le haut du cadre, là où un dégradé ancré en bas est nul par
+construction. Les quatre autres photographies candidates ont été mesurées au
+même endroit : toutes pires (1,57 à 1,67).
+
+Corrigé en deux temps — hero porté de 22 à 26rem, puis dégradé calibré page par
+page. Quatre réglages ont été mesurés ; le plus léger qui tienne AA a été
+retenu, les trois autres éteignaient l'arbre. Résultat au pixel le plus
+défavorable : **5,52 / 5,43 / 9,58 en 320 px**, 8,47 / 10,02 / 11,30 en 1440.
+
+**Sortie atteinte :** aucun débordement de 320 à 1440 px. Un `h1` unique,
+hiérarchie `h2`/`h3` continue, neuf titres au total. Trois images, une seule en
+`priority` (le hero), les deux autres en `lazy`. Aucune dépendance ajoutée.
+Lint, typecheck et build au vert.
+
+*Hauteurs de page :* 6 514 px en 320, 6 186 en 390, 6 011 en 768, 5 570 en
+1024, 5 821 en 1440.
 
 ---
 

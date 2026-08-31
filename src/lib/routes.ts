@@ -222,8 +222,11 @@ const definitions: Record<RouteId, RouteDefinition> = {
     path: "/a-propos",
     navLabel: "À propos",
     title: "L’entreprise et ses qualifications",
+    // Volontairement centrée sur la MARQUE et la personne, pas sur « élagueur
+    // Rouen » : ce mot-clé appartient a la page d'accueil, et deux pages qui le
+    // visent se cannibalisent (SEO_STRATEGY.md § 3).
     description:
-      "Arbre et Cime Élagage : élagueur-grimpeur à Rouen, environ dix ans d’expérience, CS Taille et soins des arbres et BP Paysagiste.",
+      "Arbre et Cime Élagage, c’est Cédric Simon : élagueur-grimpeur diplômé, une dizaine d’années de métier, installé dans la métropole rouennaise depuis 2023.",
     intent:
       "requêtes de marque et vérification de confiance avant prise de contact",
     group: "entreprise",

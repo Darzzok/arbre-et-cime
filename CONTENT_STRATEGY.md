@@ -55,7 +55,7 @@ Sept sections `VERROUILLÉES` (cf. `PROJECT.md`). Intentions rédactionnelles :
 | **Hero** ✅ | Dire le métier, la ville, et proposer les deux actions. Un `h1` court, un chapô d'une phrase. Rien d'autre. **Livré en phase 5B** — voir ci-dessous. |
 | **Preuves** ✅ | Aligner des faits vérifiables : années d'expérience, qualifications, sécurité, propreté, devis gratuit. Formulation brève, sans phrase de liaison marketing. **Livré en phase 6.** |
 | **Prestations** ✅ | **Quatre** prestations principales, chacune avec une ligne qui dit ce qu'elle règle, et un lien vers sa page. Les quatre secondaires sont traitées dans leur page parente. **Livré en phase 6.** |
-| **Pourquoi Arbre et Cime** | Trois à quatre différenciateurs argumentés (méthode de grimpe, sécurité, propreté, réactivité) — pas une liste d'adjectifs. |
+| **Pourquoi Arbre et Cime** ✅ | Texte d'introduction, puis quatre différenciateurs argumentés de trois lignes — pas une liste d'adjectifs. **Livré en phase 8, réécrit au correctif.** |
 | **Réalisations** | Photos réelles, légendes factuelles : commune, prestation, contrainte particulière. La légende fait le travail. |
 | **Zone d'intervention** | Rouen et la métropole nommément, puis la mention du rayon jusqu'à 100 km. |
 | **Devis interactif** | Une promesse simple : décrire le besoin, joindre des photos, être rappelé. Lever la friction avant l'entrée dans le parcours. |
@@ -126,6 +126,60 @@ porté par le hero, le pied de page et les pages services.
 Une phrase de bas de section rattache explicitement les quatre prestations
 secondaires — abattage difficile, débroussaillage, taille de haies,
 évacuation — à leur page parente, pour qu'aucune ne semble oubliée.
+
+### Texte de « Pourquoi Arbre & Cime » — livré
+
+```
+Surtitre  POURQUOI ARBRE & CIME
+Titre     Un professionnel qui s'adapte à chaque chantier
+
+Intro     Chaque chantier commence par la même chose : comprendre ce que vous
+          attendez de l'arbre, puis regarder ce que le terrain permet
+          réellement. L'accès, l'environnement immédiat et l'état du sujet
+          décident de la méthode.
+
+          Le reste suit dans cet ordre : sécuriser la zone, travailler avec du
+          matériel professionnel adapté, et laisser l'espace propre une fois
+          l'intervention terminée.
+
+01 Travail sécurisé
+   Intervention préparée selon la configuration du chantier, l'accès et
+   l'environnement immédiat. Utilisation d'équipements professionnels et
+   adaptation de la méthode aux contraintes rencontrées.
+
+02 Flexibilité
+   Jardin clos, passage étroit, arbre proche d'un bâtiment ou intervention
+   urgente : l'organisation s'adapte au terrain et à la situation du client.
+
+03 Professionnel diplômé
+   CS Taille et soins des arbres et BP Paysagiste / gestion des milieux
+   naturels, avec environ 10 ans d'expérience métier.
+
+04 Chantier propre
+   Selon la prestation, les branches, bois et déchets verts peuvent être
+   débités, broyés ou évacués afin de laisser une zone propre après
+   intervention.
+```
+
+**Correctif de la phase 8.** La première version tenait en deux lignes par
+argument, sans texte d'introduction, pour que la section « se scanne ». Le
+client l'a jugée trop maigre : c'est la seule section du site où il argumente,
+et un argument de deux lignes n'argumente pas. Les textes ci-dessus sont ceux
+qu'il a fournis, repris **mot pour mot**.
+
+À retenir pour les sections suivantes : sur cette page, la brièveté n'est pas
+une valeur en soi. Elle vaut pour les prestations, qui sont un menu ; elle ne
+vaut pas pour la preuve.
+
+Le titre a perdu son point final — aucun autre `h2` du site n'en porte.
+
+**Ce qui n'y figure pas, faute de confirmation client** : assurance,
+certification, garantie, diagnostic sanitaire, disponibilité permanente. Les
+quatre arguments retenus sont ceux de `PROJECT.md`, sans extrapolation.
+
+« Selon la prestation » et « peuvent être » ne sont pas des précautions de
+style : le client a indiqué que l'évacuation était **possible**, pas
+systématique. Les formulations doivent le rester.
 
 ---
 
@@ -239,6 +293,82 @@ Points de vigilance appliqués :
 
 « Rouen » apparaît dans le `h1` et une ou deux fois dans le corps de chaque
 page. Jamais à chaque paragraphe.
+
+---
+
+## 6 bis. Rédaction de `/a-propos` — livrée
+
+Six blocs : hero, parcours, qualifications, manière de travailler, zone,
+conversion. Le texte vit dans `src/app/a-propos/page.tsx`, et non dans un
+fichier de `src/lib` comme celui des pages services — ce fichier-là n'existe que
+parce que quatre pages sœurs doivent être relues ensemble pour vérifier
+qu'aucune n'est la copie d'une autre. Une page unique n'a pas ce problème.
+
+### Faits nouvellement confirmés par le client
+
+| Fait | Valeur | Où il vit |
+| --- | --- | --- |
+| Responsable | Cédric Simon | `site.manager` |
+| Création de l'activité | 2023 | `site.foundedYear` |
+| Ancienneté à son compte | environ 3 ans | `site.selfEmployedYears` |
+| Forme courte de la marque | Arbre & Cime | `site.shortName` |
+| Intitulés des qualifications | CS + BP | `qualifications` |
+
+Tous passent par `src/lib/site.ts`, jamais recopiés en dur. `selfEmployedYears`
+est le seul de ces chiffres qui **vieillit** : il est à relire chaque année, et
+le commentaire du fichier le dit.
+
+### Textes livrés
+
+```
+Hero
+  Surtitre  L'ENTREPRISE
+  Titre     À propos d'Arbre & Cime
+  Chapô     Une activité d'élagage, d'abattage et d'entretien des arbres
+            installée à Rouen et dans la Métropole Rouen Normandie. Derrière
+            l'entreprise, un élagueur-grimpeur : Cédric Simon.
+
+Parcours    « Un métier appris sur le terrain »
+  Deux paragraphes, puis trois repères chiffrés :
+  ≈ 10 ans de pratique · ≈ 3 ans à son compte · 2023, création de l'entreprise
+
+Qualifications  « Deux formations, deux échelles »
+  CS Taille et soins des arbres — l'arbre lui-même : physiologie, taille,
+  grimpe, et ce qu'une coupe produit sur ce qui repousse.
+  BP Paysagiste / gestion des milieux naturels — plus large : aménagement et
+  entretien des espaces végétalisés, lecture d'un terrain, gestion d'un milieu.
+  Chute : « pas seulement comment le couper, mais qu'est-ce qu'il faut lui
+  faire, et qu'est-ce que cela donnera dans deux ans ».
+
+Manière de travailler  « Comment se déroule une intervention »
+  Quatre paragraphes narratifs, dans l'ordre du chantier : le besoin, les
+  contraintes du terrain, la préparation et la fin de chantier, puis les
+  types de clients.
+
+Zone        « Où intervient Arbre & Cime »
+  Rouen et la métropole, déplacements jusqu'à 100 km selon le chantier.
+
+Conversion  « Parlons de votre chantier » + devis gratuit
+```
+
+### Trois décisions de rédaction
+
+1. **Les trois repères chiffrés se lisent comme une progression**, pas comme
+   trois faits séparés : dix ans de métier, dont trois à son compte, depuis
+   2023. Pris isolément, « 3 ans » et « 2023 » diraient deux fois la même
+   chose ; enchaînés, ils racontent un parcours.
+2. **Les types de clients ne font pas une section.** Particuliers,
+   professionnels et collectivités tiennent en une phrase à la fin de la
+   méthode : « Le cadre change, la manière de procéder non. » En faire un bloc
+   aurait produit trois cartes identiques, exactement ce qu'on évite.
+3. **Aucune inférence sur le parcours antérieur.** Dix ans de métier moins
+   trois à son compte laisse supposer sept ans salarié — la page ne l'écrit
+   pas. On n'extrapole pas un fait à partir d'une soustraction.
+
+**Ce qui n'y figure pas, faute de confirmation** : assurance, SIREN, label,
+nombre de chantiers, avis clients, disponibilité permanente, matériel nommé.
+Une page « À propos » est précisément celle où l'invention se paie le plus
+cher.
 
 ---
 

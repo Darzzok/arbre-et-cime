@@ -2,7 +2,14 @@ import type { HTMLAttributes, ReactNode } from "react";
 
 import { cn } from "@/lib/cn";
 
-/** Surface d'arriere-plan. Bascule tous les jetons semantiques (voir globals.css). */
+/**
+ * Surface d'arriere-plan. Bascule tous les jetons semantiques (voir
+ * globals.css).
+ *
+ * Deux surfaces, pas trois : la surface `charcoal` ajoutee en phase 8 a ete
+ * retiree au correctif de la meme phase, la section « Pourquoi » etant passee
+ * en clair. Ne pas la reintroduire sans un besoin reel.
+ */
 export type Surface = "light" | "dark";
 
 /** Rythme vertical. `--section-space` vaut 72 / 96 / 128 px selon la largeur. */

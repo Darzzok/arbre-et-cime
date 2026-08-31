@@ -45,8 +45,8 @@ alternatives disponibles.
 | Fichier | Dimensions | Usage prévu | Auteur | Page source | Remarques |
 | --- | --- | --- | --- | --- | --- |
 | `elagueur-grimpeur-arbre-mature.jpg` | 2400×1800 | **EN PRODUCTION — hero desktop (≥ 1024 px).** Grimpeur sur cordes dans un arbre feuillu mature. | Zak Bentley | [pexels.com/photo/…-2902892](https://www.pexels.com/photo/photo-of-man-climbing-on-tree-2902892/) | Grimpeur de dos, visage non identifiable. Aucun logo. |
-| `elagueur-ascension-arbre-hiver.jpg` | 2400×1350 | Hero — alternative desktop, non retenue. Ascension d'un arbre nu en hiver, forte respiration. | Dmytro Glazunov | [pexels.com/photo/…-35089307](https://www.pexels.com/photo/arborist-climbing-tall-bare-tree-in-winter-35089307/) | Grimpeur très petit dans le cadre. Aucune personne identifiable, aucun logo. |
-| `demontage-arbre-tronconneuse-sciure.jpg` | 2400×1600 | Hero — alternative desktop, non retenue. Démontage d'un tronc par sections, projection de sciure. | Henk Schuurmans | [pexels.com/photo/…-31127615](https://www.pexels.com/photo/arborist-cutting-down-tree-trunk-safely-with-chainsaw-31127615/) | EPI haute visibilité vert. Visage non identifiable, aucun logo lisible. |
+| `elagueur-ascension-arbre-hiver.jpg` | 2400×1350 | **Hero de `/a-propos`**, en fond de section. Écartée du hero d'accueil, retenue ici pour sa respiration. **Attention :** ciel clair sur les deux tiers supérieurs — elle impose un dégradé plus appuyé que les autres heros du site (voir `DESIGN_SYSTEM.md` § 5). | Dmytro Glazunov | [pexels.com/photo/…-35089307](https://www.pexels.com/photo/arborist-climbing-tall-bare-tree-in-winter-35089307/) | Grimpeur très petit dans le cadre. Aucune personne identifiable, aucun logo. |
+| `demontage-arbre-tronconneuse-sciure.jpg` | 2400×1600 | **Section « Pourquoi Arbre & Cime » de la homepage** (correctif phase 8). Écartée du hero, retenue là pour la même raison : c'est la plus lisible des photographies d'intervention réelle. | Henk Schuurmans | [pexels.com/photo/…-31127615](https://www.pexels.com/photo/arborist-cutting-down-tree-trunk-safely-with-chainsaw-31127615/) | EPI haute visibilité vert. Visage non identifiable, aucun logo lisible. |
 | `elagueur-ascension-tronc-vertical.jpg` | 1400×2094 | **EN PRODUCTION — hero mobile et tablette (< 1024 px).** Cadrage vertical natif. | John Robertson | [pexels.com/photo/…-34674271](https://www.pexels.com/photo/professional-arborist-climbing-tree-for-maintenance-34674271/) | Visage non identifiable, aucun logo. |
 
 ---
@@ -71,8 +71,8 @@ alternatives disponibles.
 
 | Fichier | Dimensions | Usage prévu | Auteur | Page source | Remarques |
 | --- | --- | --- | --- | --- | --- |
-| `materiel-harnais-corde-grimpe.jpg` | 1400×2100 | Détail — harnais et corde en préparation, sous-bois. | Daniel & Hannah Snipes | [pexels.com/photo/…-38346752](https://www.pexels.com/photo/roofer-preparing-safety-equipment-in-forest-setting-38346752/) | Référencée « roofer » sur Pexels ; le contenu montre bien harnais et corde en milieu boisé. Visage non identifiable. |
-| `materiel-cordage-baudrier.jpg` | 2400×1600 | Détail — cordage lové sur baudrier, vu de dos. | BOOM Photography | [pexels.com/photo/…-12585933](https://www.pexels.com/photo/a-mountain-climber-with-ropes-on-his-back-12585933/) | Matériel de grimpe générique, pas spécifiquement arboricole. Personne de dos. Aucun logo. |
+| `materiel-harnais-corde-grimpe.jpg` | 1400×2100 | `/elagage` — bloc méthode. **Et `/a-propos`** — bloc parcours : c'est la photographie la plus humaine de la banque, la seule qui montre des mains au travail. | Daniel & Hannah Snipes | [pexels.com/photo/…-38346752](https://www.pexels.com/photo/roofer-preparing-safety-equipment-in-forest-setting-38346752/) | Référencée « roofer » sur Pexels ; le contenu montre bien harnais et corde en milieu boisé. Visage non identifiable. |
+| `materiel-cordage-baudrier.jpg` | 2400×1600 | **Inutilisée.** Employée un temps dans « Pourquoi Arbre & Cime », retirée au correctif de la phase 8 : le client l'a jugée peu pertinente, et la réserve ci-contre l'explique — c'est du matériel de grimpe générique, pas une intervention. À ne pas replacer dans une section qui doit montrer le métier. | BOOM Photography | [pexels.com/photo/…-12585933](https://www.pexels.com/photo/a-mountain-climber-with-ropes-on-his-back-12585933/) | Matériel de grimpe générique, pas spécifiquement arboricole. Personne de dos. Aucun logo. |
 
 ---
 
@@ -85,7 +85,7 @@ remplacement.
 
 | Fichier | Dimensions | Usage prévu | Auteur | Page source | Remarques |
 | --- | --- | --- | --- | --- | --- |
-| `chantier-broyage-branches-evacuation.jpg` | 1600×2000 | `/realisations` — broyage des branches, illustre l'évacuation des déchets. | There on Saturn | [pexels.com/photo/…-11124086](https://www.pexels.com/photo/worker-standing-by-lumber-grinding-machine-on-vehicle-11124086/) | Opérateur de dos, protections auditives. Aucun logo lisible. |
+| `chantier-broyage-branches-evacuation.jpg` | 1600×2000 | **`/a-propos`** — fin du bloc « manière de travailler », elle montre l'étape que le texte nomme en dernier. Reste candidate pour `/realisations` (phase 9). | There on Saturn | [pexels.com/photo/…-11124086](https://www.pexels.com/photo/worker-standing-by-lumber-grinding-machine-on-vehicle-11124086/) | Opérateur de dos, protections auditives. Aucun logo lisible. |
 | `chantier-grume-abattue-sous-bois.jpg` | 2400×1600 | `/realisations` — grume abattue en sous-bois, section fraîche. | Joerg Hartmann | [pexels.com/photo/…-34338533](https://www.pexels.com/photo/felled-tree-trunk-in-schomberg-forest-34338533/) | Aucune personne, aucun logo. |
 | `chantier-billons-lisiere-hiver.jpg` | 1600×2400 | `/realisations` — billons et souche en lisière, contexte résidentiel. | Sergej | [pexels.com/photo/…-35558363](https://www.pexels.com/photo/log-cutting-in-winter-countryside-clearing-35558363/) | Habitations en arrière-plan, aucune enseigne lisible. Aucune personne. |
 
