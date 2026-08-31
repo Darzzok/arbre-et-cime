@@ -11,6 +11,7 @@ import {
   Container,
   Display,
   Eyebrow,
+  HeroScrim,
   Lead,
   Reveal,
   Rule,
@@ -122,25 +123,7 @@ export default function AProposPage() {
             sizes="100vw"
             className="-z-10 object-cover object-[center_35%]"
           />
-          <span
-            aria-hidden="true"
-            /* Dégradé PROPRE À CETTE PAGE, un cran au-dessus de celui des pages
-               services. Cette photographie est un arbre d'hiver sur ciel clair :
-               le haut du cadre est pâle, là où les photographies des pages
-               services sont denses. Sur mobile le cadre est plus haut que large,
-               le recadrage ne coupe donc rien en hauteur et le ciel occupe une
-               part maximale de l'image — c'est le cas critique.
-
-               Avec le dégradé partagé, surtitre et `h1` tombaient à 2,55 et
-               2,11 de contraste. Mesuré au pixel le PLUS DÉFAVORABLE de chaque
-               rectangle de texte, celui-ci les remonte à 5,54 et 5,43 en 390 px,
-               8,47 et 10,02 en 1440.
-
-               Calibré au plus juste : trois réglages plus appuyés ont été
-               mesurés, tous passaient AA, tous éteignaient l'arbre. C'est le
-               plus léger des quatre qui tienne le seuil. */
-            className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(20,37,30,0.95)_0%,rgba(20,37,30,0.90)_34%,rgba(20,37,30,0.76)_62%,rgba(20,37,30,0.50)_82%,rgba(20,37,30,0.14)_100%)]"
-          />
+          <HeroScrim variant="compact" />
 
           <Container className="relative py-12 lg:py-14">
             <div className="mx-auto max-w-reading">
@@ -323,12 +306,18 @@ export default function AProposPage() {
 
             <Reveal className="mt-12 lg:mt-16">
               <figure className="relative aspect-[3/2] overflow-hidden rounded-card lg:aspect-[16/7]">
+                {/* Remplacée au correctif 9B. Le broyeur figurait ici, sur la
+                    page d'accueil ET sur `/realisations` : trois emplacements
+                    pour une seule photographie. Il ne sert plus que dans la
+                    collection de `/realisations`. Celle-ci illustre le même
+                    paragraphe — « les branches, le bois et les déchets verts
+                    sont débités » — et n'apparaît nulle part ailleurs. */}
                 <Image
-                  src="/images/realisations/chantier-broyage-branches-evacuation.jpg"
-                  alt="Branches introduites dans un broyeur monté sur remorque, en fin de chantier"
+                  src="/images/realisations/chantier-debitage-epi-protection.jpg"
+                  alt="Débitage d’un tronc à la tronçonneuse, pantalon de protection et chaussures de sécurité, billons de bouleau au sol"
                   fill
                   sizes="(min-width: 64rem) 78rem, 100vw"
-                  className="object-cover object-[center_40%]"
+                  className="object-cover object-[center_55%]"
                 />
               </figure>
             </Reveal>

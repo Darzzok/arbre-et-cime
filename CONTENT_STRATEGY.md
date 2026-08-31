@@ -56,7 +56,7 @@ Sept sections `VERROUILLÉES` (cf. `PROJECT.md`). Intentions rédactionnelles :
 | **Preuves** ✅ | Aligner des faits vérifiables : années d'expérience, qualifications, sécurité, propreté, devis gratuit. Formulation brève, sans phrase de liaison marketing. **Livré en phase 6.** |
 | **Prestations** ✅ | **Quatre** prestations principales, chacune avec une ligne qui dit ce qu'elle règle, et un lien vers sa page. Les quatre secondaires sont traitées dans leur page parente. **Livré en phase 6.** |
 | **Pourquoi Arbre et Cime** ✅ | Texte d'introduction, puis quatre différenciateurs argumentés de trois lignes — pas une liste d'adjectifs. **Livré en phase 8, réécrit au correctif.** |
-| **Réalisations** | Photos réelles, légendes factuelles : commune, prestation, contrainte particulière. La légende fait le travail. |
+| **Réalisations** ✅ | Trois **types d'intervention**, légende sous la photographie. **Livré en phase 9, revu au correctif 9B** — sans commune ni date, faute de chantiers client documentés. |
 | **Zone d'intervention** | Rouen et la métropole nommément, puis la mention du rayon jusqu'à 100 km. |
 | **Devis interactif** | Une promesse simple : décrire le besoin, joindre des photos, être rappelé. Lever la friction avant l'entrée dans le parcours. |
 | **Footer** | NAP, prestations, zone, mentions, rappel des deux CTA. |
@@ -293,6 +293,100 @@ Points de vigilance appliqués :
 
 « Rouen » apparaît dans le `h1` et une ou deux fois dans le corps de chaque
 page. Jamais à chaque paragraphe.
+
+---
+
+## 5 ter. Réalisations — livrées en phase 9
+
+**C'est le contenu le plus dangereux du site.** Une page de réalisations
+appelle naturellement une commune, une date, un client, une hauteur d'arbre,
+une durée de chantier. Rien de tout cela n'est confirmé, et les photographies
+viennent d'une banque libre de droit : chacune de ces mentions serait un
+mensonge, sur la page même censée établir la confiance.
+
+Les textes vivent donc dans **`src/lib/realisations-content.ts`**, regroupés
+pour qu'une relecture d'un seul fichier suffise à vérifier qu'aucun n'a glissé
+vers le chantier inventé.
+
+### La règle de formulation
+
+| Interdit tant que rien n'est confirmé | Écrit à la place |
+| --- | --- |
+| « Chantier réalisé à Rouen » | « Coupe à proximité d'habitations » |
+| « Chêne de 18 m abattu en 2 jours » | « Un tronc débité là où il est tombé » |
+| « Notre client souhaitait… » | « Selon la prestation, le broyat est laissé ou emporté »
+
+Le principe tient en une phrase : **les titres décrivent une situation, pas un
+chantier**, et les textes disent ce que la photographie montre puis ce que cela
+implique techniquement. Deux choses vérifiables sur l'image elle-même.
+
+### La mention de transparence — UNE seule, discrète
+
+En `Small`, juste sous la collection qu'elle qualifie :
+
+> Visuels illustratifs des types d'intervention proposés. Les réalisations
+> d'Arbre et Cime seront présentées ici avec leurs propres photographies.
+
+Ce n'est pas une précaution juridique, c'est ce qui rend la page crédible.
+Un visiteur qui reconnaît une photographie de banque non signalée cesse de
+croire le reste du site ; le même visiteur, prévenu, lit la page pour ce
+qu'elle est — une explication du métier.
+
+**Correctif 9B : elle était affichée deux fois**, en tête de collection puis
+en pied de page. Répétée, une précision honnête devient une mise en garde, et
+la page se met à s'excuser d'exister. Une fois suffit — au bon endroit, dans
+le bon corps.
+
+La formulation a aussi été allégée : « ne documentent pas un chantier précis »
+insistait sur ce qui manque, « visuels illustratifs des types d'intervention
+proposés » dit ce que c'est. Même information, registre affirmatif.
+
+### Textes livrés
+
+```
+ACCUEIL — « Des interventions adaptées à chaque situation »
+  En hauteur, au ras des habitations, ou une fois l'arbre au sol : c'est la
+  situation qui décide de la méthode, pas l'inverse.
+
+  Élagage          Élagage en hauteur, sur cordes
+                   Travailler depuis l'arbre, quand aucun engin n'y accède.
+  Abattage         Coupe à proximité d'habitations
+                   Des maisons à quelques mètres : rien ne peut tomber
+                   librement.
+  Gestion du bois  Le bois, une fois l'arbre au sol
+                   Débité, rangé, marqué : ce qui reste après la coupe.
+
+/REALISATIONS
+  H1      Réalisations & interventions
+  Chapô   Les principaux types de chantiers pris en charge par Arbre et
+          Cime : ce qu'une situation impose, et comment elle se traite.
+
+  Collection  les trois ci-dessus, en version longue, plus :
+  Abattage    Abattage et débitage sur place
+  Élagage     Taille en têtard
+  Évacuation  Broyage et évacuation des branches
+
+  « Ce qui décide de la méthode » — cinq critères :
+  l'accès · la proximité des bâtiments · l'état de l'arbre ·
+  le volume de bois · l'évacuation
+
+  CTA     Un chantier à nous montrer ?
+```
+
+**Le titre de l'accueil a changé au correctif 9B.** « Quelques interventions »
+laissait entendre des chantiers réellement menés par Arbre et Cime — ce que
+ces photographies ne documentent pas. « Des interventions adaptées à chaque
+situation » porte sur la **capacité d'adaptation** : c'est exact, et c'est
+accessoirement le meilleur argument commercial de l'entreprise.
+
+Règle générale qui en découle : sur cette section, **le vocabulaire parle de
+types d'intervention, jamais de chantiers réalisés**, tant que les
+photographies du client ne sont pas livrées.
+
+**Le jour des vraies photographies**, `realisations-content.ts` accueillera
+`commune`, `contexte`, `contraintes` et un avant/après, la mention de
+transparence disparaîtra, et `CONVERSION_STRATEGY.md` § 4.3 — « chantiers
+datés et situés » — deviendra enfin applicable. Il ne l'est pas aujourd'hui.
 
 ---
 

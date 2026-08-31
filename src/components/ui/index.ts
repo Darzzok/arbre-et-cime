@@ -9,6 +9,9 @@ export { Eyebrow, SectionIndex } from "./eyebrow";
 export { Figure } from "./figure";
 export type { FigureAspect } from "./figure";
 
+export { HeroScrim } from "./hero-scrim";
+export type { HeroScrimVariant } from "./hero-scrim";
+
 export { ArrowLink, TextLink } from "./link";
 
 export { Reveal } from "./reveal";

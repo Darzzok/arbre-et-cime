@@ -466,16 +466,115 @@ Lint, typecheck et build au vert.
 
 ---
 
-## Phase 9 — Réalisations ⬜
+## Phase 9 — Réalisations ✅
 
-**Dépend de la photothèque.**
+Section 5 des 7 sections verrouillées
+(`src/components/sections/realisations.tsx`) et page `/realisations`
+(`src/app/realisations/page.tsx`). Contenu commun dans
+`src/lib/realisations-content.ts`.
 
-- Galerie éditoriale de chantiers réels, légendes factuelles
-- Avant/après si disponible
-- Chargement différé hors premier écran, dimensions explicites
+La phase était annoncée « dépend de la photothèque ». Elle a été livrée
+**sans** la photothèque client, ce qui a déplacé tout l'enjeu : le problème
+n'était pas de construire une galerie, mais d'écrire une page de réalisations
+qui ne ment pas.
 
-**Sortie :** aucun CLS, navigation clavier de la galerie opérationnelle.
+### Ce qui a été construit
 
+- **Accueil, « Quelques interventions »** : trois cartes, anatomie
+  volontairement différente de celle des Prestations — photographie pleine
+  puis légende SOUS l'image, jamais de texte incrusté. Deux grilles de cartes
+  identiques sur la même page auraient donné le « site généré » que
+  `PROJECT.md` interdit.
+- **`/realisations`** : hero compact, collection de quatre situations,
+  « Ce qui décide de la méthode » (cinq critères), conversion et maillage.
+- **Aucune route `/realisations/[slug]`** : une page par chantier n'a de
+  valeur qu'avec une commune et un contexte réels. Voir `SEO_STRATEGY.md`
+  § 5 quater.
+- **Métadonnées réécrites** : l'ancienne description annonçait des
+  « photographies réelles et situées ». C'était faux.
+
+### La transparence comme parti pris
+
+Les photographies viennent d'une banque libre de droit. La page **le dit**,
+en tête de collection et en pied de page, plutôt que de le taire. Un visiteur
+qui reconnaît une image de banque non signalée cesse de croire le reste du
+site ; prévenu, il lit la page pour ce qu'elle est.
+
+Aucun titre ne porte de commune, de date, de client, de hauteur ni de durée.
+Les titres décrivent une **situation**, les textes disent ce que la
+photographie montre puis ce que cela implique techniquement — deux choses
+vérifiables sur l'image elle-même.
+
+### Deux découvertes en cours de phase
+
+1. **`public/images/realisations/` ne contient que trois fichiers**, dont un
+   déjà employé sur `/a-propos`. La collection a été complétée par deux
+   photographies prélevées parmi les **inutilisées** du dossier `services/`,
+   sans rien télécharger ni dupliquer. Trois à quatre photographies de
+   chantier supplémentaires régleraient la question — décision client.
+2. **La fiche de `abattage-tronconnage-grume.jpg` était fausse** : elle
+   affirmait « aucun logo lisible » alors que la marque STIHL est
+   parfaitement lisible. Corrigé dans `MEDIA_SOURCES.md`. Le cadrage du hero
+   la sort du champ sous 1024 px, mais le point est à faire valider.
+
+### Refactorisation induite
+
+Le hero de `/realisations` a rencontré exactement le seuil de contraste
+documenté en phase 8 : à 26rem avec le dégradé partagé, surtitre à 3,20.
+Le dégradé « hero compact » servant désormais deux pages, il a été extrait en
+primitive — **`src/components/ui/hero-scrim.tsx`**, deux variantes,
+`default` et `compact`. Les quatre pages services et `/a-propos` l'adoptent :
+la chaîne de 300 caractères n'existe plus qu'à un seul endroit, avec sa
+justification chiffrée.
+
+**Sortie atteinte :** aucun débordement de 320 à 1440 px. Un `h1` unique,
+quatorze titres, hiérarchie `h2`/`h3` continue. Cinq images sur la page, une
+seule en `priority` (le hero), les quatre autres en `lazy` avec cadre
+d'aspect fixé — aucun CLS possible. Contrastes du hero au pixel le plus
+défavorable : 6,35 / 7,77 / 10,97 en 320 px, 9,84 / 10,47 / 11,32 en 1440.
+Aucune dépendance ajoutée. Lint, typecheck et build au vert.
+
+*Resserrage :* les cartes de l'accueil étaient en 4/5 sur mobile, ce qui
+portait la section à 2 167 px. Passées en 4/3 sous 1024 px : **1 642 px**.
+
+### Phase 9B — Photothèque réalisations et transparence ✅
+
+Correctif client sur la seule section Réalisations et la page
+`/realisations`. La phase 9 était validée techniquement ; ce qui restait à
+régler tenait entièrement à la **photothèque** et au **vocabulaire**.
+
+- **Quatre photographies téléchargées** (Pexels, licence libre, aucune en
+  Pexels+), portant `public/images/realisations/` de trois à sept fichiers.
+  Détail complet dans `MEDIA_SOURCES.md` § 6.
+- **Nouveau hero de `/realisations`.** L'ancienne photographie portait un logo
+  STIHL parfaitement lisible et un avant-bras tatoué très reconnaissable ;
+  elle est écartée, pas recadrée. La nouvelle est un abattage en forêt, EPI
+  complet, visage masqué par la visière, cadrage 16/9 natif.
+- **Plus aucune photographie sur deux pages.** Le broyeur servait sur trois
+  emplacements (accueil, `/realisations`, `/a-propos`) ; il ne sert plus que
+  dans la collection. `/a-propos` reçoit à la place une photographie de
+  débitage, qui illustre le même paragraphe.
+- **Titre d'accueil corrigé** : « Quelques interventions » laissait entendre
+  des chantiers réellement menés. Remplacé par « Des interventions adaptées à
+  chaque situation » — exact, et meilleur argument commercial.
+- **Une seule mention de transparence**, en `Small` sous la collection. Elle
+  était doublée : répétée, une précision honnête devient une mise en garde.
+- **Collection portée de quatre à six entrées**, couvrant élagage, abattage,
+  gestion du bois et évacuation.
+
+**Quatre candidates ont été téléchargées puis supprimées** après inspection à
+taille réelle : t-shirt SIEMENS, sweat d'une entreprise concurrente, broyeur
+de marque dans un pavillon nord-américain, opérateur en baskets. Aucun de ces
+détails n'était visible en vignette — d'où la règle ajoutée au registre :
+**toute candidate se contrôle affichée en pleine largeur.**
+
+*Non couvert :* aucune photographie d'entretien extérieur n'a été retenue,
+faute de candidate montrant un professionnel équipé. La catégorie reste
+absente de la collection.
+
+**Sortie atteinte :** aucun débordement de 320 à 1440 px, contrastes du hero
+7,46 / 8,51 / 11,25 en 390 px, sept images sur `/realisations` dont une seule
+en `priority`. Lint, typecheck et build au vert. Aucune dépendance ajoutée.
 ---
 
 ## Phase 10 — Carte de zone d'intervention ⬜

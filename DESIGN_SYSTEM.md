@@ -291,6 +291,29 @@ service, et tout le contenu reste visible sans survol.
 > jeton dédié, `--radius-card`, et par ce paragraphe : **ne pas l'étendre à
 > d'autres sections** sans nouvelle décision.
 >
+> **Extension, phase 9 — décision client.** La section « Quelques
+> interventions » de la page d'accueil emploie elle aussi des cartes
+> photographiques. Le motif n'est donc plus exclusif aux Prestations, mais il
+> reste **encadré** : deux sections, pas plus, et deux anatomies
+> **délibérément distinctes**, parce qu'elles cohabitent sur la même page et
+> sur la même surface claire.
+>
+> | | Prestations | Réalisations |
+> | --- | --- | --- |
+> | Texte | **incrusté** sur la photo | **sous** la photo, sur l'ivoire |
+> | Voile | dégradé forêt + renfort au survol | aucun |
+> | Repère | index `01`–`04` | étiquette de catégorie |
+> | Cadrage | portrait constant | paysage empilé, portrait en 3 colonnes |
+> | Nombre | quatre | trois |
+> | Survol | voile qui s'assombrit | image qui grandit de 4 % |
+>
+> Sortir le texte de l'image a un second mérite, moins visible : les trois
+> photographies de chantier sont claires et contrastées, un texte incrusté
+> aurait exigé un dégradé calibré **par image**.
+>
+> **Une troisième section à cartes serait de trop.** À ce stade la page
+> redeviendrait une grille, et c'est précisément ce que `PROJECT.md` interdit.
+
 > Ce qui est encadré ici, c'est le **motif de carte cliquable**, pas le rayon.
 > `--radius-card` (16 px) est depuis la phase 7 le rayon des **grands blocs** —
 > photographie de méthode des pages services, panneau sombre de conversion,
@@ -389,6 +412,28 @@ aplat vert. C'est un échec, pas une réussite.
 **Une photographie à ciel clair coûte un cran de dégradé.** C'est consigné dans
 `MEDIA_SOURCES.md` pour les fichiers concernés : le choix d'une photo de hero
 n'est pas seulement esthétique, il engage la lisibilité.
+
+#### La primitive `HeroScrim` — phase 9
+
+Le cas s'étant présenté une seconde fois sur `/realisations` (surtitre à 3,20
+avec le dégradé partagé), les deux réglages sont sortis en primitive :
+**`src/components/ui/hero-scrim.tsx`**.
+
+```tsx
+<HeroScrim />                    // heros de 30rem et plus
+<HeroScrim variant="compact" />  // heros de 26 a 29rem
+```
+
+Ce n'est pas un rangement cosmétique. La chaîne de dégradé fait 300
+caractères ; recopiée, elle se serait désynchronisée à la première retouche,
+et la **justification chiffrée** de chaque palier — la seule chose qui empêche
+quelqu'un de l'« améliorer » à l'œil — se serait perdue. Elle vit maintenant
+en un seul endroit, à côté des mesures qui l'ont produite.
+
+Adopté par les quatre pages services, `/a-propos` et `/realisations`.
+**Restent hors primitive, et c'est voulu :** le hero de la page d'accueil
+(100svh, calibré à part) et le voile des cartes Prestations — qui n'est pas un
+hero mais un fond de carte, avec un renfort au survol.
 
 ### Direction artistique — deux sources, un seul téléchargement
 

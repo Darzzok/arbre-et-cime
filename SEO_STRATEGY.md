@@ -10,8 +10,8 @@ rassurante, mais il n'est ni un mot-clé cible, ni un prétexte à multiplier de
 pages villes.
 
 **État : architecture livrée en phase 3, pages services rédigées en phase 7,
-`/a-propos` rédigée ensuite.** Restent les contenus de `/realisations` et
-`/zones-intervention` (phases 9 et 10).
+`/a-propos` puis `/realisations` rédigées ensuite.** Reste le contenu de
+`/zones-intervention` (phase 10).
 
 ---
 
@@ -218,6 +218,49 @@ vérifiable, seulement du balisage.
 
 À rouvrir en phase 14, **en même temps que `LocalBusiness`** et pas avant : les
 deux n'ont de valeur que liés.
+
+---
+
+## 5 quater. `/realisations` — livrée en phase 9
+
+Quatre blocs : hero compact, collection, lecture des chantiers, conversion.
+
+**La description a été réécrite, l'ancienne était fausse.** Elle annonçait
+des « photographies réelles et situées » alors que la photothèque du client
+n'est pas livrée. Une description mensongère se paie deux fois : en taux de
+rebond, et en crédibilité quand le visiteur s'en aperçoit.
+
+> Élagage, abattage, évacuation : ce que montre un chantier, et ce qui décide
+> de la méthode — l'accès, le voisinage, l'état de l'arbre et le volume de
+> bois.
+
+**À réécrire une troisième fois** le jour des vraies photographies : elle
+pourra alors porter Rouen et la métropole sans mentir.
+
+### Aucune route `/realisations/[slug]`
+
+Tentant, et prématuré. Une page par chantier n'a de valeur que si elle porte
+une commune, un contexte et des contraintes réels — sinon c'est exactement la
+page mince que le § 1 interdit, multipliée par le nombre de photographies.
+
+Condition de création, le jour venu : un chantier **documenté** (commune,
+contexte, contrainte, photographies avant/pendant/après). Une par une, jamais
+par lot — même règle que les pages locales.
+
+### Aucune donnée structurée d'image
+
+Ni `ImageObject`, ni `CreativeWork`. Baliser des photographies de banque comme
+des réalisations de l'entreprise serait une affirmation non vérifiable, donc
+interdite par le § 1. Seul `BreadcrumbList` est émis.
+
+### Maillage
+
+Entrant : la section Réalisations de l'accueil (trois cartes).
+Sortant : `/devis` (panneau de conversion) et les quatre pages services.
+
+L'intention reste la **preuve**, pas le volume : cette page ne vise pas
+« élagueur Rouen ». Elle sert la conversion du visiteur prévoyant décrit dans
+`CONVERSION_STRATEGY.md` § 2, celui qui compare trois à cinq prestataires.
 
 ---
 

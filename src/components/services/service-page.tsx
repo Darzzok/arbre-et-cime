@@ -9,6 +9,7 @@ import {
   Container,
   Display,
   Eyebrow,
+  HeroScrim,
   Lead,
   Reveal,
   Rule,
@@ -83,14 +84,7 @@ export function ServicePage({ id }: { id: RouteId }) {
             sizes="100vw"
             className={cn("-z-10 object-cover", content.hero.position)}
           />
-          <span
-            aria-hidden="true"
-            /* Le palier médian est appuyé : sur `/elagage`, le surtitre tombe
-               devant un bâtiment en pierre claire et descendait à 3,28 de
-               contraste — sous le seuil AA. Les quatre pages partagent le même
-               dégradé, calibré sur la plus exigeante. */
-            className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(20,37,30,0.94)_0%,rgba(20,37,30,0.86)_26%,rgba(20,37,30,0.60)_52%,rgba(20,37,30,0.24)_74%,rgba(20,37,30,0.02)_92%,rgba(20,37,30,0)_100%)]"
-          />
+          <HeroScrim />
 
           <Container className="relative py-12 lg:py-16">
             <div className="mx-auto max-w-reading">

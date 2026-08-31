@@ -25,14 +25,15 @@ la photothèque du client. Elles respectent les règles verrouillées de
 
 ## 2. Licence
 
-Les 18 images proviennent de **Pexels**, sous **licence Pexels** :
+Les 22 images proviennent de **Pexels**, sous **licence Pexels** :
 <https://www.pexels.com/license/> — utilisation gratuite, y compris commerciale,
 modification autorisée, attribution non obligatoire (mais consignée ici).
 
 **Aucune image ne provient** d'Unsplash+, d'une banque payante, de Google Images
 ou de Pinterest. Aucune image ne porte de filigrane.
 
-Date de récupération de l'ensemble : **30 août 2026**.
+Dates de récupération : **30 août 2026** pour les 18 premières, **31 août 2026**
+pour les quatre ajoutées au correctif 9B (§ 6).
 
 ---
 
@@ -56,8 +57,8 @@ alternatives disponibles.
 | Fichier | Dimensions | Usage prévu | Auteur | Page source | Remarques |
 | --- | --- | --- | --- | --- | --- |
 | `elagage-travail-sur-corde-securite.jpg` | 1400×1705 | `/elagage` — travail sur corde, EPI, contexte bâti. | Margo Evardson | [pexels.com/photo/…-35606516](https://www.pexels.com/photo/arborist-working-on-a-tree-in-birmingham-uk-35606516/) | Gilet haute visibilité jaune. Visage non identifiable, aucun logo lisible. |
-| `elagage-arbre-taille-en-tetard.jpg` | 1400×2100 | `/elagage` — résultat d'une taille en têtard, image graphique. | Maryia Babuchenka | [pexels.com/photo/…-36010884](https://www.pexels.com/photo/pollarded-london-plane-tree-against-blue-sky-36010884/) | Aucune personne, aucun logo. Ciel bleu saturé : désaturer légèrement à l'intégration. |
-| `abattage-tronconnage-grume.jpg` | 2400×1600 | `/abattage` — tronçonnage d'une grume au sol. | Aurora Aguilar | [pexels.com/photo/…-6153123](https://www.pexels.com/photo/a-person-cutting-a-tree-6153123/) | Mains et avant-bras seulement. Aucun logo lisible. |
+| `elagage-arbre-taille-en-tetard.jpg` | 1400×2100 | **`/realisations`** — collection, catégorie Élagage (phase 9). Était réservée à `/elagage`, où elle n'a finalement pas servi. | Maryia Babuchenka | [pexels.com/photo/…-36010884](https://www.pexels.com/photo/pollarded-london-plane-tree-against-blue-sky-36010884/) | Aucune personne, aucun logo. Ciel bleu saturé : désaturer légèrement à l'intégration. |
+| `abattage-tronconnage-grume.jpg` | 2400×1600 | **Inutilisée.** Hero de `/realisations` en phase 9, **retirée au correctif 9B** sur demande client. | Aurora Aguilar | [pexels.com/photo/…-6153123](https://www.pexels.com/photo/a-person-cutting-a-tree-6153123/) | **Ne pas remettre en production.** La fiche d'origine affirmait « aucun logo lisible » : c'était faux, la marque STIHL est parfaitement lisible sur le carter. S'y ajoute un avant-bras tatoué très reconnaissable. Le client a tranché au correctif 9B — l'image est écartée, pas seulement recadrée. |
 | `abattage-equipement-protection.jpg` | 1400×2100 | `/abattage` — casque, protections auditives, tronçonneuse. | light wizzi | [pexels.com/photo/…-10332551](https://www.pexels.com/photo/a-man-in-green-jacket-wearing-orange-helmet-10332551/) | EPI complet et réaliste. Visage de profil, peu identifiable. Aucun logo lisible. |
 | `abattage-arbre-tombe-intervention-urgence.jpg` | 2400×1600 | `/abattage` — arbre tombé débité ; illustre l'urgence après coup de vent. | Mike Bird | [pexels.com/photo/…-5351109](https://www.pexels.com/photo/uprooted-tree-cut-in-pieces-5351109/) | Aucune personne, aucun logo. |
 | `dessouchage-souche-fraiche-sciure.jpg` | 2400×1600 | `/dessouchage` — souche fraîchement coupée entourée de sciure. | Plato Terentev | [pexels.com/photo/…-9806894](https://www.pexels.com/photo/a-tree-stump-on-dirt-ground-9806894/) | Aucune personne, aucun logo. |
@@ -83,14 +84,50 @@ Elles ne doivent **jamais** être légendées avec une commune ou une date : ce
 serait une fausse affirmation. Légendes neutres uniquement, jusqu'au
 remplacement.
 
-| Fichier | Dimensions | Usage prévu | Auteur | Page source | Remarques |
+**Quatre photographies ajoutées au correctif 9B**, portant le dossier de trois
+à sept fichiers. La phase 9 avait dû emprunter deux images au dossier
+`services/` et employer le broyeur sur trois emplacements à la fois ; ce n'est
+plus le cas.
+
+> **Règle de répartition, posée au correctif 9B.** Aucune photographie de
+> chantier n'apparaît sur deux pages différentes. Les trois reprises de la
+> section d'accueil sont des entrées de la collection de `/realisations` —
+> c'est le principe d'une accroche, la page en montre trois de plus. Toute
+> nouvelle image doit préserver cette règle.
+
+### Ajoutées au correctif 9B — récupérées le 31 août 2026
+
+| Fichier | Dimensions | Poids | Usage | Auteur | Page source | Licence | Remarques |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `chantier-abattage-foret-tronconneuse.jpg` | 2400×1352 | 844 Ko | **Hero de `/realisations`** | Fabian Köhler | [pexels.com/photo/…-11932165](https://www.pexels.com/photo/man-cutting-the-tree-using-a-chainsaw-11932165/) | Pexels, gratuite, non Pexels+ | Coupe d'abattage au pied d'un hêtre, Hohenstein (Thuringe, Allemagne). Casque, visière, protections auditives. **Visage masqué par la visière, aucune marque lisible.** Cadrage 16/9 natif, adapté à un hero large. |
+| `chantier-grimpe-encordee-elagage.jpg` | 2400×3595 | 1 409 Ko | **Accueil + collection `/realisations`** — catégorie Élagage | Chris F | [pexels.com/photo/…-15163244](https://www.pexels.com/photo/man-hanging-on-ropes-in-a-forest-15163244/) | Pexels, gratuite, non Pexels+ | Élagueur encordé sur une charpentière, boisement en hiver. Personne à distance, de trois quarts, non identifiable. Aucun logo. *Réserve : pas de casque visible — à remplacer en priorité par une photo client.* |
+| `chantier-billons-marques-automne.jpg` | 2400×1600 | 805 Ko | **Accueil + collection `/realisations`** — catégorie Gestion du bois | Esmerald Heqimaj | [pexels.com/photo/…-33903905](https://www.pexels.com/photo/pile-of-logs-with-blue-numerical-markings-in-forest-33903905/) | Pexels, gratuite, non Pexels+ | Pile de billons marqués à la peinture, sous-bois d'automne. Aucune personne, aucun logo. |
+| `chantier-debitage-epi-protection.jpg` | 2400×1600 | 734 Ko | **`/a-propos`**, bloc « manière de travailler » | Karola / Kaboompics | [pexels.com/photo/…-4206050](https://www.pexels.com/photo/crop-man-cutting-log-with-chainsaw-4206050/) | Pexels, gratuite, non Pexels+ | Cadrage aux jambes : pantalon de protection jaune, chaussures de sécurité, billons de bouleau. **Aucun visage, aucune marque lisible.** |
+
+### Déjà présentes
+
+| Fichier | Dimensions | Usage | Auteur | Page source | Remarques |
 | --- | --- | --- | --- | --- | --- |
-| `chantier-broyage-branches-evacuation.jpg` | 1600×2000 | **`/a-propos`** — fin du bloc « manière de travailler », elle montre l'étape que le texte nomme en dernier. Reste candidate pour `/realisations` (phase 9). | There on Saturn | [pexels.com/photo/…-11124086](https://www.pexels.com/photo/worker-standing-by-lumber-grinding-machine-on-vehicle-11124086/) | Opérateur de dos, protections auditives. Aucun logo lisible. |
-| `chantier-grume-abattue-sous-bois.jpg` | 2400×1600 | `/realisations` — grume abattue en sous-bois, section fraîche. | Joerg Hartmann | [pexels.com/photo/…-34338533](https://www.pexels.com/photo/felled-tree-trunk-in-schomberg-forest-34338533/) | Aucune personne, aucun logo. |
-| `chantier-billons-lisiere-hiver.jpg` | 1600×2400 | `/realisations` — billons et souche en lisière, contexte résidentiel. | Sergej | [pexels.com/photo/…-35558363](https://www.pexels.com/photo/log-cutting-in-winter-countryside-clearing-35558363/) | Habitations en arrière-plan, aucune enseigne lisible. Aucune personne. |
+| `chantier-billons-lisiere-hiver.jpg` | 1600×2400 | **Accueil + collection `/realisations`** — catégorie Abattage, proximité d'habitations | Sergej | [pexels.com/photo/…-35558363](https://www.pexels.com/photo/log-cutting-in-winter-countryside-clearing-35558363/) | Habitations en arrière-plan, aucune enseigne lisible. Aucune personne. |
+| `chantier-grume-abattue-sous-bois.jpg` | 2400×1600 | **Collection `/realisations` uniquement** — catégorie Abattage | Joerg Hartmann | [pexels.com/photo/…-34338533](https://www.pexels.com/photo/felled-tree-trunk-in-schomberg-forest-34338533/) | Aucune personne, aucun logo. |
+| `chantier-broyage-branches-evacuation.jpg` | 1600×2000 | **Collection `/realisations` uniquement** — catégorie Évacuation. Retirée de `/a-propos` et de l'accueil au correctif 9B : elle y faisait trois emplacements pour une seule image. | There on Saturn | [pexels.com/photo/…-11124086](https://www.pexels.com/photo/worker-standing-by-lumber-grinding-machine-on-vehicle-11124086/) | Opérateur de dos, protections auditives. Aucun logo lisible. |
+
+### Candidates écartées au correctif 9B
+
+Quatre photographies téléchargées puis **supprimées après inspection à taille
+réelle** — le détail disqualifiant n'était visible sur aucune vignette :
+
+| Photo | Motif du rejet |
+| --- | --- |
+| pexels 8489861 — bûcheron, casque orange | T-shirt portant **SIEMENS** en toutes lettres |
+| pexels 5644514 — bûcheron de dos, Allemagne | Sweat portant le nom d'une **entreprise concurrente** d'élagage |
+| pexels 34581908 — broyeur de branches | Marque du broyeur lisible **et** pavillon nord-américain |
+| pexels 8821017 — tronçonneuse | Opérateur en **baskets** : incompatible avec un site qui vend le travail sécurisé |
+
+**Leçon :** une vignette ne suffit pas. Toute candidate se contrôle affichée en
+pleine largeur avant d'entrer dans le dossier.
 
 ---
-
 ## 7. Images écartées, et pourquoi
 
 Consigné pour éviter qu'elles ne reviennent par inadvertance.

@@ -171,9 +171,13 @@ const definitions: Record<RouteId, RouteDefinition> = {
     id: "realisations",
     path: "/realisations",
     navLabel: "Réalisations",
-    title: "Réalisations et chantiers",
+    title: "Réalisations et types de chantiers",
+    // Réécrite en phase 9. La version précédente annonçait des « photographies
+    // réelles et situées » : c'était faux tant que la photothèque du client
+    // n'est pas livrée, et une description mensongère se paie en taux de rebond.
+    // À réécrire une troisième fois le jour des vraies photos.
     description:
-      "Chantiers d’élagage, d’abattage et d’entretien réalisés à Rouen et dans la métropole rouennaise, en photographies réelles et situées.",
+      "Élagage, abattage, évacuation : ce que montre un chantier, et ce qui décide de la méthode — l’accès, le voisinage, l’état de l’arbre et le volume de bois.",
     intent:
       "preuve par l’exemple — faible volume de recherche, fort effet sur la conversion",
     group: "preuve",
