@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import {
   Body,
+  Capsule,
   Container,
   Eyebrow,
   Reveal,
@@ -18,12 +19,33 @@ import { serviceRoutes } from "@/lib/routes";
  * Quatre pages services, pas huit : les prestations secondaires (abattage
  * difficile, débroussaillage, taille de haies, évacuation) sont traitées à
  * l'intérieur de leur page parente, conformément au rattachement défini dans
- * `SEO_STRATEGY.md` § 4.
+ * `SEO_STRATEGY.md` § 4. Le rappel en fin de section porte cette information —
+ * elle ne doit pas disparaître.
  *
- * **Cartes photographiques** — direction arrêtée par le client en phase 6B, en
- * remplacement du traitement éditorial de la phase 6. Photo plein fond, dégradé
- * progressif, contenu ancré en bas. C'est le seul endroit du site où le motif
- * « carte » est autorisé, et le seul où le rayon dépasse 8 px.
+ * GRILLE ASYMÉTRIQUE — REFAITE EN PHASE 15B.3
+ * -------------------------------------------
+ * La version précédente était une grille 2 × 2 de quatre cartes **strictement
+ * identiques** : même largeur, même ratio 4:3, même hauteur. C'est le motif que
+ * `CLAUDE.md` § 6 interdit nommément.
+ *
+ * La grille passe donc à douze colonnes, sur deux rangées de proportions
+ * inversées :
+ *
+ * | Rangée | Gauche | Droite |
+ * | --- | --- | --- |
+ * | 1 | **Élagage** — 7/12, haute | **Abattage** — 5/12, haute |
+ * | 2 | **Dessouchage** — 5/12, basse | **Entretien** — 7/12, basse |
+ *
+ * L'inversion 7/5 puis 5/7 est ce qui produit l'asymétrie : deux rangées 7/5
+ * identiques auraient seulement déplacé le problème. Les deux hauteurs
+ * distinctes (32 rem puis 24 rem) hiérarchisent : l'élagage est le cœur de
+ * métier, il occupe la plus grande surface de la page.
+ *
+ * La mise en page est déclarée **par identifiant de route**, pas par index :
+ * réordonner `serviceRoutes` ne peut pas casser silencieusement la grille.
+ *
+ * MOBILE : une colonne, hauteur unique. L'asymétrie n'a aucun sens sur 390 px,
+ * où toutes les cartes occupent de toute façon la pleine largeur.
  */
 
 type ServiceCard = {
@@ -31,7 +53,14 @@ type ServiceCard = {
   alt: string;
   /** Cadrage : ces photos sont recadrées fort, le sujet doit rester dedans. */
   position: string;
+  /** Capsule de catégorie, affichée sur la photographie. */
+  capsule: string;
+  /** Une ligne. Le détail est sur la page du service. */
   description: string;
+  /** Emprise sur la grille de douze colonnes, à partir de `lg`. */
+  span: string;
+  /** Hauteur de la carte. Deux valeurs seulement, jamais quatre. */
+  height: string;
 };
 
 const cards: Record<string, ServiceCard> = {
@@ -39,32 +68,45 @@ const cards: Record<string, ServiceCard> = {
     image: "/images/services/elagage-travail-sur-corde-securite.jpg",
     alt: "Élagueur-grimpeur suspendu à sa corde, taillant les branches d’un arbre au pied d’un bâtiment",
     position: "object-[center_38%]",
+    capsule: "Cœur de métier",
     description: "Préserver, équilibrer et sécuriser les arbres.",
+    span: "lg:col-span-7",
+    height: "h-[21rem] sm:h-[24rem] lg:h-[32rem]",
   },
   abattage: {
     image: "/images/services/abattage-arbre-tombe-intervention-urgence.jpg",
     alt: "Grand arbre abattu, débité en sections sur un terrain arboré",
     position: "object-center",
-    description:
-      "Abattage et démontage lorsque l’arbre doit être retiré, y compris en situation complexe.",
+    capsule: "Urgences",
+    description: "Retirer l’arbre, y compris en situation complexe.",
+    span: "lg:col-span-5",
+    height: "h-[21rem] sm:h-[24rem] lg:h-[32rem]",
   },
   dessouchage: {
     image: "/images/services/dessouchage-souche-fraiche-sciure.jpg",
     alt: "Souche fraîchement coupée, entourée de sciure",
     position: "object-center",
-    description:
-      "Retirer ou réduire une souche pour libérer et remettre en état la zone.",
+    capsule: "Remise en état",
+    description: "Libérer la zone après la coupe.",
+    span: "lg:col-span-5",
+    height: "h-[21rem] sm:h-[24rem] lg:h-[24rem]",
   },
   "entretien-exterieur": {
     image: "/images/services/taille-de-haie-taille-haie-thermique.jpg",
     alt: "Taille d’une haie de conifères au taille-haie thermique",
     position: "object-[center_42%]",
-    description:
-      "Taille de haies, débroussaillage et entretien des espaces extérieurs.",
+    capsule: "Entretien",
+    description: "Haies, débroussaillage et espaces extérieurs.",
+    span: "lg:col-span-7",
+    height: "h-[21rem] sm:h-[24rem] lg:h-[24rem]",
   },
 };
 
-/** Grille 2×2 au-delà de 1024 px : chaque carte occupe la moitié de la largeur. */
+/**
+ * Les cartes larges occupent 7/12 du conteneur (soit ~640 px en 1440), les
+ * étroites 5/12 (~450 px). On annonce la plus grande des deux : servir 450 px
+ * à une carte de 640 remonterait une image floue.
+ */
 const CARD_SIZES = "(min-width: 64rem) 46vw, 100vw";
 
 export function Services() {
@@ -73,12 +115,11 @@ export function Services() {
       <Container>
         <Reveal className="mx-auto max-w-reading">
           <Eyebrow>Prestations</Eyebrow>
-          {/* Titre volontairement contenu : 30 px sur mobile, 36 px sur
-              desktop, au lieu des 46 px de l'échelle `text-title`. Ce sont les
-              cartes qui portent la section, pas le titre. */}
+          {/* Titre volontairement contenu : ce sont les cartes qui portent la
+              section, pas le titre. */}
           <Title
             id="prestations-titre"
-            className="mt-4 lg:text-[2.25rem] lg:leading-[1.1]"
+            className="mt-4 lg:text-[2.5rem] lg:leading-[1.08]"
           >
             Nos interventions
           </Title>
@@ -88,8 +129,8 @@ export function Services() {
           </Body>
         </Reveal>
 
-        <ul className="mt-10 grid gap-5 lg:mt-14 lg:grid-cols-2 lg:gap-7">
-          {serviceRoutes.map((route, index) => {
+        <ul className="mt-10 grid gap-(--card-gap) md:grid-cols-2 lg:mt-14 lg:grid-cols-12">
+          {serviceRoutes.map((route) => {
             const card = cards[route.id];
 
             if (!card) {
@@ -97,12 +138,12 @@ export function Services() {
             }
 
             return (
-              <Reveal as="li" key={route.id}>
+              <Reveal as="li" key={route.id} className={card.span}>
                 <Link
                   href={route.path}
                   className={cn(
                     "group relative block overflow-hidden rounded-card no-underline",
-                    "h-[21rem] sm:h-[24rem] lg:h-auto lg:aspect-[4/3]",
+                    card.height,
                   )}
                 >
                   <Image
@@ -110,6 +151,11 @@ export function Services() {
                     alt={card.alt}
                     fill
                     sizes={CARD_SIZES}
+                    /* 68 et non 75 : ces photographies sont recouvertes d un
+                       degrade allant de 0,93 a 0,04. Le detail des zones
+                       basses n est pas visible, son cout de transfert si —
+                       mesure a 257 Ko pour les quatre cartes. */
+                    quality={68}
                     className={cn(
                       "object-cover",
                       card.position,
@@ -154,16 +200,11 @@ export function Services() {
                     data-surface="dark"
                     className="absolute inset-x-0 bottom-0 p-6 lg:p-7"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="font-sans text-eyebrow font-semibold tabular-nums text-(--color-safety)"
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+                    <Capsule variant="photo">{card.capsule}</Capsule>
 
                     <h3
                       className={cn(
-                        "mt-2.5 font-display text-subtitle leading-tight",
+                        "mt-4 font-display text-subtitle leading-tight",
                         "text-(--surface-heading)",
                         "motion-safe:transition-transform",
                         "motion-safe:duration-(--duration-micro) motion-safe:ease-cime",
@@ -179,7 +220,7 @@ export function Services() {
                     </p>
 
                     <span className="mt-5 inline-flex items-center justify-center gap-2.5 font-sans text-caption font-semibold text-(--surface-fg)">
-                      Voir le service
+                      Découvrir
                       <svg
                         aria-hidden="true"
                         viewBox="0 0 16 16"

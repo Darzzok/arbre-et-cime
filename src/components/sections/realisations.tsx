@@ -1,7 +1,16 @@
 import Image from "next/image";
-import Link from "next/link";
 
-import { Body, Container, Eyebrow, Reveal, Section, Title } from "@/components/ui";
+import {
+  ArrowLink,
+  Body,
+  Capsule,
+  CardLink,
+  Container,
+  Eyebrow,
+  Reveal,
+  Section,
+  Title,
+} from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { homeRealisations } from "@/lib/realisations-content";
 import { getRoute } from "@/lib/routes";
@@ -9,38 +18,57 @@ import { getRoute } from "@/lib/routes";
 /**
  * Section 5 des 7 sections VERROUILLÉES — quelques interventions.
  *
- * **Anatomie de carte différente de celle des Prestations**, et c'est
- * délibéré : les deux sections vivent sur la même page, sur la même surface
- * claire, et deux grilles de cartes photographiques identiques donneraient
- * exactement le « site généré » que `PROJECT.md` interdit.
+ * TROIS ANATOMIES DE CARTE SUR UNE MÊME PAGE, ET C'EST VOULU
+ * ----------------------------------------------------------
+ * `PROJECT.md` interdit la grille de cartes interchangeables. La page en
+ * compte pourtant trois séries ; elles ne se ressemblent pas :
  *
- *   Prestations   texte INCRUSTÉ sur la photographie, dégradé forêt, index
- *                 01–04, quatre cartes.
- *   Réalisations  photographie pleine, puis légende SOUS l'image sur l'ivoire.
- *                 Trois cartes, aucun texte sur la photo.
+ * | Section | Anatomie |
+ * | --- | --- |
+ * | Preuves | carte pleine, valeur + libellé, aucune image |
+ * | Prestations | texte **incrusté** sur la photographie, dégradé forêt |
+ * | Réalisations | photographie **en tête de carte**, texte dessous sur le fond |
  *
- * Sortir le texte de l'image a un second mérite : ces trois photographies sont
- * claires et contrastées, un texte incrusté aurait exigé un dégradé par image
- * (le piège documenté dans `DESIGN_SYSTEM.md` § 5).
+ * Sortir le texte de l'image a un second mérite, relevé en phase 9 : ces trois
+ * photographies sont claires et contrastées, un texte incrusté aurait exigé un
+ * dégradé par image (le piège documenté dans `DESIGN_SYSTEM.md` § 5).
  *
- * Les trois cartes pointent vers `/realisations`. Leur nom accessible contient
- * le titre de la carte, elles ne se réduisent donc pas à trois liens
- * indiscernables pour un lecteur d'écran.
+ * COMPOSITION 7/5 — REFAITE EN PHASE 15B.3
+ * ----------------------------------------
+ * Trois cartes égales sur trois colonnes devenaient trois vignettes. La
+ * première occupe désormais 7/12 sur deux rangées, les deux autres 5/12
+ * empilées : une entrée principale et deux rappels, plutôt que trois éléments
+ * de même poids.
+ *
+ * La section passe sur **sable**, entre le forêt profond de « Pourquoi » et
+ * l'ivoire de la carte : c'est le palier qui évite de passer du sombre au
+ * clair d'un seul coup.
+ *
+ * HONNÊTETÉ DU TITRE — NE PAS REFORMULER
+ * --------------------------------------
+ * « Quelques interventions » laissait entendre des chantiers réellement menés
+ * par Arbres et Cimes, ce que ces photographies de repli ne documentent pas.
+ * Le titre porte sur l'ADAPTATION à la situation : c'est exact, et c'est aussi
+ * l'argument commercial. Tant que la photothèque client n'est pas livrée,
+ * cette formulation ne se change pas.
  */
 
 const realisationsRoute = getRoute("realisations");
 
+/** Emprise sur la grille de douze colonnes, dans l'ordre de `homeRealisations`. */
+const SPANS = ["lg:col-span-7 lg:row-span-2", "lg:col-span-5", "lg:col-span-5"];
+
 export function Realisations() {
   return (
-    <Section surface="light" aria-labelledby="realisations-titre">
+    <Section surface="sand" aria-labelledby="realisations-titre">
       <Container>
         <Reveal className="mx-auto max-w-reading">
           <Eyebrow>Réalisations</Eyebrow>
-          {/* « Quelques interventions » laissait entendre des chantiers
-              réellement menés par Arbres et Cimes, ce que ces photographies ne
-              documentent pas. Le titre porte désormais sur l'ADAPTATION à la
-              situation : c'est exact, et c'est aussi l'argument commercial. */}
-          <Title id="realisations-titre" as="h2" className="mt-4">
+          <Title
+            id="realisations-titre"
+            as="h2"
+            className="mt-4 lg:text-[2.5rem] lg:leading-[1.08]"
+          >
             Des interventions adaptées à chaque situation
           </Title>
           <Body className="mt-4 text-(--surface-fg-muted)">
@@ -49,97 +77,81 @@ export function Realisations() {
           </Body>
         </Reveal>
 
-        {/* `max-w` sur chaque carte tant qu'elles sont empilées : à 768 px
-            elles s'étiraient sur 689 px, ce qui portait la section à 2 394 px —
-            une photographie de 517 px de haut pour une simple reprise de trois
-            éléments. */}
-        <ul className="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-3 lg:gap-6">
-          {homeRealisations.map((item) => (
-            <Reveal
-              as="li"
-              key={item.id}
-              className="mx-auto w-full max-w-[26rem] lg:max-w-none"
-            >
-              <Link
-                href={realisationsRoute.path}
-                className="group block no-underline"
+        <ul className="mt-10 grid gap-(--card-gap) md:grid-cols-2 lg:mt-14 lg:grid-cols-12">
+          {homeRealisations.map((item, index) => {
+            const grand = index === 0;
+
+            return (
+              <Reveal
+                as="li"
+                key={item.id}
+                className={cn(
+                  "mx-auto w-full max-w-[30rem] md:max-w-none",
+                  SPANS[index],
+                )}
               >
-                {/* Paysage tant que les cartes sont empilées, portrait dès
-                    qu'elles passent en trois colonnes. En 4/5 sur mobile, la
-                    section atteignait 2 167 px — trop pour une reprise de
-                    trois éléments sur la page d'accueil. */}
-                <div className="relative aspect-[4/3] overflow-hidden rounded-card lg:aspect-[4/5]">
-                  <Image
-                    src={item.image}
-                    alt={item.alt}
-                    fill
-                    sizes="(min-width: 64rem) 34rem, 100vw"
+                <CardLink
+                  href={realisationsRoute.path}
+                  tone="plain"
+                  padding="none"
+                  className="flex h-full flex-col"
+                >
+                  {/* La grande carte n'a pas de ratio fixe au-delà de 1024 px :
+                      elle prend la hauteur des deux petites empilées à côté
+                      d'elle, gouttière comprise. */}
+                  <div
                     className={cn(
-                      "object-cover",
-                      item.position,
-                      // Zoom très léger au survol. `overflow-hidden` du parent
-                      // le contient ; aucun texte ne bouge, puisque le texte
-                      // est en dehors du cadre.
-                      "motion-safe:transition-transform",
-                      "motion-safe:duration-(--duration-reveal) motion-safe:ease-cime",
-                      "motion-safe:group-hover:scale-[1.04]",
-                      "motion-safe:group-focus-visible:scale-[1.04]",
-                    )}
-                  />
-                </div>
-
-                <p className="mt-5 font-sans text-eyebrow font-semibold uppercase text-(--surface-fg-muted)">
-                  {item.category}
-                </p>
-
-                <h3 className="mt-2.5 font-display text-subtitle leading-tight text-(--surface-heading) text-balance">
-                  {item.title}
-                </h3>
-
-                <p className="mt-2.5 font-sans text-caption leading-relaxed text-pretty text-(--surface-fg-muted)">
-                  {item.teaser}
-                </p>
-
-                <span className="mt-4 flex items-center justify-center gap-2.5">
-                  <span
-                    className={cn(
-                      "font-sans text-caption font-semibold text-(--surface-fg)",
-                      "underline decoration-1 underline-offset-[0.25em]",
-                      "decoration-(--surface-rule)",
-                      "transition-[text-decoration-color]",
-                      "duration-(--duration-micro) ease-cime",
-                      "group-hover:decoration-(--surface-fg)",
-                      "group-focus-visible:decoration-(--surface-fg)",
+                      "relative w-full overflow-hidden",
+                      grand
+                        ? "aspect-[4/3] lg:aspect-auto lg:min-h-[22rem] lg:flex-1"
+                        : "aspect-[4/3] lg:aspect-[16/9]",
                     )}
                   >
-                    Voir les réalisations
-                  </span>
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 16 16"
-                    className={cn(
-                      // Suit la surface : le jaune sécurité ne contraste qu'à
-                      // 1,96 sur ivoire.
-                      "size-4 shrink-0 text-(--surface-fg-muted)",
-                      "motion-safe:transition-transform",
-                      "motion-safe:duration-(--duration-micro) motion-safe:ease-cime",
-                      "motion-safe:group-hover:translate-x-1",
-                      "motion-safe:group-focus-visible:translate-x-1",
-                    )}
-                  >
-                    <path
-                      d="M2 8h11M9 4l4 4-4 4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="square"
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      fill
+                      sizes={
+                        grand
+                          ? "(min-width: 64rem) 46vw, 100vw"
+                          : "(min-width: 64rem) 34vw, 100vw"
+                      }
+                      className={cn(
+                        "object-cover",
+                        item.position,
+                        // Zoom très léger. `overflow-hidden` du parent le
+                        // contient ; aucun texte ne bouge, le texte est hors
+                        // du cadre photographique.
+                        "motion-safe:transition-transform",
+                        "motion-safe:duration-(--duration-reveal) motion-safe:ease-cime",
+                        "motion-safe:group-hover:scale-[1.04]",
+                        "motion-safe:group-focus-visible:scale-[1.04]",
+                      )}
                     />
-                  </svg>
-                </span>
-              </Link>
-            </Reveal>
-          ))}
+                  </div>
+
+                  <div className="p-5 lg:p-6">
+                    <Capsule variant="light">{item.category}</Capsule>
+
+                    <h3 className="mt-4 font-display text-subtitle leading-tight text-(--surface-heading) text-balance">
+                      {item.title}
+                    </h3>
+
+                    <p className="mx-auto mt-2.5 max-w-[44ch] font-sans text-caption leading-relaxed text-pretty text-(--surface-fg-muted)">
+                      {item.teaser}
+                    </p>
+                  </div>
+                </CardLink>
+              </Reveal>
+            );
+          })}
         </ul>
+
+        <Reveal className="mt-10 lg:mt-12">
+          <ArrowLink href={realisationsRoute.path}>
+            Voir toutes les interventions
+          </ArrowLink>
+        </Reveal>
       </Container>
     </Section>
   );

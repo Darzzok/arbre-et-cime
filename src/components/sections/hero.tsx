@@ -2,10 +2,16 @@ import { getImageProps } from "next/image";
 import type { CSSProperties } from "react";
 import { preload } from "react-dom";
 
-import { Body, ButtonLink, Container, Display, Eyebrow } from "@/components/ui";
+import {
+  Body,
+  ButtonLink,
+  Capsule,
+  CapsuleGroup,
+  Container,
+  Display,
+} from "@/components/ui";
 import { cn } from "@/lib/cn";
-import { getRoute } from "@/lib/routes";
-import { area, site } from "@/lib/site";
+import { area, contact, site, telHref } from "@/lib/site";
 
 /**
  * Hero de la page d'accueil — section 1 des 7 sections VERROUILLÉES.
@@ -59,7 +65,23 @@ const HERO_ALT =
 const HERO_MEDIA_DESKTOP = "(min-width: 64rem)";
 const HERO_MEDIA_MOBILE = "(max-width: 63.999rem)";
 
-const devis = getRoute("devis");
+/**
+ * Trois repères, pas un de plus (phase 15B.3).
+ *
+ * Ils remplacent le surtitre « 01 — Élagage · Abattage · Entretien », qui
+ * répétait mot pour mot des termes déjà présents dans le paragraphe juste en
+ * dessous. Ces trois-là ajoutent quelque chose : la gratuité, la
+ * qualification, la zone — c'est-à-dire les trois questions que se pose un
+ * visiteur avant de cliquer.
+ *
+ * Tous vérifiables dans `PROJECT.md`. Aucun tarif, aucun délai, aucune
+ * certification inventée.
+ */
+const CAPSULES = [
+  "Devis gratuit",
+  "Professionnel diplômé",
+  `${area.city} & Métropole`,
+];
 
 /** Style en ligne portant l'échelonnement de l'entrée. */
 function step(index: number): CSSProperties {
@@ -69,7 +91,9 @@ function step(index: number): CSSProperties {
 export function Hero() {
   // Aucun numéro n'est inventé : sans `NEXT_PUBLIC_PHONE`, l'action « Appeler »
   // n'est pas rendue du tout, plutôt qu'un `tel:` vide ou un faux numéro.
-  const hasPhone = site.phone.length > 0;
+  // La règle vit dans `site.ts` depuis la phase 15B.2 — elle n'est pas
+  // réécrite ici.
+  const tel = telHref();
 
   // `getImageProps` donne les jeux d'URLs optimisées de Next sans passer par le
   // composant `<Image>`, ce qui permet de les monter dans un vrai `<picture>` —
@@ -79,7 +103,13 @@ export function Hero() {
     alt: HERO_ALT,
     sizes: "100vw",
     priority: true,
-    quality: 78,
+    /* 75 et non 78. La phase 5B demandait 78, mais `images.qualities` n'existait
+       pas dans `next.config.ts` : Next 16 retombait alors sur 75 sans le dire,
+       et c'est donc 75 que le site a TOUJOURS servi. En rendant la valeur
+       effective (phase 15B.3), le hero passait de 96 à 102 Ko — sur l'élément
+       LCP, et pour une différence que personne n'a jamais vue. On garde la
+       valeur réellement éprouvée. */
+    quality: 75,
   } as const;
 
   const { props: desktopImage } = getImageProps({ ...shared, ...HERO_DESKTOP });
@@ -111,19 +141,25 @@ export function Hero() {
 
   return (
     <section aria-labelledby="hero-titre" className="relative isolate">
-      {/* ---------------------------------------------------------------
-          Bloc photographique. `min-h-svh` et non `dvh` : sur Safari mobile,
-          `dvh` change de valeur quand la barre d'URL se rétracte, ce qui fait
-          sauter la mise en page en cours de défilement. `svh` correspond à la
-          hauteur la plus petite — le hero tient toujours, sans jamais bouger.
-          --------------------------------------------------------------- */}
       {/* `data-surface="dark"` est indispensable, pas décoratif : c'est lui qui
           bascule `--surface-heading`, `--surface-fg` et `--surface-fg-muted`
           vers le jeu ivoire/pierre. Sans lui, les primitives typographiques
           rendraient du texte forêt sur une photographie sombre. */}
+      {/* HAUTEUR REVUE EN PHASE 15B.3.
+          Le hero mesurait `min-h-svh` — 900 px sur un écran de 390 × 844, soit
+          plus que le viewport une fois l'en-tête déduit : le bouton d'appel à
+          l'action tombait sous la ligne de flottaison. Il est ramené à 40 rem
+          (640 px), ce qui laisse le titre, la phrase et le bouton dans le
+          premier écran, et 44 rem au-delà de 480 px.
+          `svh` et non `dvh` : sur Safari mobile, `dvh` change de valeur quand
+          la barre d'URL se rétracte, ce qui ferait sauter la mise en page. */}
       <div
         data-surface="dark"
-        className="relative flex min-h-svh items-end overflow-hidden lg:min-h-[min(100svh,56rem)]"
+        className={cn(
+          "relative flex items-end overflow-hidden",
+          "min-h-[40rem] sm:min-h-[44rem]",
+          "lg:min-h-[min(92svh,50rem)]",
+        )}
       >
         {/* ---------------------------------------------------------------
             La photographie, plein cadre.
@@ -169,30 +205,36 @@ export function Hero() {
           className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(20,37,30,0.94)_0%,rgba(20,37,30,0.88)_24%,rgba(20,37,30,0.72)_46%,rgba(20,37,30,0.32)_64%,rgba(20,37,30,0.06)_82%,rgba(20,37,30,0)_100%)]"
         />
 
-
         {/* Protection de l'en-tête : le haut de l'image comporte du ciel clair. */}
         <div
           aria-hidden="true"
           className="absolute inset-x-0 top-0 -z-10 h-40 bg-[linear-gradient(to_bottom,rgba(20,37,30,0.62)_0%,rgba(20,37,30,0.24)_45%,rgba(20,37,30,0)_100%)]"
         />
 
-        <Container className="relative pt-28 pb-14 lg:pt-0 lg:pb-0">
-          {/* Colonne centrée, assez large pour que « Élagueur-grimpeur »
-              tienne sur une ligne à 76 px. */}
-          <div className="mx-auto w-full lg:max-w-4xl">
-            <Eyebrow data-hero style={step(0)}>
-              <span aria-hidden="true" className="text-(--color-safety)">
-                01
-              </span>
-              <span aria-hidden="true" className="mx-2.5 opacity-60">
-                —
-              </span>
-              Élagage · Abattage · Entretien
-            </Eyebrow>
+        <Container className="relative pt-24 pb-12 lg:pt-0 lg:pb-16">
+          {/* LARGEUR REVUE EN PHASE 15B.3.
+              La colonne était bornée à `max-w-4xl` (896 px) au milieu d'un
+              conteneur de 1 320 px : une colonne étroite posée sur une très
+              grande photographie, ce que le brief nomme précisément. Elle
+              passe à 68 rem (1 088 px), ce qui laisse le titre respirer sur
+              une ligne et donne au paragraphe une vraie assise.
+              L'alignement reste CENTRÉ : c'est une décision client posée une
+              fois pour toutes dans `globals.css` (DESIGN_SYSTEM.md § 4). Le
+              brief demande d'occuper la largeur, pas de ferrer à gauche. */}
+          <div className="mx-auto w-full lg:max-w-[68rem]">
+            <div data-hero style={step(0)}>
+              <CapsuleGroup>
+                {CAPSULES.map((label) => (
+                  <Capsule key={label} variant="photo" dot>
+                    {label}
+                  </Capsule>
+                ))}
+              </CapsuleGroup>
+            </div>
 
             {/* Le titre monte depuis sous son masque. Le `pb` évite que la
                 jambe du « g » soit rognée par l'`overflow-hidden`. */}
-            <div className="mt-5 -mb-[0.12em] overflow-hidden lg:mt-6">
+            <div className="mt-6 -mb-[0.12em] overflow-hidden lg:mt-7">
               <Display
                 as="h1"
                 id="hero-titre"
@@ -241,18 +283,27 @@ export function Hero() {
               {/* La largeur est portée par une ENVELOPPE : `cn()` ne fusionne
                   pas les classes concurrentes (cf. DESIGN_SYSTEM.md § 8). */}
               <div className="w-full sm:w-fit">
-                <ButtonLink href={devis.path} variant="primary" size="lg" block>
+                <ButtonLink
+                  href={contact.quotePath}
+                  variant="primary"
+                  size="lg"
+                  block
+                  data-cta="devis"
+                  data-cta-source="accueil-hero"
+                >
                   Demander un devis
                 </ButtonLink>
               </div>
 
-              {hasPhone ? (
+              {tel ? (
                 <div className="w-full sm:w-fit">
                   <ButtonLink
-                    href={`tel:${site.phone}`}
+                    href={tel}
                     variant="outline"
                     size="lg"
                     block
+                    data-cta="appel"
+                    data-cta-source="accueil-hero"
                   >
                     Appeler
                   </ButtonLink>
@@ -262,7 +313,6 @@ export function Hero() {
           </div>
         </Container>
       </div>
-
     </section>
   );
 }

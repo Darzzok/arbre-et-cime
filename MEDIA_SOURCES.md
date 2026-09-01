@@ -190,3 +190,42 @@ requise, aucune image générée.
 **Manquant :** une **version claire ou inversée** pour les surfaces sombres.
 Le logo actuel est dessiné pour fond clair et son texte devient illisible
 sur le forêt (voir `DESIGN_SYSTEM.md` § 9 ter).
+
+---
+
+## 10. Phase 15B.3 — aucune image ajoutée, mais deux réglages corrigés
+
+**Aucune photographie n'a été téléchargée pour la refonte de la page
+d'accueil.** Le registre est inchangé : les images utilisées sont celles déjà
+inscrites aux § 3, 4 et 6, à leurs emplacements prévus.
+
+Le hero conserve ses **deux sources** (§ 3), et la bascule a été vérifiée au
+réseau plutôt que dans le code :
+
+| Largeur testée | Fichier réellement téléchargé |
+| --- | --- |
+| 320 · 390 · 430 · 768 | `elagueur-ascension-tronc-vertical.jpg` |
+| 1024 · 1440 | `elagueur-grimpeur-arbre-mature.jpg` |
+
+À 390 px, la source desktop n'apparaît dans aucune requête.
+
+### Qualité de compression — le § 8 était partiellement faux
+
+Le § 8 indique que `next/image` produit les déclinaisons « aux tailles
+déclarées dans `next.config.ts` ». C'est vrai des tailles, ça ne l'était pas
+des **qualités** : Next 16 n'honore que celles listées dans `images.qualities`,
+absent de la configuration. Toute valeur passée à `<Image quality>` retombait
+donc sur 75, en silence.
+
+Qualités désormais déclarées et effectivement servies :
+
+| Valeur | Emploi | Raison |
+| --- | --- | --- |
+| 68 | cartes services de l'accueil | recouvertes d'un dégradé de 0,93 à 0,04 |
+| 70 | photographie de « Pourquoi » | cadre fortement recadré |
+| 75 | défaut du projet, **et hero** | valeur réellement éprouvée depuis l'origine |
+
+Le hero reste à 75 : l'honorer à 78, comme le demandait la phase 5B, le faisait
+passer de 96 à 102 Ko sur l'élément LCP, pour une différence invisible.
+
+> **Une qualité d'image se vérifie dans le HTML servi, pas dans le code.**

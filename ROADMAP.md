@@ -1386,6 +1386,99 @@ toujours `false`, **aucune dépendance ajoutée**, aucun numéro inventé.
 
 ---
 
+### Phase 15B.3 — Refonte visuelle de la page d'accueil ✅
+
+Les jetons (15B.1) puis le châssis (15B.2) étant refaits, cette sous-phase
+applique la direction à **la page d'accueil**. Les sept sections verrouillées
+et leur ordre sont inchangés ; aucune autre page n'est touchée.
+
+### Le vrai défaut était le rythme, pas les sections
+
+Mesuré avant toute modification, à 1440 px : **six sections sur sept étaient
+claires**, et cinq consécutives partageaient le même ivoire — 6 855 px d'aplat
+ininterrompu. La seule rupture était une bande de preuves de 121 px.
+
+Nouveau rythme : photo → **sable** → ivoire → **forêt profond** → **sable** →
+ivoire → **sable + carte forêt profond**. Deux sections voisines ne partagent
+plus jamais la même surface.
+
+### Ce qui change, section par section
+
+- **Hero** — hauteur 900 → 640 px (le bouton tombait sous la ligne de
+  flottaison), colonne 896 → 1 088 px, trois capsules à la place du surtitre.
+  La direction artistique deux sources est **conservée et vérifiée au réseau**.
+- **Preuves** — bande de filets → quatre cartes KPI sur sable.
+- **Prestations** — grille 2 × 2 de cartes identiques → **grille asymétrique**
+  7/5 puis 5/7, sur deux hauteurs.
+- **Pourquoi** — quatre paragraphes sur ivoire → **forêt profond**, grande
+  carte photo (5/12) et quatre cartes de confiance (7/12).
+- **Réalisations** — trois vignettes égales → **une grande carte et deux
+  petites**, sur sable.
+- **Zone** — carte et moteur **inchangés** ; capsule, cartes d'information,
+  CTA « Explorer toutes les zones ».
+- **Devis** — trois moments numérotés → **carte forêt profond sur bande
+  sable**. La bande claire est ce qui empêche la carte de fusionner avec le
+  pied de page sombre, problème déjà rencontré en phase 11.
+
+### L'alignement centré n'a pas été touché
+
+Le brief demandait au hero d'« utiliser davantage la largeur ». C'est une
+question de largeur, pas d'alignement : le centrage de tout le contenu est une
+**décision client** posée une fois pour toutes dans `globals.css`
+(`DESIGN_SYSTEM.md` § 4). La colonne a été élargie, pas ferrée à gauche.
+
+### Le point LCP resté ouvert depuis la phase 15 est résolu
+
+`/` n'avait, depuis la phase 15, **aucune phase de chargement de ressource**
+dans sa décomposition LCP : la métrique était attribuée à un élément de texte,
+la photographie du hero n'étant jamais candidate. Elle l'est désormais, relevé
+sur deux passages consécutifs.
+
+Conséquence sur le chiffre : LCP 3,2-3,3 → 3,6-3,8 s, performance 92-93 →
+89-90. **Le chiffre a empiré, la mesure s'est améliorée** — les deux valeurs ne
+décrivent pas le même élément.
+
+### Deux défauts trouvés en mesurant
+
+1. **`images.qualities` manquait dans `next.config.ts`.** Next 16 n'honore que
+   les qualités déclarées : le hero demandait 78 depuis la **phase 5B**, les
+   cartes services 68, et les deux étaient servis à 75 **sans le moindre
+   avertissement**. Vérifié dans le HTML : 173 URLs d'images, toutes en `q=75`.
+   Corrigé — poids images de la page : 393 → **328 Ko**.
+2. **Capsules du hero à 3,64 de contraste.** `variant="dark"` pose un fond
+   d'ivoire à 10 %, qui ne masque rien sur une photographie. Nouvelle variante
+   `photo` (forêt 80 %) : **11,53** sur la photo servie, 8,05 dans le pire cas
+   théorique.
+
+### Un palier tablette manquait depuis l'origine
+
+Les grilles passaient de 1 à 12 colonnes sans rien entre 480 et 1024 px. À
+768 px, Prestations mesurait 2 069 px et Réalisations 2 098 px.
+`md:grid-cols-2` ramène la page de 8 589 à **7 114 px** à cette largeur.
+
+### Mesures
+
+| | Avant | Après |
+| --- | --- | --- |
+| Accessibilité `/` | 100 | **100** |
+| Bonnes pratiques `/` | 100 | **100** |
+| CLS | 0 | **0** |
+| Performance `/` | 92-93 | 89-90 |
+| LCP `/` | 3,2-3,3 s (texte) | 3,6-3,8 s (**photo du hero**) |
+| Poids images de la page | 393 Ko | **328 Ko** |
+| Hauteur de `main` en 390 px | 8 967 px | **8 409 px** |
+| Hauteur de `main` en 768 px | 8 589 px | **7 114 px** |
+| Section la plus longue en 390 px | 2 005 px | **1 883 px** |
+| Débordement horizontal (6 largeurs) | 0 | **0** |
+| Cibles sous 44 px | 0 | **0** |
+
+**Sortie atteinte :** lint, typecheck et build au vert, `SITE_INDEXABLE`
+toujours `false`, métadonnées et données structurées **non touchées**, moteur
+cartographique **non touché**, **aucune dépendance ajoutée**, aucune image
+générée, aucune nouvelle photographie téléchargée.
+
+---
+
 ## Phase 16 — Analytics et conversions ⬜
 
 - Analytics respectueux de la vie privée

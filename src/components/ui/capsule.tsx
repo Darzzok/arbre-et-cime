@@ -9,16 +9,34 @@ import { cn } from "@/lib/cn";
  * objet compact et scannable : c'est le changement de registre demande par la
  * nouvelle direction.
  *
- * TROIS VARIANTES, CHOISIES PAR LA SURFACE
- * ----------------------------------------
+ * QUATRE VARIANTES, CHOISIES PAR LA SURFACE
+ * -----------------------------------------
  * | Variante | Fond | Texte | Contraste | Ou |
  * | --- | --- | --- | --- | --- |
  * | `light` | sable | foret | 12,22 | surfaces claires |
- * | `dark` | ivoire 10 % | ivoire | — | surfaces sombres |
+ * | `dark` | ivoire 10 % | ivoire | — | surfaces sombres **unies** |
+ * | `photo` | foret 80 % | ivoire | >= 7,43 | par-dessus une PHOTOGRAPHIE |
  * | `accent` | jaune | foret | 8,06 | **rare** — une seule par ecran |
  *
  * La variante `accent` suit la meme regle de parcimonie que le bouton
  * primaire : c'est la rarete du jaune qui lui donne sa valeur.
+ *
+ * POURQUOI `photo` EXISTE — MESURE EN PHASE 15B.3
+ * -----------------------------------------------
+ * `dark` pose un fond d'ivoire a 10 % : sur un aplat sombre il suffit, parce
+ * que le fond REEL est connu. Sur une photographie il ne garantit plus rien —
+ * il laisse passer 90 % de ce qu'il y a dessous.
+ *
+ * Mesure faite sur le hero de l'accueil, en recomposant le recadrage
+ * `object-cover` reel puis le degrade de lisibilite : les capsules tombaient
+ * dans une bande ou le degrade ne vaut que 0,107 d'opacite, et le texte de
+ * 13 px y ressortait a **3,64** — sous le seuil AA de 4,5.
+ *
+ * `photo` porte donc son propre fond, assez opaque pour que le resultat ne
+ * depende plus de l'image : 7,43 dans le pire cas theorique (ciel blanc pur),
+ * 10,95 sur la photographie effectivement servie.
+ *
+ * > **Une capsule posee sur une image utilise `photo`, jamais `dark`.**
  *
  * DECORATIVE PAR DEFAUT
  * ---------------------
@@ -30,17 +48,19 @@ import { cn } from "@/lib/cn";
  * COMPOSANT SERVEUR : aucune interaction, aucun etat.
  */
 
-export type CapsuleVariant = "light" | "dark" | "accent";
+export type CapsuleVariant = "light" | "dark" | "photo" | "accent";
 
 const variantClasses: Record<CapsuleVariant, string> = {
   light: "bg-sand text-forest",
   dark: "bg-ivory/10 text-ivory",
+  photo: "bg-forest/80 text-ivory",
   accent: "bg-safety text-forest",
 };
 
 const dotClasses: Record<CapsuleVariant, string> = {
   light: "bg-moss",
   dark: "bg-safety",
+  photo: "bg-safety",
   accent: "bg-forest",
 };
 

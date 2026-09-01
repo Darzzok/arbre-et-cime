@@ -243,3 +243,31 @@ de complétion global, part des demandes avec photos.
 - Part des demandes de devis contenant au moins une photo : **> 50 %**.
 - Délai de première réponse à une demande : **< 24 h ouvrées** — engagement à
   afficher seulement s'il est tenable.
+
+---
+
+## 9. Chemins vers le devis depuis la page d'accueil — phase 15B.3
+
+Audit fait après refonte, en relevant les `a[href="/devis"]` réellement rendus.
+
+| Emplacement | Nature | Dans `<main>` ? |
+| --- | --- | --- |
+| En-tête | bouton primaire, visible en permanence | non (châssis) |
+| **Hero** | bouton primaire | oui |
+| **Carte CTA finale** | bouton primaire | oui |
+| Barre d'action mobile | bouton primaire, persistant | non (châssis) |
+
+**Deux occurrences dans le corps de la page, pas sept.** Les sections
+Prestations, Pourquoi, Réalisations et Zone n'en portent aucune : elles mènent
+vers leur propre page (`/elagage`, `/realisations`, `/zones-intervention`).
+
+> **Un bouton devis dans chaque section ne renforce pas la conversion, il
+> l'affaiblit** — il retire au CTA final le statut de conclusion. Le parcours
+> repose sur une présence permanente (en-tête, barre mobile) et deux moments
+> forts (l'entrée et la sortie).
+
+Repères de mesure posés pour la phase 16 : `data-cta-source="accueil-hero"` et
+`data-cta-source="accueil-final"`.
+
+**Rappel** — le CTA « Appeler » n'est toujours rendu nulle part : le numéro
+n'est pas confirmé (`contact.phoneConfirmed`). Voir § 3.

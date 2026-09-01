@@ -319,3 +319,135 @@ désormais **Sora**, pas Fraunces, la typographie ayant été remplacée en phas
 **Reste à vérifier sur le domaine de production, avec un vrai réseau.** FCP
 0,9 s, Speed Index 0,9 s, CLS 0 et TBT 30-70 ms : rien n'indique une page
 réellement lente.
+
+---
+
+# Phase 15B.3 — refonte de la page d'accueil
+
+## 1. Le point du § 5 est RÉSOLU
+
+**Le LCP de `/` est désormais la photographie du hero.** Relevé sur deux
+passages consécutifs, avec décomposition complète :
+
+```
+element : section.relative > div.relative > picture > img.absolute
+phases  : timeToFirstByte 7 ms · resourceLoadDelay 9 ms
+          resourceLoadDuration 11 ms · elementRenderDelay 87 ms
+```
+
+C'est la première fois que cette section affiche une **phase de chargement de
+ressource**. Depuis la phase 15, `/` n'en avait aucune : le LCP était attribué
+à un élément de texte, la photographie n'étant jamais candidate.
+
+**Conséquence à assumer sur le chiffre.** Le LCP passe de 3,2-3,3 s à
+3,6-3,8 s, et la performance de 92-93 à 89-90. Ce n'est pas une dégradation du
+rendu : c'est le passage d'un petit texte à la photographie plein cadre comme
+élément mesuré. FCP **0,9 s**, Speed Index **0,9 s**, CLS **0**, TBT
+30-60 ms — tout le reste est inchangé.
+
+> Le chiffre a empiré, la mesure s'est améliorée. Les deux valeurs ne
+> décrivent pas le même élément et ne se comparent pas directement.
+
+## 2. `images.qualities` manquait — toutes les qualités étaient ignorées
+
+**Next 16 n'honore que les qualités déclarées dans `next.config.ts`.** Le
+projet n'en déclarait aucune, donc la valeur par défaut `[75]` s'appliquait, et
+**toute autre valeur passée à `<Image quality>` était ignorée en silence** —
+sans avertissement au build.
+
+Deux valeurs étaient concernées :
+
+| Emplacement | Demandé | Réellement servi |
+| --- | --- | --- |
+| Hero (depuis la phase 5B) | 78 | **75** |
+| Cartes services (phase 15B.3) | 68 | **75** |
+
+Vérifié dans le HTML servi : **173 URLs d'images générées, toutes en `q=75`**.
+
+Après déclaration de `qualities: [68, 70, 75]` :
+
+| Image | Avant | Après |
+| --- | --- | --- |
+| Cartes services (4) | 257 Ko | **199 Ko** |
+| Photo « Pourquoi » | 36 Ko | **30 Ko** |
+| **Total images de la page** | **393 Ko** | **328 Ko** |
+
+Le hero reste à **75**, volontairement : c'est la valeur que le site a toujours
+servie, et l'honorer à 78 l'alourdissait de 96 à 102 Ko — sur l'élément LCP,
+pour une différence que personne n'a jamais vue.
+
+> **Vérifier une qualité d'image dans le HTML servi, jamais dans le code.**
+> Ce réglage était faux depuis la phase 5B sans qu'aucun audit ne le signale.
+
+## 3. Résultats — page d'accueil, mobile
+
+| Passage | Perf | A11y | Best pract. | SEO | FCP | LCP | CLS | TBT |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 89 | **100** | **100** | 66 | 0,9 s | 3,8 s | **0** | 60 ms |
+| 2 | 89 | **100** | **100** | 66 | 0,9 s | 3,8 s | **0** | 40 ms |
+| 3 | 90 | **100** | **100** | 66 | 0,9 s | 3,6 s | **0** | 60 ms |
+| 4 | 89 | **100** | **100** | 66 | 0,9 s | 3,8 s | **0** | 40 ms |
+
+**Accessibilité 100 et bonnes pratiques 100 conservées.** SEO 66 = `noindex` de
+préproduction, inchangé.
+
+## 4. Un contraste sous le seuil, trouvé par recomposition
+
+Les capsules ajoutées au hero utilisaient `Capsule variant="dark"` — un fond
+d'ivoire à 10 %, qui ne masque rien sur une photographie.
+
+Méthode : redessiner dans un `<canvas>` le recadrage `object-cover` réellement
+affiché, échantillonner la bande occupée par les capsules, appliquer l'opacité
+du dégradé de lisibilité **à cette hauteur précise**, puis le fond de la
+capsule.
+
+| | Contraste |
+| --- | --- |
+| `dark`, photographie servie | **3,64** — sous AA |
+| `photo`, photographie servie | **11,53** |
+| `photo`, pixel le plus clair de la bande | **8,12** |
+| `photo`, blanc pur théorique | **8,05** |
+
+L'opacité du dégradé ne valait que **0,107** à la hauteur des capsules : le
+voile de lisibilité du hero est conçu pour le bas de l'image, pas pour cette
+bande.
+
+## 5. Direction artistique du hero — vérifiée au réseau
+
+Deux fichiers distincts, un seul téléchargé :
+
+| Largeur | Fichier servi |
+| --- | --- |
+| 320 · 390 · 430 · 768 | `elagueur-ascension-tronc-vertical.jpg` |
+| 1024 · 1440 | `elagueur-grimpeur-arbre-mature.jpg` |
+
+À 390 px, la source desktop **n'apparaît pas** dans les requêtes réseau.
+
+## 6. Balayage responsive — 6 largeurs
+
+Hauteur totale de `<main>`, et par section :
+
+| Largeur | Avant | Après |
+| --- | --- | --- |
+| 320 | — | 8 895 px |
+| **390** | **8 967 px** | **8 409 px** |
+| 430 | — | 8 380 px |
+| 768 | 8 589 px | **7 114 px** |
+| 1024 | — | 7 794 px |
+| 1440 | 7 872 px | 8 141 px |
+
+**Aucun débordement horizontal, aucune cible tactile sous 44 px, un seul `h1`,
+à toutes les largeurs.**
+
+La section « Pourquoi » passe de **2 005 px à 1 621 px** en 390 — elle était le
+seul dépassement du seuil de 2 000 px signalé au brief.
+
+Le gain à 768 px vient du palier `md:grid-cols-2` ajouté aux deux grilles, qui
+manquait entre 480 et 1024 px.
+
+## 7. Mouvement
+
+Les **25 déclarations `animation:`** du projet sont sous
+`@media (prefers-reduced-motion: no-preference)` — vérifié une à une en
+remontant la garde englobante de chaque déclaration. Sous `reduce`, aucune
+n'est appliquée : rien ne peut rester masqué par une animation non jouée.

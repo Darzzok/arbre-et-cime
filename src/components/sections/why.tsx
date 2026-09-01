@@ -2,36 +2,53 @@ import Image from "next/image";
 
 import {
   Body,
+  Capsule,
+  Card,
   Container,
   Eyebrow,
   Lead,
   Reveal,
   Section,
-  Subtitle,
+  SectionPattern,
   Title,
 } from "@/components/ui";
-import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
 
 /**
  * Section 4 des 7 sections VERROUILLÉES — pourquoi Arbres et Cimes.
  *
- * Surface **claire**. La première version de la phase 8 posait un aplat
- * charbon plein écran juste avant un pied de page forêt : deux masses sombres
- * consécutives, écrasantes et froides. La contrainte « aucune section ne doit
- * se terminer en forêt » (DESIGN_SYSTEM.md § 8) est ici satisfaite bien plus
- * simplement — une section claire donne au pied de page toute sa marche.
+ * REFAITE EN PHASE 15B.3 — LE POINT D'ANCRAGE SOMBRE DE LA PAGE
+ * ------------------------------------------------------------
+ * Mesurée avant refonte : **1 206 px en 1440, 2 005 px en 390**, sur ivoire,
+ * entre deux autres sections ivoire. C'était la plus longue section de texte
+ * de la page, et rien ne la distinguait de ses voisines.
  *
- * Composition **asymétrique en deux colonnes**, pas une grille de cartes :
- *   colonne gauche  titre, texte d'introduction, photographie ;
- *   colonne droite  les quatre arguments, en rythme vertical.
+ * Elle passe sur **forêt profond**. C'est le seul aplat sombre du corps de la
+ * page, et il tombe au bon endroit : après les prestations, quand le visiteur
+ * a vu ce qui est proposé et cherche à savoir à qui il a affaire.
  *
- * Les arguments ne sont PAS encadrés. Ils sont séparés par des filets d'un
- * pixel et scandés par un numéro serti entre deux accents jaunes : leurs
- * hauteurs suivent la longueur du texte, ce qui casse l'effet « quatre
- * rectangles identiques » reproché à la version précédente. C'est aussi ce qui
- * les distingue des cartes photographiques de la section Prestations, juste
- * au-dessus.
+ * Le motif `rings` est posé à 4 % — une texture, pas un dessin. Il reprend le
+ * traitement du pied de page, ce qui fait de ces deux blocs sombres une même
+ * famille plutôt que deux accidents.
+ *
+ * DE QUATRE PARAGRAPHES À QUATRE CARTES
+ * -------------------------------------
+ * La version précédente empilait quatre arguments de 200 à 260 signes, séparés
+ * par des filets. Les textes sont ramenés à une ligne chacun et passent en
+ * cartes.
+ *
+ * **Ce qui a été retiré l'a été sans perte d'information :** l'ancienneté du
+ * métier est portée par la bande de preuves (« 10+ / Années d'expérience »),
+ * et les nuances contractuelles sont conservées mot pour mot — « selon les
+ * accès », « selon le besoin ». Le client a indiqué que l'évacuation était
+ * possible, pas systématique : cette réserve ne se raccourcit pas.
+ *
+ * PROPORTIONS
+ * -----------
+ * Desktop : la carte photographique occupe 5/12 (~45 %), les quatre cartes de
+ * confiance les 7/12 restants, en 2 × 2. Mobile : introduction, photographie,
+ * puis les cartes — la photographie sert de respiration entre le texte
+ * d'ouverture et la grille.
  */
 
 /**
@@ -39,160 +56,116 @@ import { site } from "@/lib/site";
  *
  * Volontairement absents, faute de confirmation : assurance, certification,
  * garantie, diagnostic sanitaire, disponibilité permanente.
- *
- * « Selon la prestation » et « peuvent être » ne sont pas des précautions de
- * style : le client a indiqué que l'évacuation était possible, pas
- * systématique. Ces formulations doivent le rester.
  */
 const advantages = [
   {
     title: "Travail sécurisé",
-    body:
-      "Intervention préparée selon la configuration du chantier, l’accès et " +
-      "l’environnement immédiat. Utilisation d’équipements professionnels et " +
-      "adaptation de la méthode aux contraintes rencontrées.",
+    body: "Intervention préparée selon les accès, les bâtiments et l’environnement immédiat.",
   },
   {
     title: "Flexibilité",
-    body:
-      "Jardin clos, passage étroit, arbre proche d’un bâtiment ou " +
-      "intervention urgente : l’organisation s’adapte au terrain et à la " +
-      "situation du client.",
+    body: "Organisation adaptée au terrain et aux contraintes du chantier.",
   },
   {
     title: "Professionnel diplômé",
-    body:
-      "CS Taille et soins des arbres et BP Paysagiste / gestion des milieux " +
-      `naturels, avec environ ${site.experienceYears} ans d’expérience métier.`,
+    body: "CS Taille et soins des arbres, et BP Paysagiste / gestion des milieux naturels.",
   },
   {
     title: "Chantier propre",
-    body:
-      "Selon la prestation, les branches, bois et déchets verts peuvent être " +
-      "débités, broyés ou évacués afin de laisser une zone propre après " +
-      "intervention.",
+    body: "Débitage, broyage ou évacuation des déchets verts selon le besoin.",
   },
 ];
 
 export function Why() {
   return (
-    <Section surface="light" aria-labelledby="pourquoi-titre">
-      <Container>
-        {/* `items-stretch` (defaut) et non `items-start` : la colonne gauche
-            prend la hauteur de la rangee, fixee par la colonne d'arguments.
-            C'est ce qui permet a la photographie d'aligner son bas sur le
-            dernier argument, au lieu de laisser un vide sous elle. */}
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-x-16 xl:gap-x-24">
-          {/* ---------------------------------------- Colonne éditoriale --- */}
-          <div className="lg:col-span-6 lg:flex lg:flex-col">
-            <Reveal>
-              <Eyebrow>Pourquoi Arbres &amp; Cimes</Eyebrow>
+    <Section surface="deep-forest" aria-labelledby="pourquoi-titre">
+      <SectionPattern pattern="rings" opacity={0.04} />
 
-              {/* H2 volontairement bridé sous sa taille fluide maximale (46 px) :
-                  dans une colonne de six douzièmes il occuperait quatre lignes
-                  et écraserait le texte qui le suit. */}
-              <Title
-                id="pourquoi-titre"
-                className="mt-5 lg:text-[2.5rem] lg:leading-[1.08]"
+      <Container className="relative">
+        <Reveal className="mx-auto max-w-reading">
+          <Eyebrow>Pourquoi Arbres &amp; Cimes</Eyebrow>
+
+          <Title
+            id="pourquoi-titre"
+            className="mt-4 lg:text-[2.5rem] lg:leading-[1.08]"
+          >
+            Un professionnel qui s’adapte à votre chantier
+          </Title>
+
+          <Lead className="mt-5 text-(--surface-fg-muted)">
+            Comprendre ce que vous attendez de l’arbre, puis regarder ce que le
+            terrain permet réellement. L’accès, l’environnement immédiat et
+            l’état du sujet décident de la méthode.
+          </Lead>
+        </Reveal>
+
+        <div className="mt-12 grid gap-(--card-gap) lg:mt-16 lg:grid-cols-12 lg:items-stretch">
+          {/* ------------------------------------ Carte photographique --- */}
+          {/* `sizes` volontairement supérieur à la largeur du cadre : à partir
+              de 1024 px la carte n'a plus de ratio fixe, elle prend la hauteur
+              de la grille de droite. `object-cover` cale alors sur la hauteur
+              et rend une largeur bien plus grande que celle du cadre.
+              `lazy` et sans priorité : le LCP est le hero. */}
+          <Reveal className="lg:col-span-5">
+            <figure className="relative m-0 h-full min-h-72 overflow-hidden rounded-card">
+              <Image
+                src="/images/hero/demontage-arbre-tronconneuse-sciure.jpg"
+                alt="Élagueur-grimpeur encordé démontant un arbre à la tronçonneuse, sciure en suspension dans la lumière"
+                fill
+                sizes="(min-width: 64rem) 50rem, 100vw"
+                quality={70}
+                className="object-cover object-[38%_center]"
+              />
+
+              {/* Le cadre est une photographie plein bord : sans ce dégradé,
+                  la capsule tomberait sur une zone claire imprévisible. */}
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(to_top,rgba(8,26,20,0.88)_0%,rgba(8,26,20,0.45)_45%,rgba(8,26,20,0)_100%)]"
+              />
+
+              <figcaption
+                data-surface="deep-forest"
+                className="absolute inset-x-0 bottom-0 p-6"
               >
-                Un professionnel qui s’adapte à chaque chantier
-              </Title>
+                <Capsule variant="photo">Sur le terrain</Capsule>
+              </figcaption>
+            </figure>
+          </Reveal>
 
-              <Lead className="mt-6 text-(--surface-fg-muted)">
-                Chaque chantier commence par la même chose : comprendre ce que
-                vous attendez de l’arbre, puis regarder ce que le terrain permet
-                réellement. L’accès, l’environnement immédiat et l’état du sujet
-                décident de la méthode.
-              </Lead>
-
-              <Body className="mt-4 text-(--surface-fg-muted)">
-                Le reste suit dans cet ordre : sécuriser la zone, travailler
-                avec du matériel professionnel adapté, et laisser l’espace
-                propre une fois l’intervention terminée.
-              </Body>
-            </Reveal>
-
-            {/* Photographie de chantier réel, jusqu'ici inutilisée sur le site.
-                Cadrage vertical sur mobile — où elle est le seul visuel de la
-                section — puis paysage à 640 px. À partir de 1024 px elle n'a
-                plus de ratio fixe : elle occupe toute la hauteur restante de la
-                colonne, ce qui aligne son bas sur le dernier argument. `lazy`
-                et sans priorité : le LCP est le hero.
-
-                `sizes` est volontairement bien supérieur à la largeur du cadre :
-                celui-ci est plus haut que large alors que la source est en 3:2,
-                donc `object-cover` cale sur la hauteur et rend une largeur bien
-                plus grande. Annoncer la largeur du cadre servirait une image
-                trop petite, remontée floue. */}
-            <Reveal className="mt-10 lg:mt-12 lg:min-h-72 lg:flex-1">
-              <figure className="relative aspect-[4/5] overflow-hidden rounded-card sm:aspect-[3/2] lg:aspect-auto lg:h-full">
-                <Image
-                  src="/images/hero/demontage-arbre-tronconneuse-sciure.jpg"
-                  alt="Élagueur-grimpeur encordé démontant un arbre à la tronçonneuse, sciure en suspension dans la lumière"
-                  fill
-                  sizes="(min-width: 64rem) 60rem, 150vw"
-                  className="object-cover"
-                />
-              </figure>
-            </Reveal>
-          </div>
-
-          {/* ------------------------------------------ Colonne arguments --- */}
-          {/* Décalée d'une colonne (7 sur 12) : la gouttière supplémentaire qui
-              en résulte est ce qui rend la composition asymétrique plutôt que
-              simplement coupée en deux. */}
-          <ul className="lg:col-span-5 lg:col-start-8">
-            {advantages.map((advantage, index) => (
-              <Reveal
-                as="li"
-                key={advantage.title}
-                className={cn(
-                  "group border-t border-(--surface-rule) py-8 lg:py-9",
-                  // Le premier argument ouvre la colonne sans filet : le filet
-                  // sépare, il n'encadre pas.
-                  "first:border-t-0 first:pt-0",
-                  "last:pb-0",
-                )}
-              >
-                {/* Numéro serti entre deux accents jaunes. Seul mouvement de la
-                    section avec le Reveal : les filets s'allongent au survol,
-                    sans déplacer une seule ligne de texte. */}
-                <div
-                  aria-hidden="true"
-                  className="flex items-center justify-center gap-3"
-                >
+          {/* --------------------------------------- Cartes de confiance --- */}
+          {/* `forest` sur une section `deep-forest` : les cartes se détachent
+              d'un demi-ton, sans devenir un aplat clair au milieu du sombre. */}
+          <ul className="grid gap-(--card-gap) sm:grid-cols-2 lg:col-span-7">
+            {advantages.map((advantage) => (
+              <Reveal as="li" key={advantage.title} className="h-full">
+                <Card as="div" tone="forest" padding="lg" className="h-full">
                   <span
-                    className={cn(
-                      "block h-px w-5 bg-safety",
-                      "motion-safe:transition-[width]",
-                      "motion-safe:duration-(--duration-reveal) motion-safe:ease-line",
-                      "group-hover:w-10",
-                    )}
+                    aria-hidden="true"
+                    className="mx-auto block h-0.5 w-4 bg-safety"
                   />
-                  <span className="font-sans text-eyebrow font-semibold tabular-nums text-(--surface-fg-muted)">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span
-                    className={cn(
-                      "block h-px w-5 bg-safety",
-                      "motion-safe:transition-[width]",
-                      "motion-safe:duration-(--duration-reveal) motion-safe:ease-line",
-                      "group-hover:w-10",
-                    )}
-                  />
-                </div>
 
-                <Subtitle as="h3" className="mt-5">
-                  {advantage.title}
-                </Subtitle>
+                  <h3 className="mt-5 font-display text-subtitle leading-tight text-(--surface-heading)">
+                    {advantage.title}
+                  </h3>
 
-                <Body className="mt-3 text-(--surface-fg-muted)">
-                  {advantage.body}
-                </Body>
+                  <p className="mx-auto mt-3 max-w-[34ch] font-sans text-caption leading-relaxed text-(--surface-fg-muted) text-pretty">
+                    {advantage.body}
+                  </p>
+                </Card>
               </Reveal>
             ))}
           </ul>
         </div>
+
+        <Reveal className="mt-10 lg:mt-12">
+          <Body className="mx-auto max-w-reading text-(--surface-fg-muted)">
+            Sécuriser la zone, travailler avec du matériel professionnel adapté,
+            et laisser l’espace propre une fois l’intervention terminée — avec
+            environ {site.experienceYears} ans de métier derrière chaque
+            chantier.
+          </Body>
+        </Reveal>
       </Container>
     </Section>
   );

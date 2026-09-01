@@ -2,8 +2,9 @@ import { ZoneMap } from "@/components/map/zone-map";
 import {
   ArrowLink,
   Body,
+  Capsule,
+  Card,
   Container,
-  Eyebrow,
   Reveal,
   Section,
   Title,
@@ -15,17 +16,35 @@ import { area, site } from "@/lib/site";
 /**
  * Section 6 des 7 sections VERROUILLÉES — zone d'intervention.
  *
- * **Composition en bandeau, décidée au correctif 10C.** Les versions
- * précédentes plaçaient le texte à gauche et la carte à droite : la carte n'y
- * gagnait que sept douzièmes de la largeur, soit 640 px sur un écran de 1440.
+ * LE MOTEUR CARTOGRAPHIQUE N'EST PAS TOUCHÉ
+ * -----------------------------------------
+ * `ZoneMap`, la projection, les 23 communes, l'interaction, la séquence
+ * d'animation et les liens vers les pages villes sont **inchangés**. La phase
+ * 15B.3 ne refait que l'environnement visuel de la carte.
  *
- * Ici le texte coiffe la carte et celle-ci prend **toute la largeur du
- * conteneur** — 1 144 px en 1440. Elle passe d'illustration à sujet, et le
- * bloc de tête garde la lecture centrée du reste du site.
+ * POURQUOI LA SECTION RESTE SUR IVOIRE
+ * ------------------------------------
+ * La question a été posée : forêt ou clair. La carte tranche à elle seule.
+ * Son échelle de valeurs est construite **du clair vers le sombre** — terre
+ * ivoire, département, mer, cœur de zone (`DESIGN_SYSTEM.md` § 8 bis). Sur une
+ * section forêt, la terre ivoire deviendrait la zone la plus lumineuse de
+ * l'écran et inverserait la lecture : le fond passerait devant le sujet.
  *
- * Les trois niveaux de zone sont rendus en **colonnes de texte**, ce qui est
- * aussi le repli textuel de la carte (`CLAUDE.md` § 5 : aucune information
- * réservée à un seul canal).
+ * La régler pour du sombre supposerait de retoucher la palette géographique
+ * pour une raison purement chromatique — ce que le brief interdit
+ * explicitement. La section reste donc claire, et le rythme est tenu
+ * autrement : « Pourquoi » en forêt profond et « Réalisations » en sable la
+ * précèdent, la section devis la suit avec sa carte sombre.
+ *
+ * COMPOSITION EN BANDEAU — CONSERVÉE DEPUIS LE CORRECTIF 10C
+ * ---------------------------------------------------------
+ * Le texte coiffe la carte et celle-ci prend **toute la largeur du
+ * conteneur** — 1 320 px en 1440. Elle reste le sujet, pas une illustration.
+ *
+ * Les trois niveaux de zone sont aussi le **repli textuel** de la carte
+ * (`CLAUDE.md` § 5 : aucune information réservée à un seul canal). Ils passent
+ * de filets supérieurs à des cartes, mais restent une `<dl>` : c'est une liste
+ * de définitions, pas une grille décorative.
  */
 
 const zones = getRoute("zones-intervention");
@@ -36,14 +55,16 @@ export function Zone() {
       <Container>
         {/* ------------------------------------------------- En-tête --- */}
         <Reveal className="mx-auto max-w-reading">
-          <Eyebrow>Zone d’intervention</Eyebrow>
+          <Capsule variant="light">Zone d’intervention</Capsule>
+
           <Title
             id="zone-titre"
             as="h2"
-            className="mt-4 lg:text-[2.75rem] lg:leading-[1.06]"
+            className="mt-5 lg:text-[2.5rem] lg:leading-[1.08]"
           >
             Jusqu’à {area.maxRadiusKm} km autour de {area.city}
           </Title>
+
           <Body className="mt-5 text-(--surface-fg-muted)">
             {site.shortName} travaille au cœur de la métropole rouennaise et se
             déplace plus largement selon la nature et les contraintes du
@@ -51,23 +72,24 @@ export function Zone() {
           </Body>
         </Reveal>
 
-        {/* --------------------------------------------------- Niveaux ---
-            Trois colonnes à filet supérieur : compact, lisible, et sans le
-            poids visuel d'un tableau. */}
+        {/* --------------------------------------------------- Niveaux --- */}
         <Reveal>
-          <dl className="mx-auto mt-10 grid max-w-4xl gap-x-8 gap-y-5 sm:grid-cols-3 lg:mt-12">
+          <dl className="mx-auto mt-10 grid max-w-4xl gap-(--card-gap) sm:grid-cols-3 lg:mt-12">
             {ZONE_LEVELS.map((level) => (
-              <div
+              <Card
                 key={level.id}
-                className="border-t border-(--surface-rule) pt-4"
+                as="div"
+                tone="sand"
+                padding="md"
+                className="h-full"
               >
-                <dt className="font-sans text-eyebrow font-semibold uppercase text-(--surface-fg-muted)">
+                <dt className="font-sans text-eyebrow font-semibold uppercase tracking-[0.12em] text-(--surface-fg-muted)">
                   {level.label}
                 </dt>
-                <dd className="mt-1.5 font-sans text-body text-(--surface-fg) text-pretty">
+                <dd className="mt-2.5 font-sans text-body leading-snug text-(--surface-fg) text-pretty">
                   {level.detail}
                 </dd>
-              </div>
+              </Card>
             ))}
           </dl>
         </Reveal>
@@ -81,7 +103,7 @@ export function Zone() {
         </Reveal>
 
         <Reveal className="mt-9">
-          <ArrowLink href={zones.path}>Voir la zone d’intervention</ArrowLink>
+          <ArrowLink href={zones.path}>Explorer toutes les zones</ArrowLink>
         </Reveal>
       </Container>
     </Section>

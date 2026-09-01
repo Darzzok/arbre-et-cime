@@ -1680,3 +1680,128 @@ enfreinte.
 - **CLS 0** partout.
 - **48 combinaisons** (8 routes × 6 largeurs : 320, 390, 430, 768, 1024,
   1440) : aucun débordement horizontal, aucune cible tactile sous 44 px.
+
+---
+
+# Page d'accueil — phase 15B.3
+
+La 15B.1 avait refait les jetons, la 15B.2 le châssis. Cette sous-phase
+applique la direction à **la page d'accueil, et à elle seule**. Les sept
+sections verrouillées et leur ordre sont inchangés.
+
+## 1. Le rythme des surfaces est le sujet
+
+Mesure avant refonte, à 1440 px : **six sections sur sept étaient claires**, et
+cinq consécutives partageaient exactement le même ivoire — 6 855 px d'aplat
+ininterrompu. La seule rupture était une bande de preuves de 121 px.
+
+| # | Section | Avant | Après |
+| --- | --- | --- | --- |
+| 1 | Hero | photo (sombre) | photo (sombre) |
+| 2 | Preuves | forêt, bande de 121 px | **sable**, quatre cartes |
+| 3 | Prestations | ivoire | ivoire |
+| 4 | Pourquoi | ivoire | **forêt profond** |
+| 5 | Réalisations | ivoire | **sable** |
+| 6 | Zone | ivoire | ivoire |
+| 7 | Devis | ivoire | **sable + carte forêt profond** |
+
+> **Deux sections voisines ne partagent plus jamais la même surface.** C'est la
+> règle qui remplace « alterner de temps en temps ».
+
+## 2. Pourquoi la carte reste sur ivoire
+
+La question forêt / clair a été tranchée par la carte elle-même. Son échelle de
+valeurs va **du clair vers le sombre** — terre ivoire, département, mer, cœur
+de zone (§ 8 bis). Sur une section forêt, la terre ivoire deviendrait la zone
+la plus lumineuse de l'écran : le fond passerait devant le sujet.
+
+La régler pour du sombre supposerait de retoucher la palette géographique pour
+une raison purement chromatique. Le rythme est donc tenu par ses voisines.
+
+## 3. Trois anatomies de carte, jamais une de plus
+
+Le risque d'une page entièrement en cartes est la grille interchangeable que
+`PROJECT.md` interdit. Les trois séries de la page d'accueil ne se ressemblent
+pas :
+
+| Section | Anatomie |
+| --- | --- |
+| Preuves | carte pleine, valeur + libellé, **aucune image** |
+| Prestations | texte **incrusté** sur la photographie, dégradé forêt |
+| Réalisations | photographie **en tête de carte**, texte dessous sur le fond |
+
+## 4. Grille asymétrique des prestations
+
+Douze colonnes, deux rangées de proportions **inversées** :
+
+| Rangée | Gauche | Droite |
+| --- | --- | --- |
+| 1 | Élagage — 7/12, 32 rem | Abattage — 5/12, 32 rem |
+| 2 | Dessouchage — 5/12, 24 rem | Entretien — 7/12, 24 rem |
+
+L'inversion 7/5 puis 5/7 produit l'asymétrie ; deux rangées 7/5 identiques
+n'auraient fait que déplacer le problème. Les deux hauteurs hiérarchisent :
+l'élagage est le cœur de métier, il occupe la plus grande surface.
+
+**La mise en page est déclarée par identifiant de route, pas par index** :
+réordonner `serviceRoutes` ne peut pas casser la grille en silence.
+
+## 5. Un palier tablette était manquant
+
+La grille passait de « une colonne » à « douze colonnes » sans rien entre 480
+et 1024 px. Mesure à 768 px : Prestations **2 069 px**, Réalisations
+**2 098 px** — deux colonnes vides de chaque côté de cartes bornées à 30 rem.
+
+`md:grid-cols-2` sur les deux grilles ramène la page de 8 589 à **7 114 px** à
+cette largeur.
+
+> **Toute grille qui saute de 1 à 12 colonnes doit être vérifiée à 768 px.**
+
+## 6. Capsule `photo` — nouvelle variante
+
+Voir § 7 du bloc phase 15B.1 pour la primitive. La variante `photo` est ajoutée
+ici parce que `dark` **ne garantit rien sur une image** : elle pose un fond
+d'ivoire à 10 %, donc laisse passer 90 % de ce qu'il y a dessous.
+
+Mesuré sur le hero, en recomposant le recadrage `object-cover` réel puis le
+dégradé de lisibilité : les capsules tombaient dans une bande où le dégradé ne
+vaut que **0,107** d'opacité, et le texte de 13 px y ressortait à **3,64** —
+sous le seuil AA.
+
+`photo` porte son propre fond, forêt à 80 % : **11,53** sur la photographie
+servie, **8,12** sur son pixel le plus clair, **8,05** sur un blanc pur
+théorique.
+
+> **Une capsule posée sur une image utilise `photo`, jamais `dark`.**
+> `dark` reste réservée aux aplats sombres, où le fond réel est connu.
+
+## 7. Le hero
+
+- **Hauteur** : `min-h-svh` (900 px sur un écran de 390 × 844) → **40 rem**
+  (640 px), 44 rem au-delà de 480 px. L'ancienne valeur dépassait le viewport
+  une fois l'en-tête déduit : le bouton tombait sous la ligne de flottaison.
+- **Largeur de contenu** : `max-w-4xl` (896 px) → **68 rem** (1 088 px) dans un
+  conteneur de 1 320. La colonne n'est plus une bande étroite posée sur une
+  très grande photographie.
+- **L'alignement reste centré.** C'est une décision client posée une fois pour
+  toutes (§ 4). Occuper la largeur et ferrer à gauche sont deux choses
+  différentes ; seule la première était demandée.
+- **Trois capsules** remplacent le surtitre « 01 — Élagage · Abattage ·
+  Entretien », qui répétait mot pour mot le paragraphe situé juste dessous.
+- **Direction artistique inchangée** : deux sources distinctes, desktop
+  horizontale et mobile verticale, servies par un `<picture>`. Vérifié au
+  réseau — une seule des deux est téléchargée.
+
+## 8. Hiérarchie typographique de la page
+
+Les H2 mesuraient 36, 40, **56**, 44 et 44 px sans logique : le titre le plus
+gros de la page était celui des réalisations.
+
+| Niveau | Taille (1440) |
+| --- | --- |
+| H1 du hero | 72 px |
+| Carte CTA finale | 48 px |
+| Tous les H2 de section | **40 px** |
+
+La carte finale est le seul titre à dépasser les sections : c'est le moment de
+conversion, il porte plus que les autres.

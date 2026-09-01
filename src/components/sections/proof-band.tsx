@@ -1,80 +1,97 @@
-import { Container, Reveal } from "@/components/ui";
+import { Card, Container, Reveal, Section } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { area, site } from "@/lib/site";
 
 /**
  * Section 2 des 7 sections VERROUILLÉES — les preuves.
  *
- * Bande **compacte**, posée sous le hero sur la même surface forêt : une ligne
- * de repères qui se lit d'un coup d'œil, pas un bloc à part entière.
+ * REFAITE EN PHASE 15B.3 — DE LA RÉGLURE AUX CARTES
+ * -------------------------------------------------
+ * La version précédente était une bande de 121 px sur forêt, quatre colonnes
+ * séparées par des filets d'un pixel. Mesurée telle quelle, elle se lisait
+ * comme **une ligne de tableau** posée sous le hero : quatre valeurs alignées,
+ * aucune matière, aucun poids.
  *
- * Valeurs en **Inter**, pas en Sora : un titrage de grande taille
- * occuperait toute la hauteur et ferait « section », alors qu'on veut une
- * réglure. Aucune carte, aucun pictogramme, aucune ombre.
+ * Elle est aussi ce qui rendait le hero interminable à l'œil — deux surfaces
+ * sombres consécutives, la photographie puis la bande, sans respiration entre
+ * les deux.
  *
- * Pas de `<section>` : sans titre visible, un point de repère anonyme n'aide
- * personne. Un `<div>` porteur d'une liste est plus juste.
+ * Elle passe donc sur **sable** et devient quatre cartes. Le changement de
+ * surface est le premier de la page : c'est lui qui annonce que le hero est
+ * terminé.
+ *
+ * POURQUOI DES CARTES `plain` ET NON `sand`
+ * -----------------------------------------
+ * Sur une section sable, une carte `sand` serait invisible. Les cartes sont
+ * donc `plain` : elles prennent le fond de la section et se détachent par leur
+ * seul filet. C'est exactement l'effet recherché — une carte ne doit pas
+ * devenir un bloc de couleur de plus.
+ *
+ * RIEN N'EST INVENTÉ
+ * ------------------
+ * Les quatre valeurs sortent de `site.ts` ou sont vérifiables dans
+ * `PROJECT.md`. Aucune certification, aucun tarif, aucun délai.
  */
 
-/**
- * Quatre repères, pas un de plus. Tous vérifiables dans `PROJECT.md` :
- * aucune certification inventée, aucun tarif, aucune promesse de délai.
- */
 const proofs = [
-  { value: `${site.experienceYears} ans`, label: "d’expérience du métier" },
-  { value: "Diplômé", label: "CS Taille et soins des arbres" },
-  { value: "Devis gratuit", label: "et sans engagement" },
-  { value: `Jusqu’à ${area.maxRadiusKm} km`, label: "de rayon d’intervention" },
+  {
+    value: `${site.experienceYears}+`,
+    label: "Années d’expérience",
+  },
+  {
+    value: "Diplômé",
+    label: "CS Taille et soins des arbres",
+  },
+  {
+    value: "Devis",
+    label: "Gratuit et sans engagement",
+  },
+  {
+    value: `${area.maxRadiusKm} km`,
+    label: "Selon la nature du chantier",
+  },
 ];
 
 export function ProofBand() {
   return (
-    <div
-      data-surface="dark"
-      className="border-t border-(--surface-rule) bg-(--surface-bg) text-(--surface-fg)"
-    >
+    <Section surface="sand" spacing="compact">
       <Container>
-        <ul className="grid grid-cols-2 lg:grid-cols-4">
+        {/*
+          2 × 2 sur mobile, quatre colonnes à partir de `sm`. La bascule est
+          posée à 480 px et non à 1024 : mesurée à 480 px, la valeur la plus
+          longue (« Diplômé ») tient déjà sur une ligne dans un quart de
+          largeur, il n'y a donc aucune raison d'attendre le desktop.
+        */}
+        <ul className="grid grid-cols-2 gap-(--card-gap) sm:grid-cols-4">
           {proofs.map((proof) => (
-            <Reveal
-              as="li"
-              key={proof.value}
-              className={cn(
-                "py-5 lg:py-6",
-                "border-(--surface-rule)",
-                // Filets mobiles : entre les deux colonnes, entre les rangées.
-                "[&:nth-child(even)]:border-l",
-                "[&:nth-child(n+3)]:border-t",
-                // Desktop : quatre colonnes, un filet vertical entre chacune.
-                "lg:border-l lg:[&:nth-child(n+3)]:border-t-0",
-                "lg:first:border-l-0",
-              )}
-            >
-              {/* Accent jaune réduit à un trait de 16 px : présent, jamais
-                  dominant (règle de parcimonie, DESIGN_SYSTEM.md § 1). */}
-              <span
-                aria-hidden="true"
-                className="mx-auto block h-0.5 w-4 bg-safety"
-              />
+            <Reveal as="li" key={proof.label} className="h-full">
+              <Card as="div" tone="plain" padding="md" className="h-full">
+                {/* Accent réduit à un trait de 16 px : présent, jamais
+                    dominant (règle de parcimonie, DESIGN_SYSTEM.md § 1). */}
+                <span
+                  aria-hidden="true"
+                  className="mx-auto block h-0.5 w-4 bg-safety"
+                />
 
-              <p
-                className={cn(
-                  // 20 px sur mobile pour que « Jusqu'à 100 km » tienne sur
-                  // une ligne dans une colonne de 168 px, 26 px au-delà.
-                  "mt-3.5 font-sans text-[1.25rem] font-semibold lg:text-subtitle",
-                  "leading-none tracking-tight text-(--surface-heading)",
-                )}
-              >
-                {proof.value}
-              </p>
+                <p
+                  className={cn(
+                    // 24 px sur mobile pour que « 100 km » tienne sur une
+                    // ligne dans une demi-colonne de 171 px.
+                    "mt-4 font-display text-[1.5rem] lg:text-[1.75rem]",
+                    "leading-none tracking-tight text-(--surface-heading)",
+                  )}
+                >
+                  {proof.value}
+                </p>
 
-              <p className="mt-2 font-sans text-caption text-(--surface-fg-muted)">
-                {proof.label}
-              </p>
+                <p className="mt-2.5 font-sans text-caption leading-snug text-(--surface-fg-muted) text-pretty">
+                  {proof.label}
+                </p>
+              </Card>
             </Reveal>
           ))}
         </ul>
       </Container>
-    </div>
+    </Section>
   );
 }

@@ -662,3 +662,68 @@ ses phrases — le reste étant la structure mutualisée (bloc confiance, CTA).
 
 C'est ce chiffre qui fait la différence entre vingt-trois pages locales et
 vingt-trois pages satellites. Il se re-mesure, il ne se suppose pas.
+
+---
+
+# Texte vers cartes — phase 15B.3
+
+La refonte de la page d'accueil a transformé une partie des paragraphes en
+cartes et en capsules. Ce document consigne **ce qui a été raccourci, ce qui a
+été déplacé, et ce qui ne devait pas bouger**.
+
+## 1. La règle appliquée
+
+> **Raccourcir n'est autorisé que si l'information survit ailleurs.** Un
+> paragraphe supprimé sans point de chute est une perte, pas une simplification.
+
+## 2. Section « Pourquoi Arbres & Cimes »
+
+Quatre arguments de 200 à 260 signes ramenés à une ligne chacun.
+
+| Argument | Ce qui a été retiré | Où l'information subsiste |
+| --- | --- | --- |
+| Travail sécurisé | « utilisation d'équipements professionnels » | phrase de clôture de la section |
+| Flexibilité | l'énumération « jardin clos, passage étroit, arbre proche d'un bâtiment » | pages services, où elle est utile au chiffrage |
+| Professionnel diplômé | « environ 10 ans d'expérience métier » | **carte de preuves « 10+ / Années d'expérience »**, plus haut dans la page |
+| Chantier propre | « les branches, bois et déchets verts » | conservé sous « déchets verts » |
+
+**Deux formulations n'ont pas été touchées, et ne doivent pas l'être :**
+« selon les accès » et « **selon le besoin** ». Le client a indiqué que
+l'évacuation était *possible*, pas systématique. Ce n'est pas une précaution de
+style, c'est une limite contractuelle.
+
+## 3. Section devis finale
+
+Les trois « moments » numérotés (décrire, photographier, être rappelé)
+deviennent trois capsules et une phrase.
+
+L'objection à laquelle ils répondaient — *combien de temps, et qu'est-ce qu'on
+va me demander* — reste traitée : « Environ 2 minutes », « Photos
+facultatives », « 5 étapes, sans engagement ». Les valeurs sont lues dans le
+configurateur (`ESTIMATED_MINUTES`, `STEP_COUNT`), jamais écrites en dur.
+
+Le détail du déroulé appartient désormais à `/devis`, c'est-à-dire à l'endroit
+où le visiteur s'y engage.
+
+## 4. Hero
+
+Le surtitre « 01 — Élagage · Abattage · Entretien » est supprimé : il répétait
+mot pour mot des termes déjà présents dans le paragraphe situé deux lignes plus
+bas. Les trois capsules qui le remplacent apportent une information neuve —
+gratuité, qualification, zone.
+
+**Aucune intention SEO perdue** : « élagage », « abattage », « entretien »,
+« Rouen » et « Métropole Rouen Normandie » restent dans le paragraphe du hero,
+et le H1 est inchangé.
+
+## 5. Ce qui n'a pas été raccourci, et pourquoi
+
+- **Le rappel des prestations secondaires** en fin de section Prestations
+  (abattage difficile, débroussaillage, taille de haies, évacuation) : c'est le
+  seul endroit de la page d'accueil où ces quatre termes apparaissent, et le
+  rattachement défini dans `SEO_STRATEGY.md` § 4 en dépend.
+- **Les trois niveaux de zone** : ils sont le repli textuel de la carte. Les
+  raccourcir reviendrait à réserver l'information à un seul canal.
+- **Le titre des réalisations** : « Des interventions adaptées à chaque
+  situation » est une formulation d'exactitude, pas de style. Tant que les
+  photographies sont un repli libre, elle ne se change pas.
