@@ -1,5 +1,5 @@
 import { cn } from "@/lib/cn";
-import { ESTIMATED_MINUTES, QUOTE_STEPS, STEP_COUNT } from "@/lib/quote-flow";
+import { ESTIMATED_MINUTES, QUOTE_STEPS, STEP_COUNT } from "@/lib/quote";
 
 /**
  * Progression du configurateur — deux traitements, un seul état.

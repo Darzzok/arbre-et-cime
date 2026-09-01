@@ -18,7 +18,8 @@ import {
   Title,
 } from "@/components/ui";
 import { cn } from "@/lib/cn";
-import { METROPOLE_CITIES } from "@/lib/map-content";
+import { LOCATION_GROUPS } from "@/content/locations";
+import { locationPath } from "@/lib/seo";
 import { getRoute, serviceRoutes } from "@/lib/routes";
 import { buildMetadata } from "@/lib/seo";
 import { area } from "@/lib/site";
@@ -191,50 +192,74 @@ export default function ZonesInterventionPage() {
 
         {/* --------------------------------- 5. Communes principales --- */}
         <Section surface="light" aria-labelledby="zones-communes">
-          <Container width="prose">
-            <Reveal>
+          <Container>
+            <Reveal className="mx-auto max-w-reading">
               <Eyebrow>Communes</Eyebrow>
               <Title id="zones-communes" as="h2" className="mt-4">
-                Quelques repères du cœur de zone
+                Une page par commune
               </Title>
               <Body className="mt-4 text-(--surface-fg-muted)">
-                Sept communes parmi les 71 de la métropole, avec leur distance
-                réelle à {area.city}. Ce n’est pas une liste de secteurs
+                Chaque commune de la carte a sa page : distance réelle à{" "}
+                {area.city}, contexte local, et ce que cela change pour
+                organiser un chantier. Ce n’est pas une liste de secteurs
                 desservis d’office.
               </Body>
             </Reveal>
 
-            {/* Liste, pas cartes : un filet, un nom, une distance. */}
-            <Reveal>
-              <ul className="mt-8">
-                {METROPOLE_CITIES.map((city) => (
-                  <li
-                    key={city.code}
-                    className={cn(
-                      "flex items-baseline justify-center gap-4",
-                      "border-t border-(--surface-rule) py-4",
-                    )}
-                  >
-                    <span className="font-display text-subtitle text-(--surface-heading)">
-                      {city.nom}
-                    </span>
-                    <span className="font-sans text-caption tabular-nums text-(--surface-fg-muted)">
-                      {city.km === 0 ? "cœur de zone" : `${city.km} km`}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+            {/*
+              HUB LOCAL — une grille de liens, pas vingt-trois cartes.
+              Les groupes suivent des faits géographiques (appartenance à la
+              métropole, puis département), jamais un découpage commercial :
+              un visiteur qui connaît la région doit retrouver sa commune là
+              où il l'attend. Voir `src/content/locations.ts`.
+            */}
+            {LOCATION_GROUPS.map((groupe) => (
+              <Reveal key={groupe.id} className="mt-12 first:mt-10">
+                <div className="mx-auto max-w-4xl text-left">
+                  <h3 className="font-sans text-eyebrow font-semibold uppercase tracking-[0.24em] text-(--surface-fg-muted)">
+                    {groupe.titre}
+                  </h3>
+                  <p className="mt-2 font-sans text-caption text-(--surface-fg-muted)">
+                    {groupe.detail}
+                  </p>
+
+                  <ul className="mt-5 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+                    {groupe.locations.map((ville) => (
+                      <li
+                        key={ville.slug}
+                        className="border-t border-(--surface-rule)"
+                      >
+                        <Link
+                          href={locationPath(ville.slug)}
+                          className={cn(
+                            "flex items-baseline justify-between gap-4 py-3.5 no-underline",
+                            "motion-safe:transition-colors motion-safe:duration-(--duration-micro)",
+                            "hover:text-(--surface-heading)",
+                          )}
+                        >
+                          <span className="font-sans text-body text-(--surface-fg)">
+                            {ville.nom}
+                          </span>
+                          <span className="shrink-0 font-sans text-caption tabular-nums text-(--surface-fg-muted)">
+                            {ville.km === 0 ? "cœur de zone" : `${ville.km} km`}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            ))}
 
             <Reveal>
-              <Small className="mx-auto mt-9 block max-w-reading">
+              <Small className="mx-auto mt-12 block max-w-reading">
                 Le plus simple reste de demander : une commune et quelques
-                photos suffisent pour dire si le chantier est réalisable, et
-                dans quels délais.
+                photos suffisent pour dire si le chantier est réalisable.
               </Small>
             </Reveal>
           </Container>
         </Section>
+
         {/* ----------------------------------------- 6. Conversion --- */}
         <Section surface="light" aria-labelledby="zones-cta">
           <Container>

@@ -4,12 +4,9 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 
 import { FieldError } from "@/components/quote/field";
+import type { QuotePhoto } from "@/components/quote/use-quote-state";
 import { cn } from "@/lib/cn";
-import {
-  MAX_PHOTOS,
-  PHOTO_ACCEPT_ATTR,
-  formatBytes,
-} from "@/lib/quote-flow";
+import { MAX_PHOTOS, formatBytes } from "@/lib/quote";
 
 /**
  * Étape 3 — dépôt de photos, **100 % local à cette phase**.
@@ -23,19 +20,14 @@ import {
  * voir `QUOTE_FLOW.md` § 4.
  */
 
-export type QuotePhoto = {
-  id: string;
-  file: File;
-  /** `blob:` — révoqué au retrait et au démontage, sinon la mémoire fuit. */
-  url: string;
-};
-
 type PhotoPickerProps = {
   photos: readonly QuotePhoto[];
   onAdd: (files: FileList | null) => void;
   onRemove: (id: string) => void;
-  /** Fichiers refusés au dernier ajout : format, poids ou nombre. */
+  /** Fichiers refusés au dernier ajout : format, poids, nombre ou doublon. */
   rejections: readonly string[];
+  /** Attribut `accept` des deux inputs, fourni par l'état. */
+  accept: string;
 };
 
 export function PhotoPicker({
@@ -43,6 +35,7 @@ export function PhotoPicker({
   onAdd,
   onRemove,
   rejections,
+  accept,
 }: PhotoPickerProps) {
   const galleryInput = useRef<HTMLInputElement>(null);
   const cameraInput = useRef<HTMLInputElement>(null);
@@ -59,7 +52,7 @@ export function PhotoPicker({
       <input
         ref={galleryInput}
         type="file"
-        accept={PHOTO_ACCEPT_ATTR}
+        accept={accept}
         multiple
         className="sr-only"
         onChange={(event) => {
@@ -70,7 +63,7 @@ export function PhotoPicker({
       <input
         ref={cameraInput}
         type="file"
-        accept={PHOTO_ACCEPT_ATTR}
+        accept={accept}
         capture="environment"
         className="sr-only"
         onChange={(event) => {

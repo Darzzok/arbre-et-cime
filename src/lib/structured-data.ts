@@ -1,6 +1,6 @@
 import { area, services, site } from "./site";
 import { breadcrumbFor, getRoute, type RouteId } from "./routes";
-import { absoluteUrl, isRouteIndexable } from "./seo";
+import { absoluteUrl, isRouteIndexable, SITE_INDEXABLE } from "./seo";
 
 /**
  * Donnees structurees (JSON-LD).
@@ -126,5 +126,59 @@ export function serviceSchema(id: RouteId): JsonLdNode | null {
       { "@type": "City", name: area.city },
       { "@type": "AdministrativeArea", name: area.metro },
     ],
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* Pages locales (phase 14)                                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Fil d'Ariane d'une page ville : Accueil > Zone d'intervention > Ville.
+ *
+ * C'est le SEUL JSON-LD emis par une page ville, et c'est deliberé.
+ *
+ * **Aucun `LocalBusiness` par commune.** Arbre & Cime est une entreprise
+ * unique, basee a Rouen ; declarer vingt-trois etablissements reviendrait a
+ * affirmer vingt-trois implantations qui n'existent pas. Une page ville decrit
+ * une **zone de service**, pas une agence — et une adresse locale inventee est
+ * exactement le genre de donnee qui detruit la confiance d'un moteur comme
+ * d'un visiteur.
+ *
+ * Le `LocalBusiness` unique du site reste gele tant que les donnees client
+ * manquent (voir `missingLocalBusinessData`), et `areaServed` sera le bon
+ * endroit pour exprimer la couverture geographique le jour venu.
+ */
+export function locationBreadcrumbSchema(input: {
+  slug: string;
+  nom: string;
+}): JsonLdNode | null {
+  const zones = getRoute("zones-intervention");
+  const home = getRoute("home");
+
+  // Meme garde que `breadcrumbSchema` : un balisage decrivant la place d'une
+  // page dans un site qui ne doit pas etre indexe n'a aucun destinataire, et
+  // pointerait vers l'URL de preproduction.
+  if (!site.url || !SITE_INDEXABLE) {
+    return null;
+  }
+
+  const items = [
+    { label: home.navLabel, path: home.path },
+    { label: zones.navLabel, path: zones.path },
+    { label: input.nom, path: `${zones.path}/${input.slug}` },
+  ];
+
+  const listItems = items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.label,
+    item: absoluteUrl(item.path),
+  }));
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: listItems,
   };
 }

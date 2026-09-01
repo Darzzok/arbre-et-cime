@@ -176,7 +176,22 @@ refusable en un clic.
 | `devis_envoye` | Soumission réussie |
 | `devis_erreur` | Échec d'envoi |
 
-**Aucun de ces événements n'est émis à ce jour.** La phase 11 livre le
+**Le point d'émission existe depuis la phase 12** — `emitQuoteEvent()` dans
+`src/lib/quote/events.ts` — mais **il ne fait rien** : aucun service connecté,
+aucune requête, aucun script tiers.
+
+Les points d'appel sont posés dès maintenant, pendant qu'on écrit la logique et
+qu'on sait exactement ce qui se passe à chaque endroit. Les retrouver dans six
+mois, dans un composant qu'on aura oublié, coûterait bien plus cher qu'une
+fonction vide aujourd'hui. Quatre événements sont câblés : `quote_started`,
+`quote_step_completed`, `quote_photo_added`, `quote_ready_to_submit`.
+
+**Aucune donnée personnelle ne transite par cette interface.** Le type des
+charges utiles n'accepte que des identifiants d'étape, des noms de prestation
+et des compteurs : ni nom, ni téléphone, ni e-mail, ni nom de fichier. L'erreur
+est rendue difficile par la signature elle-même.
+
+En phase 16, il suffira de remplacer le corps de `emitQuoteEvent()`. La phase 11 livre le
 parcours ; l'instrumentation est la phase 16. Deux préparatifs sont toutefois
 déjà en place et n'auront pas à être repris :
 

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
 import { QuoteConfigurator } from "@/components/quote";
 import { Container, Display, Eyebrow, Lead, Section } from "@/components/ui";
-import { ESTIMATED_MINUTES, STEP_COUNT } from "@/lib/quote-flow";
+import { ESTIMATED_MINUTES, STEP_COUNT } from "@/lib/quote";
 import { buildMetadata } from "@/lib/seo";
 import { area, site } from "@/lib/site";
 

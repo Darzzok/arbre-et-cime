@@ -3,19 +3,21 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-import type { QuotePhoto } from "@/components/quote/photo-picker";
-import { Body, ButtonLink, Button } from "@/components/ui";
-import { cn } from "@/lib/cn";
+import type { QuotePhoto } from "@/components/quote/use-quote-state";
+import { Body, Button, ButtonLink } from "@/components/ui";
 import {
   CONSTRAINT_OPTIONS,
+  COUNT_OPTIONS,
   HEIGHT_OPTIONS,
-  type QuoteDraft,
+  OUTDOOR_SCALE_OPTIONS,
+  OUTDOOR_WORK_OPTIONS,
+  STUMP_SIZE_OPTIONS,
   choiceLabel,
-  countOptionsFor,
+  choiceLabels,
   countQuestionFor,
   needLabel,
-  needsHeight,
-} from "@/lib/quote-flow";
+} from "@/lib/quote";
+import type { Chantier, QuoteDraft } from "@/lib/quote";
 import { getRoute } from "@/lib/routes";
 import { area, site } from "@/lib/site";
 
@@ -24,37 +26,25 @@ import { area, site } from "@/lib/site";
  *
  * CE QUE L'ANIMATION DIT, ET CE QU'ELLE NE DIT PAS
  * ------------------------------------------------
- * Le client a demandé « une animation d'envoi ». Elle est là, mais elle
- * annonce **« demande prête »**, jamais « demande envoyée » : en phase 11 rien
- * ne part, et le site est déployé publiquement (`CLAUDE.md` § 10). Une
- * personne réelle qui verrait une coche verte et lirait « envoyé » attendrait
- * un rappel qui ne viendrait jamais.
+ * Elle annonce **« demande prête »**, jamais « demande envoyée » : en phase 12
+ * rien ne part, et le site est déployé publiquement (`CLAUDE.md` § 10). Une
+ * personne réelle qui verrait une coche et lirait « envoyé » attendrait un
+ * rappel qui ne viendrait jamais.
  *
  * Les trois lignes de la séquence sont donc **vraies** : les informations sont
- * réellement vérifiées, le récapitulatif réellement construit, les photos
- * réellement préparées en mémoire. Quand l'envoi arrivera (phase 12), la même
- * séquence portera une quatrième ligne — « demande transmise » — et ce sera
- * vrai aussi.
+ * réellement validées, le récapitulatif réellement construit, les photos
+ * réellement préparées en mémoire. En phase 13, la même séquence portera une
+ * quatrième ligne — « demande transmise » — et ce sera vrai aussi.
  */
 
 /* ------------------------------------------------------------ Séquence -- */
 
-type SendingProps = { photoCount: number };
-
-/**
- * Les étapes affichées pendant la préparation.
- *
- * Trois, pas cinq : au-delà, la séquence dure plus longtemps que le travail
- * qu'elle décrit et devient une fausse attente. Chacune se coche à 380 ms
- * d'intervalle, soit ~1,5 s au total — assez pour être lue, trop court pour
- * agacer.
- */
 const SENDING_LINES = [
   "Informations vérifiées",
   "Récapitulatif préparé",
 ] as const;
 
-export function QuoteSending({ photoCount }: SendingProps) {
+export function QuoteSending({ photoCount }: { photoCount: number }) {
   const lines = [
     ...SENDING_LINES,
     photoCount > 0
@@ -68,8 +58,8 @@ export function QuoteSending({ photoCount }: SendingProps) {
         data-surface="dark"
         className="bg-(--surface-bg) px-5 py-12 text-center sm:px-8 sm:py-16"
       >
-        {/* Anneau qui se trace — même vocabulaire que le cercle de la carte de
-            zone : un tracé, jamais un spinner qui tourne indéfiniment. */}
+        {/* L'anneau se REMPLIT une fois puis s'arrête. Ce n'est pas un spinner :
+            un spinner tourne indéfiniment et ne dit rien du temps restant. */}
         <svg
           aria-hidden="true"
           viewBox="0 0 64 64"
@@ -138,74 +128,111 @@ export function QuoteSending({ photoCount }: SendingProps) {
 type RecapProps = {
   draft: QuoteDraft;
   photos: readonly QuotePhoto[];
-  onEdit: () => void;
+  onEdit: (stepIndex: number) => void;
+  onRestart: () => void;
 };
 
-type Block = { titre: string; lignes: { label: string; valeur: string }[] };
+type Ligne = { label: string; valeur: string };
+type Bloc = { titre: string; stepIndex: number; lignes: Ligne[] };
 
-export function QuoteRecap({ draft, photos, onEdit }: RecapProps) {
+/** Détaille le chantier ligne à ligne, selon sa variante. */
+function chantierLignes(chantier: Chantier): Ligne[] {
+  const contraintes: Ligne = {
+    label: "Contraintes",
+    valeur: choiceLabels(CONSTRAINT_OPTIONS, chantier.contraintes) || "—",
+  };
+
+  switch (chantier.kind) {
+    case "arbre":
+      return [
+        {
+          label: countQuestionFor("arbre").replace(/\s*\?$/, ""),
+          valeur: choiceLabel(COUNT_OPTIONS, chantier.nombre) || "—",
+        },
+        {
+          label: "Hauteur approximative",
+          valeur: choiceLabel(HEIGHT_OPTIONS, chantier.hauteur) || "—",
+        },
+        contraintes,
+      ];
+
+    case "souche":
+      return [
+        {
+          label: countQuestionFor("souche").replace(/\s*\?$/, ""),
+          valeur: choiceLabel(COUNT_OPTIONS, chantier.nombre) || "—",
+        },
+        {
+          label: "Taille de la souche",
+          valeur: choiceLabel(STUMP_SIZE_OPTIONS, chantier.taille) || "—",
+        },
+        contraintes,
+      ];
+
+    case "exterieur":
+      return [
+        {
+          label: "Travaux",
+          valeur: choiceLabels(OUTDOOR_WORK_OPTIONS, chantier.travaux) || "—",
+        },
+        {
+          label: "Ampleur",
+          valeur: choiceLabel(OUTDOOR_SCALE_OPTIONS, chantier.ampleur) || "—",
+        },
+        contraintes,
+      ];
+
+    case "inconnu":
+      return chantier.description.trim()
+        ? [{ label: "Description", valeur: chantier.description.trim() }]
+        : [{ label: "Description", valeur: "À préciser au téléphone" }];
+  }
+}
+
+export function QuoteRecap({ draft, photos, onEdit, onRestart }: RecapProps) {
   const contact = getRoute("contact");
   const hasPhone = site.phone.length > 0;
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   /*
-   * Le focus arrive sur le titre du récapitulatif : sans cela, la personne au
-   * clavier resterait sur un bouton « Envoyer » disparu, et un lecteur d'écran
-   * n'annoncerait jamais que le parcours est terminé.
+   * Le focus arrive sur le titre : sans cela, la personne au clavier resterait
+   * sur un bouton « Envoyer » disparu, et un lecteur d'écran n'annoncerait
+   * jamais que le parcours est terminé.
    */
   useEffect(() => {
     titleRef.current?.focus();
   }, []);
 
-  const chantier: { label: string; valeur: string }[] = [
-    {
-      label: countQuestionFor(draft.besoin).replace(/\s*\?$/, ""),
-      valeur: choiceLabel(countOptionsFor(draft.besoin), draft.nombre) || "—",
-    },
-  ];
-
-  if (needsHeight(draft.besoin)) {
-    chantier.push({
-      label: "Hauteur approximative",
-      valeur: choiceLabel(HEIGHT_OPTIONS, draft.hauteur) || "—",
-    });
-  }
-
-  chantier.push({
-    label: "Contraintes",
-    valeur:
-      draft.contraintes
-        .map((id) => choiceLabel(CONSTRAINT_OPTIONS, id))
-        .filter(Boolean)
-        .join(", ") || "—",
-  });
-
-  const blocks: Block[] = [
+  const blocks: Bloc[] = [
     {
       titre: "Intervention",
+      stepIndex: 0,
       lignes: [{ label: "Besoin", valeur: needLabel(draft.besoin) || "—" }],
     },
-    { titre: "Chantier", lignes: chantier },
+    { titre: "Chantier", stepIndex: 1, lignes: chantierLignes(draft.chantier) },
     {
       titre: "Lieu",
+      stepIndex: 3,
       lignes: [
         {
           label: "Commune",
-          valeur: `${draft.codePostal} ${draft.ville}`.trim() || "—",
+          valeur:
+            `${draft.lieu.codePostal} ${draft.lieu.ville}`.trim() || "—",
         },
-        ...(draft.adresse.trim()
-          ? [{ label: "Adresse", valeur: draft.adresse.trim() }]
+        ...(draft.lieu.adresse.trim()
+          ? [{ label: "Adresse", valeur: draft.lieu.adresse.trim() }]
           : []),
       ],
     },
     {
       titre: "Coordonnées",
+      stepIndex: 4,
       lignes: [
-        { label: "Nom", valeur: draft.nom.trim() || "—" },
-        { label: "Téléphone", valeur: draft.telephone.trim() || "—" },
-        { label: "E-mail", valeur: draft.email.trim() || "—" },
-        ...(draft.commentaire.trim()
-          ? [{ label: "Précisions", valeur: draft.commentaire.trim() }]
+        { label: "Nom", valeur: draft.contact.nom.trim() || "—" },
+        { label: "Téléphone", valeur: draft.contact.telephone.trim() || "—" },
+        { label: "E-mail", valeur: draft.contact.email.trim() || "—" },
+        ...(draft.contact.commentaire.trim()
+          ? [{ label: "Précisions", valeur: draft.contact.commentaire.trim() }]
           : []),
       ],
     },
@@ -262,9 +289,20 @@ export function QuoteRecap({ draft, photos, onEdit }: RecapProps) {
               data-quote-recap-block=""
               style={{ "--block-index": index } as React.CSSProperties}
             >
-              <p className="font-sans text-caption font-semibold uppercase tracking-[0.12em] text-(--surface-fg-muted)">
-                {block.titre}
-              </p>
+              <div className="flex items-baseline justify-between gap-4">
+                <p className="font-sans text-caption font-semibold uppercase tracking-[0.12em] text-(--surface-fg-muted)">
+                  {block.titre}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => onEdit(block.stepIndex)}
+                  className="shrink-0 rounded-edge font-sans text-caption font-semibold text-(--surface-fg-muted) underline underline-offset-4 hover:text-(--surface-fg)"
+                >
+                  Modifier
+                  <span className="sr-only"> {block.titre.toLowerCase()}</span>
+                </button>
+              </div>
 
               <div className="mt-3 space-y-2.5 border-t border-(--surface-rule) pt-3.5">
                 {block.lignes.map((ligne) => (
@@ -285,16 +323,26 @@ export function QuoteRecap({ draft, photos, onEdit }: RecapProps) {
           ))}
 
           {/* Les photos sont MONTRÉES, pas comptées : c'est la pièce qui a
-              demandé le plus d'effort, la voir dans le récapitulatif confirme
-              qu'elle a bien été prise en compte. */}
+              demandé le plus d'effort, la voir confirme qu'elle est prise en
+              compte. */}
           {photos.length > 0 ? (
             <div
               data-quote-recap-block=""
               style={{ "--block-index": blocks.length } as React.CSSProperties}
             >
-              <p className="font-sans text-caption font-semibold uppercase tracking-[0.12em] text-(--surface-fg-muted)">
-                Photos ({photos.length})
-              </p>
+              <div className="flex items-baseline justify-between gap-4">
+                <p className="font-sans text-caption font-semibold uppercase tracking-[0.12em] text-(--surface-fg-muted)">
+                  Photos ({photos.length})
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => onEdit(2)}
+                  className="shrink-0 rounded-edge font-sans text-caption font-semibold text-(--surface-fg-muted) underline underline-offset-4 hover:text-(--surface-fg)"
+                >
+                  Modifier<span className="sr-only"> les photos</span>
+                </button>
+              </div>
 
               <ul className="mt-3 grid grid-cols-3 gap-2.5 border-t border-(--surface-rule) pt-3.5 sm:grid-cols-5">
                 {photos.map((photo) => (
@@ -354,8 +402,8 @@ export function QuoteRecap({ draft, photos, onEdit }: RecapProps) {
             {area.metro} et jusqu’à {area.maxRadiusKm} km selon le chantier.
           </p>
 
-          <Button variant="outline" onClick={onEdit} className={cn("sm:w-auto")} block>
-            Modifier ma demande
+          <Button variant="outline" onClick={onRestart} className="sm:w-auto" block>
+            Nouvelle demande
           </Button>
         </div>
       </div>

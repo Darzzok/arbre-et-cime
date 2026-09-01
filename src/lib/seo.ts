@@ -156,3 +156,76 @@ export function buildMetadata(id: RouteId): Metadata {
     },
   };
 }
+
+/* -------------------------------------------------------------------------- */
+/* Pages locales (phase 14)                                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Metadonnees d'une page ville.
+ *
+ * Fonction distincte de `buildMetadata` parce qu'une page ville n'est pas une
+ * `RouteId` : il y en a vingt-trois, generees a partir d'une donnee et non
+ * declarees une a une. Tout le reste du dispositif est IDENTIQUE — meme
+ * garde-fou `SITE_INDEXABLE`, meme regle de canonique, meme absence d'URL
+ * absolue quand aucune origine publique n'existe.
+ *
+ * Consequence directe : tant que le site est en preproduction, ces pages sont
+ * `noindex, follow` et n'emettent AUCUNE canonique — donc jamais de canonique
+ * vers une preview Vercel ni vers `localhost`.
+ */
+export function buildLocationMetadata(input: {
+  slug: string;
+  title: string;
+  description: string;
+}): Metadata {
+  const path = `/zones-intervention/${input.slug}`;
+
+  // Une page ville n'est jamais `noindex` pour son propre compte : seul l'etat
+  // du site decide. Elle suit donc exactement la regle des pages publiques.
+  const canonical = SITE_INDEXABLE ? absoluteUrl(path) : null;
+
+  const robots: Metadata["robots"] = SITE_INDEXABLE
+    ? {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+        },
+      }
+    : {
+        index: false,
+        follow: true,
+        googleBot: { index: false, follow: true },
+      };
+
+  return {
+    title: { absolute: input.title },
+    description: input.description,
+    ...(canonical ? { alternates: { canonical } } : {}),
+    robots,
+    openGraph: {
+      type: "website",
+      locale: "fr_FR",
+      siteName: site.name,
+      title: input.title,
+      description: input.description,
+      ...(canonical ? { url: canonical } : {}),
+      ...(OG_IMAGE ? { images: [OG_IMAGE] } : {}),
+    },
+    twitter: {
+      card: OG_IMAGE ? "summary_large_image" : "summary",
+      title: input.title,
+      description: input.description,
+      ...(OG_IMAGE ? { images: [OG_IMAGE.url] } : {}),
+    },
+  };
+}
+
+/** Chemin public d'une page ville — une seule construction dans tout le site. */
+export function locationPath(slug: string): string {
+  return `/zones-intervention/${slug}`;
+}

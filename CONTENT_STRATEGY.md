@@ -605,3 +605,60 @@ vraiment, et il renvoie vers la prestation correspondante.
 - [ ] Avis clients existants et autorisation de les citer
 - [ ] Horaires, y compris conditions d'intervention en urgence
 - [ ] Validation des textes finaux, section par section
+
+---
+
+## 5 sexies. Pages locales — rédaction (phase 14)
+
+Vingt-trois pages, une par commune de la carte. C'est le format le plus
+exposé au risque de contenu creux : vingt-trois textes qui ne diffèrent que
+par un nom propre ne servent personne et se voient immédiatement.
+
+### La règle de site
+
+> **Tout point ville public de la carte possède une landing page locale
+> correspondante.**
+
+### Trois discours, jamais interchangeables
+
+| Niveau | Définition | Ce que le texte peut dire |
+| --- | --- | --- |
+| `core` | commune de la Métropole Rouen Normandie | « zone principale d'intervention » — affirmatif |
+| `primary` | ≤ 60 km de Rouen | « interventions possibles selon la nature du chantier » |
+| `extended` | > 60 km de Rouen | « un déplacement peut être envisagé selon la nature, l'ampleur et l'organisation du chantier » |
+
+La formulation `extended` est **imposée au mot près**. Promettre une
+intervention à cent kilomètres serait un mensonge commercial, et la personne
+qui attendrait une visite qui ne vient pas s'en souviendrait plus longtemps
+que de la page.
+
+### De quoi parle un texte local
+
+De **géographie vérifiable**, et de ce qu'elle change concrètement pour
+organiser un chantier : relief et pente, fond de vallée ou plateau,
+exposition au vent sur le littoral, portance d'un sol humide, densité du
+tissu urbain, proximité d'un massif forestier ou d'une voie de circulation.
+
+Ce sont des faits qu'un habitant reconnaît, et qui ont une conséquence
+réelle sur le métier — pas du décor rédigé pour remplir.
+
+### Ce qui est interdit sur une page locale
+
+- un chantier déjà réalisé, un client, un quartier « déjà desservi » ;
+- une essence d'arbre présentée comme typique de la commune ;
+- un délai d'intervention, un tarif, une statistique ;
+- un règlement municipal ou une contrainte administrative locale ;
+- toute mention laissant croire à une agence ou une adresse sur place.
+
+Aucun de ces éléments n'est vérifiable aujourd'hui. Un seul suffirait à
+rendre les vingt-deux autres pages suspectes.
+
+### Le contrôle remplace la bonne intention
+
+`scripts/check-locations.mjs` échoue si deux communes partagent une
+phrase éditoriale. Mesuré sur le HTML produit : **70 à 89 % de phrases
+propres** par page, la paire la plus proche ne partageant que **30 %** de
+ses phrases — le reste étant la structure mutualisée (bloc confiance, CTA).
+
+C'est ce chiffre qui fait la différence entre vingt-trois pages locales et
+vingt-trois pages satellites. Il se re-mesure, il ne se suppose pas.

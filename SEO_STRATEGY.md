@@ -18,10 +18,19 @@ devis (phases 11 à 13).
 
 ## 1. Ce que l'on ne fera pas — `VERROUILLÉ`
 
-- **Aucune génération massive de pages villes.** Pas de gabarit dupliqué sur
-  50 communes avec le nom substitué : c'est du contenu à faible valeur, mal
-  toléré, et cela dilue l'autorité du site. Cette règle ne se contourne ni par
-  script, ni par route dynamique, ni « pour tester ».
+- **Aucune génération massive de pages villes.** *Règle amendée en phase 14,
+  sur demande explicite du client.* Vingt-trois pages locales existent
+  désormais (§ 5 sexies) — mais l'interdiction de fond demeure : **pas de
+  gabarit dupliqué avec le nom substitué**. Ce qui la rend tenable, c'est que
+  la différenciation n'est plus une intention mais une **mesure** :
+  `scripts/check-locations.mjs` échoue si deux pages partagent une phrase
+  éditoriale, et le contrôle sur le HTML produit relève **70 à 89 % de phrases
+  propres** à chaque page. Le jour où ce chiffre s'effondre, la règle a été
+  contournée.
+- **Aucune page croisant service et ville.** Pas de `/elagage-rouen`,
+  `/abattage-rouen` et consorts : elles n'existeraient que pour les moteurs,
+  se cannibaliseraient entre elles et diviseraient l'autorité du site. Une page
+  service porte l'intention métier, une page ville l'intention géographique.
 - **Aucune page dédiée par prestation secondaire.** Les huit prestations se
   rattachent à quatre pages services (voir § 4) : une prestation secondaire est
   une **section** de sa page parente, jamais une page mince de plus.
@@ -310,6 +319,69 @@ Sortant : `/devis` (deux fois) et les quatre pages services.
 
 ---
 
+## 5 sexies. Pages locales — livrées en phase 14
+
+Vingt-trois pages, une par commune affichée sur la carte, sous
+`/zones-intervention/[ville]`.
+
+### La règle qui tient l'ensemble
+
+> **Tout point ville public de la carte possède une landing page locale
+> correspondante — et réciproquement.**
+
+Cette bijection n'est pas une intention : elle est **vérifiée
+automatiquement** par `scripts/check-locations.mjs`, qui rapproche les
+repères de `src/lib/map-content.ts` des entrées de
+`src/content/locations.ts`. Un point sans page produit un lien mort ; une
+page sans point produit une page orpheline. Ni l'un ni l'autre ne fait échouer
+un build — d'où le contrôle.
+
+### Source unique
+
+`src/content/locations.ts` fait foi pour la carte, les pages, le hub, le
+maillage et le sitemap. Avant la phase 14, la liste des communes existait à
+trois endroits et divergeait déjà : Saint-Étienne-du-Rouvray et Elbeuf étaient
+cités dans le texte de `/zones-intervention` sans figurer sur la carte.
+
+Coordonnées : centroïdes officiels `geo.api.gouv.fr`. Distances :
+**recalculées** par haversine depuis Rouen, jamais recopiées — et toujours
+présentées comme des distances **à vol d'oiseau**, jamais routières.
+
+### Trois niveaux, définis par des faits
+
+| Niveau | Règle | Nombre | Discours |
+| --- | --- | --- | --- |
+| `core` | membre de la Métropole Rouen Normandie | 7 | « zone principale d'intervention » |
+| `primary` | ≤ 60 km de Rouen | 9 | « interventions possibles selon le chantier » |
+| `extended` | > 60 km de Rouen | 7 | « un déplacement peut être envisagé selon la nature, l'ampleur et l'organisation du chantier » |
+
+L'appartenance à la métropole est une **donnée administrative vérifiable**,
+pas une appréciation commerciale. Le seuil de 60 km sépare ensuite ce qui est
+à moins d'une heure de ce qui ne l'est pas. Le contrôle automatique recalcule
+le niveau de chaque commune et échoue si la donnée et la règle divergent.
+
+**Une page `extended` n'affirme jamais une intervention.** La formulation
+est conditionnelle du surtitre (« Déplacement à étudier ») au CTA (« Un
+chantier à Amiens ? Parlons-en. »).
+
+### Ce qui n'est jamais écrit sur une page locale
+
+Aucune adresse locale, aucun établissement secondaire, aucun chantier réalisé,
+aucun client, aucun quartier desservi, aucune essence d'arbre locale, aucun
+délai, aucun règlement municipal, aucune statistique. Le contenu local se
+limite à de la **géographie vérifiable** — relief, vallée, plateau, littoral,
+département — et à ce qu'elle implique concrètement pour organiser un chantier.
+
+### Données structurées
+
+**Aucun `LocalBusiness` par commune.** Arbre & Cime est une entreprise
+unique basée à Rouen ; déclarer vingt-trois établissements affirmerait
+vingt-trois implantations qui n'existent pas. Une page ville décrit une **zone
+de service**, pas une agence. Seul un `BreadcrumbList` est émis, et
+uniquement quand le site est indexable.
+
+---
+
 ## 6. Métadonnées — livrées
 
 **Fabrique unique : `buildMetadata(routeId)` dans `src/lib/seo.ts`.** Aucune
@@ -456,6 +528,58 @@ piloter avec le client :
    fédérations arboricoles), sans inscription de masse.
 5. Mentions locales : presse locale, partenariats, clients professionnels et
    collectivités qui peuvent citer l'entreprise.
+
+---
+
+## 9 bis. Google Business Profile — check-list de lancement
+
+À dérouler avec le client au lancement (phase 18). Rien ne peut être fait
+avant : la fiche exige une adresse, un téléphone et un domaine, dont aucun
+n'est confirmé à ce jour.
+
+| # | Étape | Précision |
+| --- | --- | --- |
+| 1 | Créer la fiche | Compte Google dédié à l'entreprise, pas un compte personnel |
+| 2 | Vérifier l'établissement | Par courrier ou téléphone selon ce que Google propose |
+| 3 | **Catégorie principale** | « Service d'élagage » — une seule, la plus précise |
+| 4 | Catégories secondaires | « Entreprise d'aménagement paysager », « Service de jardinage ». Ne pas en empiler : chaque catégorie hors métier dilue la principale |
+| 5 | **Zone desservie** | Rouen + communes de la métropole. **Ne pas déclarer 100 km** : une zone exagérée dégrade la pertinence locale |
+| 6 | Adresse | Masquée si l'activité se fait chez le client — un élagueur n'accueille pas de public |
+| 7 | Prestations | Les 8 de `src/lib/site.ts`, mêmes intitulés que le site |
+| 8 | Horaires | Réels. Mieux vaut pas d'horaires que des horaires faux |
+| 9 | Téléphone | **Identique au site au caractère près** (cohérence NAP) |
+| 10 | Site web | Domaine définitif, jamais l'URL de préproduction |
+| 11 | Photos | Photographies réelles récentes : chantiers, matériel, véhicule. Aucune image générée |
+| 12 | Description | Reprendre le positionnement de `PROJECT.md`, sans bourrage de mots-clés |
+| 13 | Avis | Sollicitation systématique après chantier, réponse à chacun. Levier le plus rentable du projet |
+| 14 | **Search Console** | Propriété par domaine, validation DNS |
+| 15 | **Sitemap** | Soumettre `/sitemap.xml` — seulement après bascule de `NEXT_PUBLIC_SITE_INDEXABLE` |
+| 16 | Bing Webmaster Tools | Import depuis Search Console, coût nul |
+
+---
+
+## 9 ter. Check-list de passage en production
+
+Dans cet ordre. Les trois premières lignes conditionnent toutes les autres.
+
+| # | Contrôle | État |
+| --- | --- | --- |
+| 1 | Domaine définitif acquis et pointé | ⬜ client |
+| 2 | `NEXT_PUBLIC_SITE_URL` renseignée en production | ⬜ |
+| 3 | `NEXT_PUBLIC_PHONE`, `NEXT_PUBLIC_PHONE_DISPLAY`, `NEXT_PUBLIC_EMAIL` renseignées | ⬜ client |
+| 4 | Raison sociale, SIREN, assurance, mentions légales complétées | ⬜ client |
+| 5 | Photothèque réelle livrée et intégrée | ⬜ client |
+| 6 | Image Open Graph déposée (`OG_IMAGE` dans `src/lib/seo.ts`) | ⬜ |
+| 7 | `localBusinessSchema()` débloqué — `missingLocalBusinessData()` renvoie une liste vide | ⬜ |
+| 8 | Endpoint d'envoi du devis opérationnel (phase 13) | ⬜ |
+| 9 | **`NEXT_PUBLIC_SITE_INDEXABLE="true"`** — une seule fois, en dernier | ⬜ |
+| 10 | Vérifier : canoniques présentes, `robots` en `index, follow`, sitemap non vide | ⬜ |
+| 11 | Vérifier : aucune occurrence de `localhost` ni de `vercel.app` dans le HTML | ⬜ |
+| 12 | Soumettre le sitemap à Search Console | ⬜ |
+
+> **La ligne 9 est la dernière.** Basculer l'indexation avant que les lignes 1
+> à 8 soient faites ferait entrer dans l'index des pages au contenu d'attente,
+> avec un coût durable sur le domaine.
 
 ---
 

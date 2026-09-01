@@ -1,5 +1,5 @@
 import { ButtonLink, Container, Eyebrow, Reveal, Section } from "@/components/ui";
-import { ESTIMATED_MINUTES, STEP_COUNT } from "@/lib/quote-flow";
+import { ESTIMATED_MINUTES, STEP_COUNT } from "@/lib/quote";
 import { getRoute } from "@/lib/routes";
 import { area } from "@/lib/site";
 

@@ -1,3 +1,4 @@
+import { locationByCode } from "@/content/locations";
 import { CITIES, MAP_VIEW_BOX, type MapCity } from "@/lib/map-data";
 import { area } from "@/lib/site";
 
@@ -99,6 +100,19 @@ export type MapMarker = MapCity & {
   note: string;
   /** Masqué sous 768 px, où la grappe devient trop dense. */
   secondary: boolean;
+  /**
+   * Le point existe toujours ; l'étiquette, elle, peut n'apparaître qu'à
+   * l'interaction.
+   *
+   * C'est la hiérarchisation demandée au brief de phase 14 : vingt-trois noms
+   * affichés en permanence se percuteraient quelle que soit la taille de la
+   * carte. Les communes trop serrées pour porter une étiquette permanente
+   * gardent donc un point cliquable et se nomment au survol, au focus ou au
+   * tap — l'information n'est jamais perdue, elle est différée.
+   */
+  labelOnInteraction: boolean;
+  /** Page locale correspondante. Toujours présente : c'est la règle du site. */
+  slug: string | null;
 };
 
 const byCode = new Map(CITIES.map((city) => [city.code, city]));
@@ -106,7 +120,10 @@ const byCode = new Map(CITIES.map((city) => [city.code, city]));
 function marker(
   code: string,
   placement: { leader?: Leader; side?: MapMarker["side"] },
-  { secondary = false }: { secondary?: boolean } = {},
+  {
+    secondary = false,
+    labelOnInteraction = false,
+  }: { secondary?: boolean; labelOnInteraction?: boolean } = {},
 ): MapMarker {
   const city = byCode.get(code);
 
@@ -127,7 +144,27 @@ function marker(
       ? `Cœur de zone · ${area.metro}, à ${city.km} km de ${area.city}`
       : `À ${city.km} km de ${area.city} · déplacement possible selon le chantier`;
 
-  return { ...city, isCenter, inMetropole, note, secondary, ...placement };
+  /*
+   * Tout point public renvoie à sa page locale.
+   *
+   * Le rapprochement se fait par code INSEE contre `src/content/locations.ts`,
+   * qui fait foi. Si un point n'y trouve pas de correspondance, `slug` vaut
+   * `null` et le point reste affiché sans lien — mais le contrôle de la phase
+   * 14 (`scripts/check-locations.mjs`) échoue, ce qui rend l'oubli visible au
+   * lieu de le laisser passer.
+   */
+  const slug = locationByCode(code)?.slug ?? null;
+
+  return {
+    ...city,
+    isCenter,
+    inMetropole,
+    note,
+    secondary,
+    labelOnInteraction,
+    slug,
+    ...placement,
+  };
 }
 
 /**
@@ -143,6 +180,20 @@ const CLUSTER: readonly MapMarker[] = [
   marker("76108", { leader: { dx: 64, dy: -50 } }, { secondary: true }), // Bois-Guillaume, nord-est. Secondaire : sous 768 px, la grappe ne tient que deux étiquettes.
   marker("76681", { leader: { dx: 70, dy: 38 } }, { secondary: true }), // Sotteville, sud-est
   marker("76322", { leader: { dx: -78, dy: 34 } }, { secondary: true }), // Le Grand-Quevilly, sud-ouest
+
+  /*
+   * Saint-Étienne-du-Rouvray — 6 km, au cœur de la grappe.
+   *
+   * Point permanent, étiquette à l'interaction seulement : à cette distance
+   * du centre, une sixième étiquette déportée croiserait celles de Sotteville
+   * et du Grand-Quevilly quelle que soit la longueur du rappel. Le brief
+   * demandait justement d'éviter les collisions plutôt que d'afficher
+   * vingt-trois noms.
+   */
+  marker("76575", { side: "bottom" }, { labelOnInteraction: true }),
+
+  /* Elbeuf — 19 km au sud, hors grappe : la place existe pour un nom. */
+  marker("76231", { side: "bottom" }, { secondary: true }),
 ];
 
 /**

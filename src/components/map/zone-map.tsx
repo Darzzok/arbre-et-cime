@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { cn } from "@/lib/cn";
@@ -22,6 +23,7 @@ import {
   SEINE_PATH,
   SEINE_PATH_LENGTH,
 } from "@/lib/map-data";
+import { locationPath } from "@/lib/seo";
 import { area } from "@/lib/site";
 
 /**
@@ -83,17 +85,31 @@ const REACH_KM = 100;
 const REACH_CIRCUMFERENCE = Math.round(2 * Math.PI * REACH_KM);
 
 type ZoneMapProps = {
-  variant: "home" | "page";
+  variant: "home" | "page" | "local";
   /** Nom accessible de la figure. */
   title: string;
   className?: string;
+  /**
+   * Variante `local` : code INSEE de la commune mise en avant, et jeu de
+   * repères restreint. Une page ville ne montre pas vingt-trois points — elle
+   * montre la commune, Rouen, et quelques voisins pour situer.
+   */
+  highlight?: string;
+  markers?: readonly MapMarker[];
 };
 
-export function ZoneMap({ variant, title, className }: ZoneMapProps) {
-  const markers = variant === "home" ? HOME_MARKERS : PAGE_MARKERS;
+export function ZoneMap({
+  variant,
+  title,
+  className,
+  highlight,
+  markers: markersProp,
+}: ZoneMapProps) {
+  const markers =
+    markersProp ?? (variant === "home" ? HOME_MARKERS : PAGE_MARKERS);
 
   const rootRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState<string | null>(null);
+  const [active, setActive] = useState<string | null>(highlight ?? null);
   const [hovered, setHovered] = useState<string | null>(null);
   // `useId` produit des deux-points, illégaux dans une référence `url(#…)`.
   const id = useId().replace(/:/g, "");
@@ -336,6 +352,7 @@ export function ZoneMap({ variant, title, className }: ZoneMapProps) {
             mark={mark}
             index={index}
             isActive={active === mark.code}
+            isHighlighted={highlight === mark.code}
             onToggle={() =>
               setActive((current) => (current === mark.code ? null : mark.code))
             }
@@ -378,6 +395,32 @@ export function ZoneMap({ variant, title, className }: ZoneMapProps) {
             </span>
             {" — "}
             {shown.note}
+            {/*
+              Le point n'est pas qu'un repère : il ouvre la page locale.
+              Le lien est posé ICI plutôt que sur le point lui-même — une cible
+              de 11 px qui navigue au clic piégerait autant qu'elle servirait,
+              alors qu'un survol ou un tap révèle d'abord l'information, puis
+              propose d'aller plus loin.
+            */}
+            {/*
+              Pas d'auto-lien : sur une page ville, le repère mis en avant EST
+              la page courante. Proposer « Voir la zone » renverrait sur
+              elle-même — un lien mort du point de vue de l'utilisateur, et un
+              auto-référencement inutile dans le maillage.
+            */}
+            {shown.slug && shown.code !== highlight ? (
+              <>
+                {" · "}
+                <Link
+                  href={locationPath(shown.slug)}
+                  className="font-semibold text-(--surface-heading) underline underline-offset-4"
+                >
+                  Voir la zone
+                  <span aria-hidden="true"> →</span>
+                  <span className="sr-only"> de {shown.nom}</span>
+                </Link>
+              </>
+            ) : null}
           </span>
         ) : (
           <span className="opacity-70">
@@ -447,6 +490,7 @@ type CityMarkerProps = {
   mark: MapMarker;
   index: number;
   isActive: boolean;
+  isHighlighted: boolean;
   onToggle: () => void;
   onPreview: (code: string | null) => void;
 };
@@ -455,6 +499,7 @@ function CityMarker({
   mark,
   index,
   isActive,
+  isHighlighted,
   onToggle,
   onPreview,
 }: CityMarkerProps) {
@@ -527,7 +572,10 @@ function CityMarker({
             "relative block rounded-full",
             mark.isCenter
               ? "size-2.5 bg-safety ring-[3px] ring-(--surface-bg)"
-              : "size-[0.4375rem] bg-(--color-forest) ring-2 ring-(--surface-bg)",
+              : isHighlighted
+                ? // Commune de la page : même accent que Rouen, en plus large.
+                  "size-3 bg-safety ring-[3px] ring-(--surface-bg)"
+                : "size-[0.4375rem] bg-(--color-forest) ring-2 ring-(--surface-bg)",
             "motion-safe:transition-transform",
             "motion-safe:duration-(--duration-micro) motion-safe:ease-cime",
             "group-hover:scale-150 group-focus-visible:scale-150",
@@ -550,9 +598,19 @@ function CityMarker({
           className={cn(
             "absolute whitespace-nowrap font-sans text-caption",
             !leader && mark.side ? sidePlacement[mark.side] : "",
-            mark.isCenter
+            mark.isCenter || isHighlighted
               ? "font-semibold text-(--surface-heading)"
               : "text-(--surface-fg)",
+            /*
+              Étiquette différée : le point reste visible et cliquable, le nom
+              n'apparaît qu'au survol, au focus ou au tap. C'est ce qui permet
+              d'avoir plus de points que de place pour les nommer, sans jamais
+              produire de collision. En UNE expression : cn() ne fusionne pas
+              les classes concurrentes.
+            */
+            mark.labelOnInteraction && !isActive && !isHighlighted
+              ? "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 motion-safe:transition-opacity motion-safe:duration-(--duration-micro)"
+              : "opacity-100",
           )}
         >
           {mark.nom}

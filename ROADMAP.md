@@ -837,8 +837,8 @@ Interface complète des 5 étapes VERROUILLÉES, **sans aucun envoi**.
 
 Un seul composant client, `QuoteConfigurator`, monté dans une page qui reste
 serveur. `src/lib/quote-flow.ts` porte le modèle, les options et la validation
-sans une ligne de JSX : c'est ce qui permettra à la route `POST /api/devis` de
-la phase 12 de revalider avec **exactement les mêmes règles**, comme l'exige
+sans une ligne de JSX : les règles sont ainsi isolées de l'affichage et
+transposables telles quelles côté serveur en phase 13, comme l'exige
 `QUOTE_FLOW.md` § 4.
 
 ### Deux écarts avec la spécification, demandés au brief
@@ -899,42 +899,212 @@ et sur `/devis` ; aucune dépendance ajoutée ; lint, typecheck et build au vert
 
 ---
 
-## Phase 12 — Logique de devis et photos ⬜
+## Phase 12 — Logique du configurateur et photos locales ✅
 
-- Validation par étape, schéma partagé client/serveur
-- Dépôt de 1 à 6 photos, compression côté client, prévisualisation, suppression
-- Persistance `sessionStorage` des champs texte (jamais des photos)
-- Récapitulatif éditable avant envoi
+La phase 11 avait livré l'interface ; la phase 12 livre le **fonctionnement**,
+toujours sans une seule requête réseau.
 
-**Sortie :** formulaire complet, validé, sans envoi réel.
+### Découpage
+
+Le composant de 630 lignes qui portait tout est réduit à une **vue**. La
+logique est répartie ainsi :
+
+| Fichier | Rôle |
+| --- | --- |
+| `src/lib/quote/types.ts` | Modèle, union discriminée du chantier |
+| `src/lib/quote/options.ts` | Étapes, options, libellés, limites photos |
+| `src/lib/quote/conditional.ts` | Questions par prestation, changement de besoin |
+| `src/lib/quote/validation.ts` | Règles, pures et sans dépendance |
+| `src/lib/quote/persistence.ts` | `sessionStorage`, ce qui est stocké et ce qui ne l'est pas |
+| `src/lib/quote/events.ts` | Points d'émission, inertes |
+| `src/components/quote/use-quote-state.ts` | Tout l'état, hors de la vue |
+
+`src/lib/quote/` ne contient **ni JSX, ni React** : les règles y sont lisibles
+d'un bloc et sans contexte d'affichage, donc transposables sans ambiguïté dans
+l'endpoint PHP de la phase 13. `validation.ts` fait foi.
+
+### Le type porte la règle métier
+
+Le chantier est une **union discriminée par `kind`** plutôt qu'un objet plat
+rempli de champs facultatifs. Lire `hauteur` sur un dessouchage est désormais
+une **erreur de compilation**. « Une souche n'a pas de hauteur » n'est plus une
+convention à respecter, c'est une contrainte du compilateur.
+
+### Trois décisions notables
+
+- **Restauration automatique après rechargement**, ce que la phase 11 refusait.
+  Le refus était justifié tant que le stockage contenait des coordonnées ; il
+  ne l'est plus depuis qu'il n'en contient aucune. La règle a changé parce que
+  le risque a disparu, pas par confort.
+- **Aucune déduction de zone à partir du code postal.** La version précédente
+  lisait les deux premiers chiffres pour annoncer « dans le rayon ». Un
+  département n'est ni un rayon ni une zone desservie : c'était une
+  approximation présentée comme un fait. Message unique et vrai désormais.
+- **Le focus est sorti du hook.** `react-hooks/refs` refuse qu'un objet
+  contenant un `RefObject` traverse le rendu — à juste titre. Le focus est de
+  toute façon une préoccupation de vue, pas de logique métier.
+
+### Douze scénarios exécutés, pas douze scénarios prévus
+
+A à L, déroulés dans le navigateur. Résultats notables :
+
+- **dessouchage** : aucune question de hauteur, une question de taille ;
+- **entretien extérieur** : travaux + ampleur, ni nombre ni hauteur ;
+- **je ne sais pas** : zéro champ technique, « Continuer » actif d'emblée ;
+- **arbre → souche** : « 4 à 10 » et « accès difficile » conservés, hauteur
+  vidée ; **élagage → abattage** : rien perdu ;
+- **photos** : 5 acceptées, 6ᵉ refusée, doublon refusé (« est déjà jointe »),
+  PDF refusé, 11 Mo refusé avec le poids affiché ;
+- **téléphone** : `0612345678`, `06 12 34 56 78`, `+33 6 12 34 56 78`,
+  `06.12.34.56.78`, `0033612345678` acceptés ; `06 12 34` refusé ;
+- **stockage** : **212 octets**, sans nom, téléphone, e-mail ni commentaire —
+  vérifié par recherche de chaîne sur le contenu réel ;
+- **rechargement à l'étape 5** : étape restaurée, coordonnées vides, bandeau
+  « photos à ajouter de nouveau ».
+
+**Sortie atteinte :** zéro débordement horizontal à 320 / 390 / 430 / 768 /
+1024 / 1440 px ; champs à 17 px (pas de zoom iOS) ; **aucune dépendance
+ajoutée** ; lint, typecheck et build au vert.
+
+*Tests automatisés :* aucun. Le projet n'a pas d'infrastructure de tests, et en
+monter une supposait soit une dépendance, soit une modification de `tsconfig`
+et de la convention d'import de tout le module — au-delà de « quelques tests
+ciblés ». Les modules de `src/lib/quote/` sont en revanche **conçus pour être
+testables** : fonctions pures, sans React ni DOM. Un exécuteur peut être ajouté
+en une étape le jour où le projet en accueille un.
+
+## Phase 13 — Envoi de la demande par e-mail ⬜
+
+**Architecture VERROUILLÉE**, simplifiée après la phase 12 :
+
+```
+Next.js (statique)
+  └── multipart/form-data
+        └── endpoint PHP (Hostinger)
+              ├── validation serveur
+              ├── envoi SMTP  →  adresse unique de l'entreprise
+              └── suppression des fichiers temporaires
+```
+
+- `fetch` en **multipart/form-data** depuis `submit()` — point de branchement
+  unique, déjà isolé en phase 12.
+- **Endpoint PHP sur Hostinger**, pas de route Next.js : le site est
+  intégralement statique, lui ajouter un runtime Node imposerait un hébergement
+  applicatif pour une seule fonction. PHP est déjà là.
+- **Revalidation côté PHP** de toutes les règles de `validateStep()`.
+- **Un seul e-mail**, à l'entreprise, `reply-to` sur l'adresse du client.
+- **Photos** : reçues en temporaire, contrôlées (type MIME réel, taille,
+  nombre), jointes à l'e-mail, puis **supprimées**.
+- Honeypot, délai minimal de remplissage, limitation de débit.
+- Écran de confirmation réel côté client.
+
+**Écartés explicitement** — et c'est la simplification qui définit cette
+phase : base de données, stockage objet, liens signés, CRM, numéro de demande,
+accusé de réception au prospect, conservation des demandes. **L'e-mail est
+l'enregistrement.** Rien à sécuriser dans la durée, rien à purger, rien à
+déclarer au titre d'une conservation.
+
+**Bloqué pour l'instant :** le site n'est ni hébergé sur Hostinger ni rattaché
+à un domaine. **Aucun SMTP réel ne doit être configuré avant.** Les identifiants
+d'envoi et l'adresse de réception vivront dans la configuration du serveur,
+jamais dans le dépôt.
+
+**Sortie :** demande de bout en bout reçue par e-mail avec ses photos ; aucun
+fichier conservé sur le serveur ; aucun secret exposé.
 
 ---
 
-## Phase 13 — Envoi et stockage des demandes ⬜
+## Phase 14 — SEO technique, SEO local et pages villes ✅
 
-- Route Handler `POST /api/devis`, revalidation serveur systématique
-- Stockage objet privé des photos, liens signés
-- E-mail de notification à l'entreprise (`reply-to` client) + accusé de
-  réception au client
-- Limitation de débit, honeypot, journalisation des erreurs
-- Variables d'environnement documentées dans `.env.example`
+### Vingt-trois pages locales
 
-**Sortie :** demande de bout en bout reçue avec photos ; aucun secret exposé.
+Une par commune de la carte, sous `/zones-intervention/[ville]`,
+entièrement générées au build par `generateStaticParams` — aucun runtime
+Node, le site reste exportable tel quel.
 
----
+> Le brief annonçait « 22 pages » mais en énumérait **23** (Rouen → Amiens,
+> 23 URLs). La liste explicite a été suivie.
 
-## Phase 14 — SEO technique et local ⬜
+### Source unique
 
-- `sitemap.ts`, `robots.ts`
-- JSON-LD : `LocalBusiness`, `Service`, `BreadcrumbList`, `FAQPage`
-- Open Graph avec photo réelle
-- Redirection d'hôte unique, canoniques vérifiées
-- Search Console + Google Business Profile alignés sur le NAP du site
+`src/content/locations.ts` fait foi pour la carte, les pages, le hub, le
+maillage et le sitemap. Avant, la liste vivait à trois endroits — et
+divergeait déjà : Saint-Étienne-du-Rouvray et Elbeuf étaient cités dans le
+texte de `/zones-intervention` sans exister sur la carte. Les deux ont
+rejoint la carte et ont leur page.
 
-**Sortie :** aucune erreur au test des résultats enrichis, sitemap soumis.
+**Les coordonnées saisies à la main étaient fausses.** Écrites de mémoire,
+elles s'écartaient jusqu'à 2,3 km des centroïdes officiels — sans que les
+distances arrondies au kilomètre le laissent voir. Elles ont été remplacées
+par les valeurs de `geo.api.gouv.fr`, et un contrôle automatique refuse
+désormais tout écart.
 
----
+### Trois niveaux, définis par des faits
 
+| Niveau | Règle | Nombre |
+| --- | --- | --- |
+| `core` | membre de la Métropole Rouen Normandie | 7 |
+| `primary` | ≤ 60 km de Rouen | 9 |
+| `extended` | > 60 km de Rouen | 7 |
+
+Ce découpage reproduit exactement les exemples du brief, sans qu'aucune
+commune ait été classée à la main.
+
+### Anti-doorway : mesuré, pas espéré
+
+**70 à 89 % de phrases propres** par page ; la paire la plus proche
+(Fécamp / Yvetot) ne partage que **30 %** de ses phrases. Le contrôle
+échoue si deux pages partagent une phrase éditoriale.
+
+### Carte interactive
+
+Les 23 points renvoient vers leur page. **22 étiquettes permanentes, 1
+différée** (Saint-Étienne-du-Rouvray, trop au cœur de la grappe) : le point
+existe et reste cliquable, le nom apparaît au survol, au focus ou au tap.
+C'est la hiérarchisation demandée — zéro collision mesurée aux six largeurs.
+
+### Audit SEO de toutes les routes
+
+Mené sur le **HTML réellement produit**, pas sur les intentions :
+
+- 38 documents analysés, **1 seul `h1` par page** partout ;
+- **aucune canonique émise**, aucune occurrence de `localhost` ni de
+  `vercel.app` ;
+- `noindex, follow` sur toutes les pages publiques ;
+- titres de 28 à 60 caractères, descriptions jusqu'à 160 — **aucune
+  duplication** de titre ni de description ;
+- sitemap **vide** et `robots.txt` sans ligne `Sitemap`, conformes au
+  mode préproduction.
+
+**Un défaut trouvé et corrigé : la page 404 héritait du titre de la page
+d'accueil.** Deux URLs portaient le même `<title>`. `src/app/not-found.tsx`
+a été créée, avec son propre titre, sa description, et un `noindex` **en
+dur** — une 404 ne s'indexe jamais, y compris après le lancement.
+
+*Reste `/_global-error`, page interne de Next sans `<meta robots>` : ce
+n'est pas une URL routable, elle n'est ni liée ni au sitemap.*
+
+### Données structurées
+
+**Aucun `LocalBusiness` par commune** : une entreprise, une fiche. Une
+page ville décrit une zone de service, pas une agence. Seul un
+`BreadcrumbList` est prévu, et il reste inactif tant que le site n'est pas
+indexable — d'où **0 JSON-LD** dans le HTML actuel, ce qui est le
+comportement attendu en préproduction.
+
+### Documentation
+
+- `SEO_STRATEGY.md` § 5 sexies (pages locales), § 9 bis (check-list Google
+  Business Profile, 16 points), § 9 ter (check-list de passage en production,
+  12 points). La règle `VERROUILLÉ` du § 1 qui interdisait les pages villes
+  a été **amendée explicitement**, en nommant qui l'a levée et par quel
+  garde-fou mesuré elle est remplacée.
+- `CONTENT_STRATEGY.md` § 5 sexies : de quoi parle un texte local, et la
+  liste de ce qui y est interdit.
+
+**Sortie atteinte :** 40 routes générées (17 + 23), `SITE_INDEXABLE` reste
+`false`, zéro débordement horizontal et zéro collision de carte aux six
+largeurs, aucune dépendance ajoutée, lint, typecheck et build au vert.
 ## Phase 15 — Performance, mobile, accessibilité ⬜
 
 - Budgets : LCP < 2,5 s, INP < 200 ms, CLS < 0,1 en 4G mobile
@@ -988,6 +1158,6 @@ homepage et une page service.
 | --- | --- |
 | Qualité finale des phases 5B et 9 | Photothèque client — un repli libre est en place depuis la phase 5A |
 | Phases 4, 14, 18 | Téléphone, e-mail, domaine définitifs |
-| Phase 13 | Hébergement, fournisseur d'envoi, adresse de réception |
+| Phase 13 | **Hébergement Hostinger et domaine** — sans eux, pas de SMTP |
 | Phases 14, 18 | Raison sociale, SIREN, mentions légales, assurances |
 | Phase 6 | Justificatifs des qualifications et de l'expérience |
