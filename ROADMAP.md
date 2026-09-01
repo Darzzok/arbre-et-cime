@@ -829,7 +829,67 @@ dépendance ajoutée, aucun appel réseau. Lint, typecheck et build au vert.
 
 ---
 
-## Phase 11 — Configurateur de devis (UI) ⬜
+## Phase 11 — Configurateur de devis (UI) ✅
+
+Interface complète des 5 étapes VERROUILLÉES, **sans aucun envoi**.
+
+### Architecture
+
+Un seul composant client, `QuoteConfigurator`, monté dans une page qui reste
+serveur. `src/lib/quote-flow.ts` porte le modèle, les options et la validation
+sans une ligne de JSX : c'est ce qui permettra à la route `POST /api/devis` de
+la phase 12 de revalider avec **exactement les mêmes règles**, comme l'exige
+`QUOTE_FLOW.md` § 4.
+
+### Deux écarts avec la spécification, demandés au brief
+
+- **Étape 1 ramenée à cinq choix uniques** (les 4 pages services + « je ne sais
+  pas ») au lieu d'une sélection multiple parmi 8 prestations, plus urgence et
+  type de demandeur. Trois questions à la première étape, dont deux sans effet
+  sur le chiffrage.
+- **Étape 2 ramenée à trois questions** au lieu de six, dont une seule
+  adaptative : la hauteur disparaît quand elle n'a pas de sens (souche, haie).
+
+Le récapitulatif éditable exigé par `QUOTE_FLOW.md` § 2 est livré **dans
+l'étape 5**, pas en sixième étape : le brief l'interdisait explicitement.
+
+### Décisions notables
+
+- **`aria-disabled` plutôt que `disabled`** sur « Continuer ». Un bouton
+  réellement désactivé sort de la tabulation et n'explique rien. Ici il paraît
+  inactif, reste atteignable, et le clic affiche ce qui manque — seule façon de
+  tenir ensemble « désactivé si informations manquantes » et « l'erreur doit
+  être découvrable ».
+- **Aucun rouge.** La charte n'en contient pas et il n'en a pas été introduit :
+  une erreur se signale par un filet épaissi en jaune sécurité, un pictogramme
+  et un texte explicite — trois signaux dont aucun n'est chromatique seul.
+- **Le brouillon n'est jamais réinjecté d'office** : la reprise est proposée
+  par un bandeau, puis choisie. Retrouver un formulaire pré-rempli sans l'avoir
+  demandé surprend, et sur un poste partagé cela expose des coordonnées.
+- **`useSyncExternalStore` pour lire `sessionStorage`**, pas un `setState` dans
+  un effet : c'est la seule lecture qui donne un rendu serveur cohérent sans
+  écart d'hydratation ni rendu en cascade.
+- **L'écran final ne dit pas « envoyé »**, parce que rien ne l'est. Le site
+  étant déployé publiquement, une confirmation fabriquée serait un mensonge
+  affiché à un visiteur réel.
+
+### Trois défauts trouvés à la mesure, pas à l'œil
+
+1. **Les refus de photos ne s'affichaient jamais** : le tableau des messages
+   était rempli à l'intérieur d'un updater `setPhotos`, donc lu vide à
+   l'extérieur — et dupliqué au double passage de développement. Tri déplacé
+   avant toute mise à jour d'état.
+2. **Le configurateur s'étalait sur 1 144 px au lieu de 832** : `cn()` ne
+   fusionne pas les classes concurrentes, `max-w-content` restait posée à côté
+   de `max-w-[52rem]`. Troisième occurrence de ce piège dans le projet.
+3. **Le voile de la section 7 passait derrière la photo** (`-z-10` sur un
+   frère lui-même positionné) : le titre se retrouvait sur une image en pleine
+   lumière. Corrigé, puis vérifié par recomposition — 13,91 et 9,46.
+
+**Sortie atteinte :** parcours complet réalisable au clavier ; focus déplacé
+sur le titre à chaque étape ; cibles tactiles à 44 px minimum mesurées ; zéro
+débordement horizontal à 320 / 390 / 430 / 768 / 1024 / 1440 px sur l'accueil
+et sur `/devis` ; aucune dépendance ajoutée ; lint, typecheck et build au vert.
 
 - Coquille des 5 étapes de `QUOTE_FLOW.md`, sans logique d'envoi
 - Progression annoncée textuellement, navigation avant/arrière

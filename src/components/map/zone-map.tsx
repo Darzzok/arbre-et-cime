@@ -427,25 +427,20 @@ function labelAnchor({ dx, dy }: Leader): string {
 /**
  * Seuil d'apparition d'un repère secondaire.
  *
- * DEUX seuils, pas un. Les deux familles d'étiquettes n'ont pas la même
- * contrainte, et les confondre coûtait cher :
+ * Seuil unique à 768 px, et c'est un choix MESURÉ, pas prudentiel.
  *
- * - une étiquette **déportée** tourne autour d'une grappe de 14 px. Mesuré,
- *   trois d'entre elles se percutent sous 768 px quelles que soient les
- *   longueurs de rappel ;
- * - une étiquette **collée** au point n'a que ses voisines à éviter. Mesuré,
- *   la couronne entière tient sans une seule collision dès 480 px.
- *
- * Un seuil unique à 768 px masquait donc onze repères entre 480 et 768 px —
- * la carte y paraissait vide, ce qui est exactement le reproche d'origine.
+ * Un seuil plus bas a été tenté pour densifier la bande 480-768 px, où la
+ * carte paraît clairsemée. Résultat au banc de collisions : quatre chevauchements
+ * à 480 px (dont Amiens hors cadre), trois à 500, et « Gisors x Vernon »
+ * persistant jusqu'à 640 px. La couronne ne tient réellement qu'à partir de
+ * ~700 px de largeur de carte.
  *
  * En **une seule expression** : `cn()` ne fusionne pas les classes Tailwind
- * concurrentes. Deux entrées « hidden » puis « hidden sm:block » laisseraient
+ * concurrentes. Deux entrées « hidden » puis « hidden md:block » laisseraient
  * les deux en place, et c'est la seconde qui gagnerait.
  */
 function secondaryVisibility(mark: MapMarker): string {
-  if (!mark.secondary) return "";
-  return mark.leader ? "hidden md:block" : "hidden sm:block";
+  return mark.secondary ? "hidden md:block" : "";
 }
 
 type CityMarkerProps = {

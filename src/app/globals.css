@@ -590,3 +590,144 @@
     scale: 3.4;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Configurateur de devis — transition entre etapes.
+
+   Le bloc d'etape est remonte a chaque changement (`key` sur l'index) : c'est
+   ce remontage qui rejoue l'animation, sans etat de transition a gerer ni
+   composant d'animation a installer.
+
+   Le sens suit la navigation : en avancant, la nouvelle etape entre par la
+   droite ; en revenant, par la gauche. Le mouvement dit ou l'on va, il n'est
+   pas decoratif.
+
+   320 ms, dans la fourchette 250-450 ms du brief. Translation de 20 px : au
+   dela, le bloc parait glisser sous le doigt sur mobile ; en deca, l'entree ne
+   se lit plus.
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-quote-step][data-direction="avant"] {
+    animation: cime-step-avant 320ms var(--ease-cime) both;
+  }
+
+  [data-quote-step][data-direction="arriere"] {
+    animation: cime-step-arriere 320ms var(--ease-cime) both;
+  }
+}
+
+@keyframes cime-step-avant {
+  from {
+    opacity: 0;
+    translate: 1.25rem 0;
+  }
+
+  to {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+@keyframes cime-step-arriere {
+  from {
+    opacity: 0;
+    translate: -1.25rem 0;
+  }
+
+  to {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Configurateur — cascade des pastilles et des cartes de choix.
+
+   Chaque option entre avec un retard indexe sur son rang. Le bloc d'etape est
+   remonte a chaque changement (`key`), donc la cascade se rejoue a chaque
+   etape sans etat a gerer.
+
+   40 ms d'ecart et pas davantage : au dela, six options mettent une demi-
+   seconde a se poser et l'attente devient perceptible. Le but est de faire
+   sentir que les choix arrivent, pas de les faire attendre.
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-quote-chip],
+  [data-quote-card] {
+    animation: cime-chip-in 300ms var(--ease-cime) both;
+    animation-delay: calc(100ms + var(--chip-index, 0) * 40ms);
+  }
+
+}
+
+@keyframes cime-chip-in {
+  from {
+    opacity: 0;
+    translate: 0 0.5rem;
+  }
+
+  to {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Fin de parcours — sequence de preparation, puis recapitulatif.
+
+   L'anneau se REMPLIT une fois et s'arrete : ce n'est pas un spinner. Un
+   spinner tourne indefiniment et ne dit rien du temps restant ; un arc qui se
+   ferme dit « ca avance et ca va s'arreter ». Meme vocabulaire que le cercle
+   de portee de la carte de zone.
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-quote-ring-track] {
+    stroke-dasharray: 176;
+    animation: cime-quote-ring 1700ms var(--ease-line) both;
+  }
+
+  [data-quote-check] {
+    animation: cime-chip-in 320ms var(--ease-cime) both;
+    animation-delay: calc(280ms + var(--check-index, 0) * 380ms);
+  }
+
+  /* Le sceau se pose : echelle et opacite, jamais de rebond. */
+  [data-quote-seal] {
+    animation: cime-quote-seal 520ms var(--ease-cime) both;
+  }
+
+  [data-quote-recap-title] {
+    animation: cime-chip-in 420ms var(--ease-cime) 160ms both;
+  }
+
+  [data-quote-recap-block] {
+    animation: cime-chip-in 380ms var(--ease-cime) both;
+    animation-delay: calc(260ms + var(--block-index, 0) * 90ms);
+  }
+}
+
+@keyframes cime-quote-ring {
+  from {
+    stroke-dashoffset: 176;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cime-quote-seal {
+  from {
+    opacity: 0;
+    scale: 0.72;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}

@@ -988,6 +988,158 @@ vérifié par comparaison deux à deux des rectangles de toutes les étiquettes 
 par test de contenance dans la plaque.
 
 ---
+
+## 8 ter. Configurateur de devis — primitives de formulaire
+
+Livrées en phase 11, dans `src/components/quote/`. Elles ne sont pas dans
+`src/components/ui/` : elles servent un seul parcours, et les promouvoir en
+primitives générales avant d'avoir un second usage serait de l'abstraction
+spéculative.
+
+| Composant | Rôle |
+| --- | --- |
+| `ChoiceCard` | Carte de sélection photographique — étape 1 |
+| `ChoiceChip` | Pastille de choix, radio ou case — étape 2 |
+| `Field` / `TextareaField` | Champ étiqueté avec erreur reliée |
+| `ChoiceGroup` | `fieldset` + `legend` autour d'un groupe |
+| `PhotoPicker` | Dépôt de photos, aperçus, refus motivés |
+| `QuoteProgress` | Progression, deux traitements |
+| `QuoteSummary` | Récapitulatif éditable |
+
+### Le configurateur est un objet, pas une suite de blocs
+
+Première version : tout posé à plat sur l'ivoire. Un formulaire pâle, sans
+hiérarchie, que rien ne distinguait du texte éditorial au-dessus — le reproche
+exact du client (« c'est fade »).
+
+Le configurateur est désormais un **panneau fermé, en deux zones franches** :
+
+| Zone | Surface | Porte |
+| --- | --- | --- |
+| Bandeau | **forêt** (`data-surface="dark"`) | progression, numéro, question de l'étape |
+| Corps | ivoire | les contrôles |
+
+Le découpage n'est pas décoratif : il sépare **« où j'en suis »** de **« ce que
+je dois faire »**, les deux questions que se pose la personne à chaque étape.
+
+C'est aussi ce qui rend la progression lisible. Sur ivoire, le filet jaune
+tombait à **1,96** — invisible à un mètre. Sur forêt il atteint **7,16**, et il
+devient le premier repère lu en arrivant sur l'étape.
+
+### La pastille est un objet, pas un contour
+
+| État | Traitement |
+| --- | --- |
+| Au repos | fond `--surface-inset`, filet `--surface-rule` |
+| Survol | filet `--surface-fg-muted` |
+| **Sélectionné** | **aplat forêt, texte ivoire** (14,04), repère jaune, échelle 1,02 |
+
+Au repos, la pastille a un fond : elle se lit comme une chose qu'on peut
+toucher, pas comme un cadre dessiné. Sélectionnée, elle bascule sur le
+contraste le plus fort de la charte — le choix retenu se repère d'un coup
+d'œil au milieu de six options.
+
+Le jaune sécurité reste réservé au **repère de validation**, une dizaine de
+pixels : il ne devient jamais un aplat, conformément à « maximum une occurrence
+pleine par écran visible ».
+
+### Le bouton « Continuer » change de variante, pas d'opacité
+
+Étape incomplète → `outline`. Étape complète → `primary`. Un bouton translucide
+paraît **raté**, pas indisponible ; et `cn()` ne fusionnant pas les classes,
+forcer un fond par-dessus `variantClasses.primary` aurait laissé les deux en
+place. Deux variantes donnent deux états francs — et le bouton **s'allume** au
+moment où l'information est réunie.
+
+### Cascade des options
+
+Chaque pastille et chaque carte entre avec un retard indexé sur son rang :
+`--chip-index`, 40 ms d'écart, 300 ms de durée. Au-delà de 40 ms, six options
+mettent une demi-seconde à se poser et l'attente devient perceptible. Le but
+est de faire sentir que les choix **arrivent**, pas de les faire attendre.
+
+Le bloc d'étape étant remonté par son `key`, la cascade se rejoue à chaque
+étape sans un seul état à gérer.
+
+### Le contrôle natif est toujours là
+
+`ChoiceCard` et `ChoiceChip` enveloppent un `<input>` réel en `sr-only`. Le
+brief demandait « pas de radio button visible classique » — **visible**, pas
+absent. Conséquences gratuites : navigation aux flèches dans un groupe de
+radios, barre d'espace sur une case, annonce « case d'option 2 sur 5 »,
+`:focus-visible` natif remonté au conteneur par `has-[:focus-visible]`.
+
+Un `div` avec `role="radio"` aurait produit le même dessin et trois bugs
+d'accessibilité à écrire soi-même.
+
+### L'état sélectionné ne repose jamais sur la couleur
+
+Trois signaux simultanés, dont deux non chromatiques : **filet à 2 px**,
+**voile**, **pastille de validation**. Et sur les pastilles, la forme du repère
+annonce le comportement avant la première sélection — **carré pour un choix
+multiple, rond pour un choix unique**.
+
+### L'erreur, sans rouge
+
+La charte ne contient pas de rouge et il n'en a pas été introduit pour
+l'occasion. Une erreur se signale par :
+
+1. un **filet épaissi à 2 px en jaune sécurité** sur le champ ;
+2. un **pictogramme** devant le message ;
+3. un **texte explicite** qui dit quoi faire — « Indiquez un code postal à
+   5 chiffres », jamais « champ invalide ».
+
+Le message est **sous le champ**, relié par `aria-describedby`, avec
+`aria-invalid` sur le contrôle. Aucun toast, aucun bandeau rouge global : une
+erreur se lit là où elle se corrige.
+
+### `aria-disabled` plutôt que `disabled`
+
+Le bouton « Continuer » paraît inactif tant que l'étape est incomplète, mais
+reste **focusable et cliquable** : le clic affiche ce qui manque. Un bouton
+réellement `disabled` sort de la tabulation et n'explique rien — l'utilisateur
+au clavier se retrouve devant un mur muet.
+
+### Transition entre étapes
+
+320 ms, glissement de 20 px + fondu, **sens porté par la navigation** : entrée
+par la droite en avançant, par la gauche en revenant. Le mouvement dit où l'on
+va ; il n'est pas décoratif.
+
+Aucun composant d'animation, aucun état de transition : le bloc d'étape porte
+un `key` sur l'index, React le remonte, et le remontage rejoue l'animation
+CSS. Le sens vient d'un attribut `data-direction`.
+
+Tout est sous `prefers-reduced-motion: no-preference`.
+
+### Fin de parcours
+
+| Élément | Traitement |
+| --- | --- |
+| Anneau de préparation | se **remplit une fois** puis s'arrête — jamais un spinner |
+| Lignes cochées | cascade, 380 ms d'intervalle |
+| Sceau du récapitulatif | échelle 0,72 → 1 + opacité, **aucun rebond** |
+| Blocs du récapitulatif | cascade, 90 ms d'intervalle |
+
+Un *spinner* tourne indéfiniment et ne dit rien du temps restant ; un arc qui
+se ferme dit « ça avance et ça va s'arrêter ». C'est le même vocabulaire que
+le cercle de portée de la carte de zone — un tracé, pas une rotation.
+
+Sous `prefers-reduced-motion`, la séquence entière est **sautée**, pas
+ralentie : faire patienter sans animation serait le pire des deux mondes.
+
+### Mesures
+
+| Contrôle | Hauteur |
+| --- | --- |
+| Champ de saisie, pastille | 44 px minimum |
+| Bouton de navigation | 48 px (`md`) / 56 px (`lg`) |
+| Retrait d'une photo | 44 × 44 px |
+
+Taille de police des champs : `--text-body`, soit **16 px minimum** — en
+dessous, iOS zoome automatiquement à la mise au point du champ.
+
+---
 ## 9. Accessibilité
 
 - Contraste AA minimum sur tout texte (tableaux des sections 1 et 2).

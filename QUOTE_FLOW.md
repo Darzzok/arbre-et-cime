@@ -1,7 +1,8 @@
 # QUOTE_FLOW.md — Configurateur de devis
 
-Spécification du parcours de demande de devis. **Rien n'est développé à ce
-stade** : ce document cadre les phases 11 à 13 de `ROADMAP.md`.
+Spécification du parcours de demande de devis. **L'interface est livrée en
+phase 11** ; l'envoi et le stockage restent à faire (phases 12 et 13). Ce que
+la phase 11 fait réellement, et ce qu'elle simule, est détaillé au § 6.
 
 Périmètre `VERROUILLÉ` : **5 étapes, dans cet ordre.** Aucune étape ajoutée,
 retirée ou réordonnée sans demande explicite du client.
@@ -28,42 +29,65 @@ retirée ou réordonnée sans demande explicite du client.
 
 Ce que le client veut faire faire.
 
-- Sélection d'une ou plusieurs prestations parmi les 8 de référence (ordre et
-  libellés identiques à `src/lib/site.ts`).
-- Niveau d'urgence : `urgent (sous 48 h)` / `dans les semaines à venir` /
-  `je me renseigne`.
-- Type de demandeur : `particulier` / `professionnel` / `collectivité` — oriente
-  le ton de la réponse et les pièces attendues.
+**Un seul choix, parmi cinq** — les quatre pages services plus une sortie :
 
-Champ obligatoire : au moins une prestation.
+| Choix | Correspondance |
+| --- | --- |
+| Élagage | page `/elagage` |
+| Abattage | page `/abattage` |
+| Dessouchage | page `/dessouchage` |
+| Entretien extérieur | page `/entretien-exterieur` |
+| Je ne sais pas encore | aucune — la qualification se fera au rappel |
+
+Champ obligatoire : une intervention.
+
+> **Écart assumé avec la spécification initiale**, sur demande explicite du
+> client au brief de phase 11. La version d'origine prévoyait une sélection
+> multiple parmi les **8 prestations**, plus un niveau d'urgence et un type de
+> demandeur. Trois questions à la première étape, dont deux sans effet sur le
+> chiffrage : c'est le meilleur moyen de perdre quelqu'un avant l'étape 2. Les
+> quatre prestations secondaires (abattage difficile, débroussaillage, taille
+> de haies, évacuation) sont couvertes par leur page parente, exactement comme
+> dans la navigation. L'urgence et le type de demandeur se lisent dans le champ
+> « Précisions » de l'étape 5, ou se demandent au rappel.
 
 ### Étape 2 — Informations chantier
 
-Ce qui conditionne réellement le devis.
+Ce qui conditionne réellement le devis. **Trois questions, pas six.**
 
-- Nombre d'arbres ou linéaire de haie concerné (fourchettes, pas de précision
-  illusoire).
-- Hauteur estimée : `< 5 m` / `5 à 10 m` / `10 à 20 m` / `> 20 m` / `je ne sais
-  pas`.
-- Accès : `facile (véhicule au pied)` / `passage étroit` / `accès uniquement à
-  pied` / `nacelle impossible`.
-- Environnement : proximité de bâtiments, ligne électrique, voie publique,
-  piscine, mitoyenneté.
-- Évacuation des déchets souhaitée : oui / non / à voir.
-- État de l'arbre si connu : sain, dépérissant, tombé, penché, cassé.
+| Question | Réponses | Posée quand |
+| --- | --- | --- |
+| Ampleur | 1 · 2 à 3 · 4 à 10 · plus de 10 | toujours |
+| Hauteur | < 5 m · 5-10 m · 10-20 m · > 20 m · je ne sais pas | seulement si la hauteur existe |
+| Contraintes | accès difficile · proche d'une habitation · proche d'une route · proximité de câbles · aucune · autre | toujours, choix multiple |
 
-Tous ces champs proposent « je ne sais pas ». **Ne jamais bloquer une demande
-parce que le client ignore une donnée technique.**
+**Deux adaptations, et deux seulement** (`quote-flow.ts`) :
+
+- l'intitulé de l'ampleur suit le besoin — « combien d'arbres », « combien de
+  souches » — et pour l'entretien extérieur l'échelle change (« une haie »,
+  « un terrain entier ») : on ne compte pas une haie en unités ;
+- **la hauteur disparaît** pour le dessouchage et l'entretien extérieur. Une
+  souche n'a pas de hauteur ; poser la question produirait une donnée vide et
+  donnerait au parcours l'air d'un formulaire générique.
+
+Multiplier l'adaptativité au-delà rendrait le parcours imprévisible : deux
+personnes ne verraient plus le même nombre d'écrans sans comprendre pourquoi.
+
+« Aucune de ces situations » est **exclusive dans les deux sens** : la cocher
+vide les autres, en cocher une autre la retire.
+
+La hauteur propose « je ne sais pas ». **Ne jamais bloquer une demande parce
+que le client ignore une donnée technique.**
 
 ### Étape 3 — Photos
 
 L'étape qui a le plus de valeur pour le chiffrage.
 
-- Dépôt de **1 à 6 photos**, optionnel mais fortement encouragé, avec l'argument
-  affiché : « une photo du pied de l'arbre et une vue d'ensemble permettent un
-  devis beaucoup plus précis, et souvent sans visite ».
+- Dépôt de **1 à 5 photos**, optionnel mais fortement encouragé, avec
+  l'argument affiché : « une vue d'ensemble et une photo du pied de l'arbre
+  suffisent souvent ». Plafond ramené de 6 à 5 au brief de phase 11.
 - Formats acceptés : JPEG, PNG, HEIC, WebP. Taille maximale **10 Mo par
-  fichier**, 40 Mo au total.
+  fichier**.
 - Compression et redimensionnement **côté client** avant envoi (côté long max
   2000 px), pour tenir sur une connexion mobile.
 - Prévisualisation avec suppression individuelle, indicateur de progression,
@@ -166,3 +190,89 @@ Avant l'envoi : **récapitulatif complet**, éditable étape par étape.
 6. Aucune demande perdue silencieusement : toute erreur serveur est journalisée
    et signalée à l'utilisateur.
 7. Les six événements de mesure de `CONVERSION_STRATEGY.md` sont émis.
+
+---
+
+## 6. État d'avancement — après la phase 11
+
+La phase 11 livre **l'interface et rien d'autre**. Ce tableau fait foi.
+
+### Fonctionne réellement, en local
+
+| Ce qui marche | Où |
+| --- | --- |
+| Les 5 étapes, navigation avant / arrière | `quote-configurator.tsx` |
+| Validation par étape, messages sous les champs | `quote-flow.ts` — `validateStep()` |
+| Conservation de la saisie au retour arrière | état React, une seule source de vérité |
+| Étape reflétée dans l'URL (`?etape=3`), bouton « précédent » du navigateur | `history.pushState` + `popstate` |
+| Reprise d'un brouillon après rechargement | `sessionStorage`, **sur proposition explicite** |
+| Ajout, aperçu et suppression de photos | `photo-picker.tsx` — `URL.createObjectURL` |
+| Refus motivé : format, poids, nombre | `isAcceptedPhoto()`, `MAX_PHOTO_BYTES`, `MAX_PHOTOS` |
+| Retour de zone à partir du code postal | `zoneNoteFor()` |
+| Récapitulatif éditable avant envoi | `quote-summary.tsx`, dans l'étape 5 |
+
+### Fin de parcours — séquence puis récapitulatif
+
+Le bouton « Envoyer ma demande » déclenche une **séquence de préparation**
+(~1,8 s), puis le **récapitulatif complet**.
+
+La séquence coche trois lignes, et **les trois sont vraies** : les
+informations sont réellement validées, le récapitulatif réellement construit,
+les photos réellement préparées en mémoire. L'anneau se remplit une fois et
+s'arrête — ce n'est pas un *spinner* : un spinner tourne indéfiniment et ne
+dit rien du temps restant.
+
+Elle annonce **« Votre demande est prête »**, jamais « envoyée ». Quand l'envoi
+arrivera en phase 12, la même séquence portera une quatrième ligne — « demande
+transmise » — et ce sera vrai aussi.
+
+Le récapitulatif reprend **tout** : intervention, chantier, lieu, coordonnées,
+précisions, et les **vignettes des photos** (montrées, pas comptées — c'est la
+pièce qui a demandé le plus d'effort). Il porte le statut réel en clair, et un
+bouton « Modifier ma demande » qui ramène à l'étape 1 sans rien perdre.
+
+Sous `prefers-reduced-motion`, la séquence est **entièrement sautée** : une
+animation d'attente est exactement ce que ce réglage demande d'éviter.
+
+### Volontairement simulé
+
+**Le bouton « Envoyer ma demande » n'envoie rien.** Il valide, purge le
+brouillon, et affiche un écran qui dit explicitement que la demande **n'a pas
+été envoyée**, avec un moyen de contact réel.
+
+Ce choix n'est pas de la prudence de développeur : le site est déployé
+publiquement avec un contenu d'attente (`CLAUDE.md` § 10). Un visiteur réel
+qui remplirait ce formulaire et lirait « votre demande a bien été envoyée »
+attendrait un rappel qui ne viendrait jamais. Une confirmation fabriquée est
+un mensonge affiché, pas un placeholder.
+
+### Phase 12 — envoi
+
+- Route Handler `POST /api/devis`, runtime Node, jamais mis en cache.
+- Revalidation serveur avec **le même `validateStep()`** — c'est la raison pour
+  laquelle `quote-flow.ts` ne contient aucun JSX et n'est pas un module client.
+- Écran de confirmation réel : numéro de demande, rappel de l'envoi, délai
+  annoncé.
+- E-mail d'accusé au client, e-mail de notification à l'entreprise avec
+  `reply-to` sur l'adresse du client.
+- Honeypot, délai minimal de remplissage, limitation par IP.
+
+### Phase 13 — photos et stockage
+
+- Compression et redimensionnement **côté client** avant envoi (côté long max
+  2000 px). Non fait en phase 11 : sans destination, compresser ne sert à rien.
+- Envoi multipart avec indicateur de progression par fichier.
+- Stockage objet privé, liens signés à durée limitée pour l'entreprise.
+- Vérification serveur du type MIME **réel**, pas de l'extension déclarée.
+
+### Ce que la phase 11 ne persiste jamais
+
+- **Aucune photo**, sous aucune forme — ni fichier, ni base64. Une seule photo
+  de téléphone saturerait le quota de `sessionStorage`, et conserver l'image
+  d'un domicile dans le navigateur n'a aucune justification.
+- **Rien dans `localStorage`.** Le brouillon vit le temps de l'onglet : un
+  devis à moitié rempli retrouvé trois semaines plus tard n'aide personne, et
+  fait traîner des coordonnées sur un poste peut-être partagé.
+- Le brouillon est **purgé** à la fin du parcours, et sur « Recommencer ».
+- Aucune donnée personnelle en paramètre d'URL — seul le numéro d'étape y
+  figure.

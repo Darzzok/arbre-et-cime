@@ -103,6 +103,61 @@ Le trafic est majoritairement mobile et souvent en situation d'urgence.
 
 ---
 
+## 6 bis. La section 7 de l'accueil — entrée vers le devis
+
+Livrée en phase 11. **La plus courte section du site**, et c'est délibéré :
+elle est la dernière chose que lit un visiteur qui a déjà parcouru six
+sections. Un titre, une phrase, un bouton.
+
+| Élément | Texte |
+| --- | --- |
+| Titre | « Votre chantier commence ici. » |
+| Phrase | « Quelques informations suffisent pour préparer votre demande. » |
+| CTA | « Obtenir mon devis gratuit » |
+| Réassurance | « Environ 2 minutes. Sans engagement. » |
+
+**Surface claire, sans photographie.** Deux versions ont été écartées avant
+celle-ci, et chacune a appris quelque chose :
+
+1. **Photo de fond** — retirée sur demande. La page compte déjà le hero,
+   quatre cartes services et trois réalisations. Une septième photo n'ajoutait
+   pas de preuve, elle diluait les précédentes.
+2. **Aplat forêt** — retiré aussi : le pied de page est lui-même en forêt, et
+   les deux blocs sombres se fondaient en **une seule masse de 900 px** en fin
+   de page. Le filet supérieur du pied de page ne suffisait pas à les séparer.
+
+Ces deux versions masquaient le vrai défaut : **la section était vide**. Un
+titre, une phrase et un bouton, là où le visiteur se demande exactement ce
+qu'on va lui demander s'il clique.
+
+### Les trois moments — la dernière objection levée
+
+Avant le bouton, le parcours est annoncé :
+
+| | Moment | Ce que ça lève |
+| --- | --- | --- |
+| 01 | Décrivez le chantier | « ça va être long à remplir » |
+| 02 | Ajoutez des photos | « je vais devoir tout expliquer par écrit » |
+| 03 | On vous rappelle | « je ne saurai jamais ce qui se passe ensuite » |
+
+Ce n'est pas du remplissage : c'est la réponse à « combien de temps ça va me
+prendre, et qu'est-ce qu'on va me demander » — la dernière hésitation avant un
+formulaire. Les trois moments sont vrais et vérifiables dans le configurateur.
+
+Le motif en trois colonnes à filet supérieur est **celui de la section Zone
+d'intervention**, repris tel quel : le site n'invente pas une mise en page par
+section.
+
+**Le jaune n'apparaît que dans le remplissage du bouton.** Sur ivoire il tombe
+à 1,96 : aucun chiffre, aucun filet jaune ici — les numéros sont en forêt
+(14,04).
+
+> « Environ 2 minutes » n'est pas un argument marketing mais une **promesse
+> vérifiable** : cinq étapes dont trois sont des choix à cliquer, une
+> facultative, et six champs au total. Elle est tenable.
+
+---
+
 ## 7. Mesure et instrumentation (phase 16)
 
 Analytics respectueux de la vie privée, sans cookie de suivi si possible
@@ -120,6 +175,16 @@ refusable en un clic.
 | `devis_photo_ajoutee` | Au moins une photo jointe |
 | `devis_envoye` | Soumission réussie |
 | `devis_erreur` | Échec d'envoi |
+
+**Aucun de ces événements n'est émis à ce jour.** La phase 11 livre le
+parcours ; l'instrumentation est la phase 16. Deux préparatifs sont toutefois
+déjà en place et n'auront pas à être repris :
+
+- l'étape est reflétée dans l'URL (`?etape=3`), donc le **taux d'abandon par
+  étape** — l'indicateur le plus utile de la liste — sera mesurable sans
+  instrumenter chaque bouton ;
+- la validation par étape est centralisée dans `validateStep()` : un seul
+  endroit à instrumenter pour `devis_etape`.
 
 Indicateurs suivis : taux de clic appel par page d'entrée, taux d'ouverture du
 configurateur, **taux d'abandon par étape** (le diagnostic le plus utile), taux

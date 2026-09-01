@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
+import { Devis } from "@/components/sections/devis";
 import { Hero } from "@/components/sections/hero";
 import { ProofBand } from "@/components/sections/proof-band";
 import { Realisations } from "@/components/sections/realisations";
@@ -21,7 +22,7 @@ export const metadata: Metadata = buildMetadata("home");
  *   4. Pourquoi Arbre et Cime            — livré en phase 8
  *   5. Réalisations                      — livré en phase 9
  *   6. Zone d’intervention               — livré en phase 10
- *   7. Devis interactif                  — phases 11 à 13
+ *   7. Devis interactif                  — livré en phase 11 (interface)
  *
  * N'ajouter aucune autre section sans demande explicite du client.
  */
@@ -34,6 +35,7 @@ export default function Home() {
       <Why />
       <Realisations />
       <Zone />
+      <Devis />
     </main>
   );
 }

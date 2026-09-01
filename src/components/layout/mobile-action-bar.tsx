@@ -24,7 +24,13 @@ import { site } from "@/lib/site";
  * où une barre fixe gênerait la saisie.
  * Laissé vide aujourd'hui : aucune page n'a encore de raison de la masquer.
  */
-const HIDDEN_ON: readonly RouteId[] = [];
+/*
+ * Sur /devis, la barre proposerait « Devis gratuit » à quelqu'un qui est déjà
+ * dans le configurateur, et recouvrirait ses boutons Retour / Continuer —
+ * les deux cibles les plus utilisées de la page. L'appel reste accessible par
+ * l'en-tête et par l'écran final du parcours.
+ */
+const HIDDEN_ON: readonly RouteId[] = ["devis"];
 
 const cta = getRoute(ctaRouteId);
 
