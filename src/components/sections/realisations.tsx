@@ -37,7 +37,7 @@ export function Realisations() {
         <Reveal className="mx-auto max-w-reading">
           <Eyebrow>Réalisations</Eyebrow>
           {/* « Quelques interventions » laissait entendre des chantiers
-              réellement menés par Arbre et Cime, ce que ces photographies ne
+              réellement menés par Arbres et Cimes, ce que ces photographies ne
               documentent pas. Le titre porte désormais sur l'ADAPTATION à la
               situation : c'est exact, et c'est aussi l'argument commercial. */}
           <Title id="realisations-titre" as="h2" className="mt-4">

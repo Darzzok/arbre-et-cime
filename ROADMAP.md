@@ -150,7 +150,7 @@ Reprise du seul châssis, sans toucher aux autres sections :
   (180 ms), Reveal (520 ms), Signature (900 ms, réservé au hero, à la carte et
   au devis). Vocabulaire arrêté : filets qui se tracent, masques, translations
   contrôlées ; rebond, zoom, flou et rotation exclus.
-- **Logotype renforcé** : « Arbre & Cime » avec esperluette en italique, et
+- **Logotype renforcé** : « Arbres & Cimes » avec esperluette en italique, et
   « ÉLAGAGE · ROUEN » en surtitre au point médian jaune. Toujours aucun symbole
   inventé. Trois tailles.
 - **En-tête toujours sur surface sombre**, `fixed`, qui se compacte au
@@ -358,7 +358,7 @@ de ce qui fait varier un devis.
 
 ---
 
-## Phase 8 — Pourquoi Arbre et Cime ✅
+## Phase 8 — Pourquoi Arbres et Cimes ✅
 
 Section 4 des 7 sections verrouillées
 (`src/components/sections/why.tsx`).
@@ -1105,16 +1105,119 @@ comportement attendu en préproduction.
 **Sortie atteinte :** 40 routes générées (17 + 23), `SITE_INDEXABLE` reste
 `false`, zéro débordement horizontal et zéro collision de carte aux six
 largeurs, aucune dépendance ajoutée, lint, typecheck et build au vert.
-## Phase 15 — Performance, mobile, accessibilité ⬜
+## Phase 15 — Performance, mobile, accessibilité ✅
 
-- Budgets : LCP < 2,5 s, INP < 200 ms, CLS < 0,1 en 4G mobile
-- Audit des images, des fontes et du JavaScript embarqué
-- Audit accessibilité : contrastes, focus, clavier, lecteur d'écran, cibles
-  tactiles
-- Vérification complète sous `prefers-reduced-motion`
+Audit mené sur le **build de production**, pas sur le serveur de
+développement. Mesures complètes et conditions dans `PERFORMANCE_AUDIT.md`.
 
-**Sortie :** Lighthouse mobile ≥ 95 en performance et accessibilité sur la
-homepage et une page service.
+### Résultat
+
+| | Avant | Après |
+| --- | --- | --- |
+| Accessibilité | 96-100 | **100 sur les 8 mesures** |
+| Bonnes pratiques | 96 | **100 sur les 8 mesures** |
+| Performance | 95-98 | 94-99 |
+| CLS | 0 | **0** |
+
+Le SEO reste à 63-66 : `is-crawlable` échoue parce que le site répond
+`noindex` en préproduction. **C'est le garde-fou qui fonctionne**, pas un
+défaut — il remontera seul en phase 18.
+
+### Sept défauts trouvés, sept corrigés
+
+1. **Onze liens du pied de page à 36 px** — sous la règle des 44 px que le
+   projet s'impose. Seul endroit du site où elle était enfreinte.
+2. **Logotype à 40 px** — même règle.
+3. **Nom accessible du logotype ne contenant pas son texte visible**
+   (WCAG 2.5.3), sur l'en-tête *et* le pied de page. Une commande vocale
+   « clique sur Arbres et Cimes » ne trouvait pas la cible.
+4. **Invite de la carte à 2,86 de contraste** — une `opacity-70` empilée
+   sur un jeton déjà mis en sourdine.
+5. **`favicon.ico` absent** — 404 en console. Icône typographique ajoutée,
+   dans la continuité du logotype provisoire, sans inventer de symbole.
+6. **Ligne de 164 caractères en 1440 px** dans la section devis.
+7. **Opacité redondante** sur l'animation du titre du hero.
+
+### Un point reste OUVERT
+
+Sur la page d'accueil, Chrome attribue le LCP au **logotype de l'en-tête**
+(146 × 22 px). La photographie du hero (329 160 px²) n'est **jamais**
+candidate, alors qu'elle est `eager`, `fetchPriority="high"`,
+préchargée, non animée, et à 0,59 bit/pixel — bien au-dessus du seuil
+d'exclusion de Chrome.
+
+L'opacité redondante du `h1` a été retirée (elle l'excluait à juste titre
+pendant 990 ms) : le titre est désormais opaque dès la première image, et
+**reste non candidat**. La correction est juste sur le fond mais n'a pas
+déplacé la métrique — 3,0-3,2 s après contre 2,9-3,7 s avant, dans le bruit
+de mesure (±0,3 s relevé sur trois passages).
+
+Ce n'est pas une urgence : **FCP 0,9 s**, **Speed Index 0,9 s**, **CLS 0**,
+**TBT 30-40 ms**, et les sept autres routes sont entre 2,0 et 2,7 s. À
+revérifier sur le domaine de production, en conditions réseau réelles.
+
+### Non testable avec l'outillage actuel
+
+**Le clavier réel** : l'automatisation ne délivre pas les événements clavier
+à l'onglet (vérifié — un écouteur `keydown` ne reçoit rien). L'audit a été
+mené structurellement ; la tabulation de bout en bout **reste à faire à la
+main**. Idem pour le clavier virtuel sur téléphone réel.
+
+### Vérifié sans rien changer
+
+Zéro débordement horizontal aux **huit largeurs** (320 → 1440) ; un seul
+`h1` par page sur 38 documents ; aucun ID dupliqué ; aucune imbrication
+invalide ; champs du devis tous étiquetés, à 16 px (pas de zoom iOS) ;
+aucune erreur console ; aucune tâche longue.
+
+**Mouvement réduit vérifié empiriquement** : sous
+`--force-prefers-reduced-motion`, la page entière est visible, carte
+comprise.
+
+**Sortie atteinte :** lint, typecheck et build au vert, 40 routes,
+`SITE_INDEXABLE` toujours `false`, aucune dépendance ajoutée.
+### Phase 15B — Logotype réel et correction du nom ✅
+
+Le client a fourni son logo. Deux conséquences, dont une qui dépassait la
+simple intégration graphique.
+
+**Le nom du site était faux.** Le logo porte « Arbres et Cimes Élagage », au
+pluriel ; tout le site écrivait « Arbre et Cime ». **77 occurrences
+corrigées dans 22 fichiers**, code et documentation compris.
+
+Effet de bord mesuré : le nom gagnant deux caractères, **trois titres
+dépassaient 60 caractères**. Raccourcis — « Zones d'intervention depuis
+Rouen », « Devis d'élagage gratuit », « Entretien extérieur à Rouen ». Tous
+les titres tiennent désormais (max 60), aucun dupliqué.
+
+**Le logo ne s'intègre pas tel quel.** C'est un bloc vertical dessiné pour
+fond clair :
+
+- dans l'en-tête (72 px), son texte tomberait sous 8 px ;
+- dans le pied de page (forêt), son texte charbon devient quasi illisible —
+  vérifié à l'écran après un premier essai.
+
+D'où le **lockup** : symbole réel + nom composé dans la typographie du site.
+La variante `variant="full"` existe et attend une **version claire du
+logo**, à demander au client.
+
+**CTA « Demander un devis » retiré du pied de page**, sur demande. Il reste
+accessible depuis l'en-tête, la barre d'action mobile et le bloc de
+conversion qui termine chaque page. Le lien « Devis gratuit » de la colonne
+de navigation demeure : c'est un lien de liste, pas un appel à l'action.
+
+Icônes réelles en place (`favicon.ico`, `icon.png`,
+`apple-icon.png`) ; l'icône typographique provisoire de la phase 15 est
+retirée.
+
+*Non modifié, et signalé au client :* le logo porte « **Arboriste
+Grimpeur** » là où le site dit « **Élagueur-grimpeur** ». Ce second terme
+est le mot-clé SEO principal — il porte les 23 `h1` des pages villes et
+l'essentiel des titres. Le changer est une décision éditoriale, pas une
+correction ; elle n'a pas été prise sans demande explicite.
+
+**Sortie atteinte :** lint, typecheck et build au vert, 40 routes, titres et
+descriptions tous conformes, `SITE_INDEXABLE` toujours `false`.
 
 ---
 

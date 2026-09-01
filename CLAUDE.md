@@ -8,7 +8,7 @@ dépôt. Il est lu avant chaque tâche. En cas de contradiction avec une idée
 
 ## 1. Projet
 
-Site vitrine sur mesure de **Arbre et Cime Élagage**, élagueur-grimpeur basé à
+Site vitrine sur mesure de **Arbres et Cimes Élagage**, élagueur-grimpeur basé à
 Rouen. Objectif commercial unique : **générer des demandes de devis qualifiées**
 (appel téléphonique ou configurateur de devis).
 

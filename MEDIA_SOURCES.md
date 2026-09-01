@@ -16,7 +16,7 @@ la photothèque du client. Elles respectent les règles verrouillées de
 
 - **vraies photographies uniquement** — aucune image générée ;
 - essences, matériel et EPI plausibles en Europe de l'Ouest ;
-- aucune image représentant le dirigeant réel d'Arbre et Cime.
+- aucune image représentant le dirigeant réel d'Arbres et Cimes.
 
 **Elles sont à remplacer par des photos client dès réception.** La colonne
 « Usage prévu » indique quelle photo client viendra les remplacer.
@@ -47,7 +47,7 @@ alternatives disponibles.
 | --- | --- | --- | --- | --- | --- |
 | `elagueur-grimpeur-arbre-mature.jpg` | 2400×1800 | **EN PRODUCTION — hero desktop (≥ 1024 px).** Grimpeur sur cordes dans un arbre feuillu mature. | Zak Bentley | [pexels.com/photo/…-2902892](https://www.pexels.com/photo/photo-of-man-climbing-on-tree-2902892/) | Grimpeur de dos, visage non identifiable. Aucun logo. |
 | `elagueur-ascension-arbre-hiver.jpg` | 2400×1350 | **Hero de `/a-propos`**, en fond de section. Écartée du hero d'accueil, retenue ici pour sa respiration. **Attention :** ciel clair sur les deux tiers supérieurs — elle impose un dégradé plus appuyé que les autres heros du site (voir `DESIGN_SYSTEM.md` § 5). | Dmytro Glazunov | [pexels.com/photo/…-35089307](https://www.pexels.com/photo/arborist-climbing-tall-bare-tree-in-winter-35089307/) | Grimpeur très petit dans le cadre. Aucune personne identifiable, aucun logo. |
-| `demontage-arbre-tronconneuse-sciure.jpg` | 2400×1600 | **Section « Pourquoi Arbre & Cime » de la homepage** (correctif phase 8). Écartée du hero, retenue là pour la même raison : c'est la plus lisible des photographies d'intervention réelle. | Henk Schuurmans | [pexels.com/photo/…-31127615](https://www.pexels.com/photo/arborist-cutting-down-tree-trunk-safely-with-chainsaw-31127615/) | EPI haute visibilité vert. Visage non identifiable, aucun logo lisible. |
+| `demontage-arbre-tronconneuse-sciure.jpg` | 2400×1600 | **Section « Pourquoi Arbres & Cimes » de la homepage** (correctif phase 8). Écartée du hero, retenue là pour la même raison : c'est la plus lisible des photographies d'intervention réelle. | Henk Schuurmans | [pexels.com/photo/…-31127615](https://www.pexels.com/photo/arborist-cutting-down-tree-trunk-safely-with-chainsaw-31127615/) | EPI haute visibilité vert. Visage non identifiable, aucun logo lisible. |
 | `elagueur-ascension-tronc-vertical.jpg` | 1400×2094 | **EN PRODUCTION — hero mobile et tablette (< 1024 px).** Cadrage vertical natif. | John Robertson | [pexels.com/photo/…-34674271](https://www.pexels.com/photo/professional-arborist-climbing-tree-for-maintenance-34674271/) | Visage non identifiable, aucun logo. |
 
 ---
@@ -73,7 +73,7 @@ alternatives disponibles.
 | Fichier | Dimensions | Usage prévu | Auteur | Page source | Remarques |
 | --- | --- | --- | --- | --- | --- |
 | `materiel-harnais-corde-grimpe.jpg` | 1400×2100 | `/elagage` — bloc méthode. **Et `/a-propos`** — bloc parcours : c'est la photographie la plus humaine de la banque, la seule qui montre des mains au travail. | Daniel & Hannah Snipes | [pexels.com/photo/…-38346752](https://www.pexels.com/photo/roofer-preparing-safety-equipment-in-forest-setting-38346752/) | Référencée « roofer » sur Pexels ; le contenu montre bien harnais et corde en milieu boisé. Visage non identifiable. |
-| `materiel-cordage-baudrier.jpg` | 2400×1600 | **Inutilisée.** Employée un temps dans « Pourquoi Arbre & Cime », retirée au correctif de la phase 8 : le client l'a jugée peu pertinente, et la réserve ci-contre l'explique — c'est du matériel de grimpe générique, pas une intervention. À ne pas replacer dans une section qui doit montrer le métier. | BOOM Photography | [pexels.com/photo/…-12585933](https://www.pexels.com/photo/a-mountain-climber-with-ropes-on-his-back-12585933/) | Matériel de grimpe générique, pas spécifiquement arboricole. Personne de dos. Aucun logo. |
+| `materiel-cordage-baudrier.jpg` | 2400×1600 | **Inutilisée.** Employée un temps dans « Pourquoi Arbres & Cimes », retirée au correctif de la phase 8 : le client l'a jugée peu pertinente, et la réserve ci-contre l'explique — c'est du matériel de grimpe générique, pas une intervention. À ne pas replacer dans une section qui doit montrer le métier. | BOOM Photography | [pexels.com/photo/…-12585933](https://www.pexels.com/photo/a-mountain-climber-with-ropes-on-his-back-12585933/) | Matériel de grimpe générique, pas spécifiquement arboricole. Personne de dos. Aucun logo. |
 
 ---
 
@@ -168,3 +168,25 @@ déclinaisons AVIF et WebP aux tailles déclarées dans `next.config.ts`
 3. Aucune image sans URL de page source vérifiable.
 4. Vérifier, à chaque ajout : filigrane, logo tiers lisible, visage identifiable,
    plausibilité des EPI, cohérence chromatique avec la charte.
+
+---
+
+## Logotype — fourni par le client (phase 15B)
+
+| Fichier | Usage | Dimensions |
+| --- | --- | --- |
+| `public/brand/logo-symbol.png` | symbole seul, en-tête et pied de page | 1280 × 1115 |
+| `public/brand/logo-footer.webp` | logo complet, en réserve | 540 × 640 |
+| `public/brand/logo-nav.webp` | logo complet, en réserve | 354 × 420 |
+| `public/brand/logo-square-1024.png` | aperçus, réseaux sociaux | 1024 × 1024 |
+| `src/app/favicon.ico` | favicon | 256 |
+| `src/app/icon.png` | icône Android / PWA | 192 |
+| `src/app/apple-icon.png` | icône iOS | 180 |
+
+**Source :** pack `Pack_Logo_Arbres_et_Cimes_Elagage.zip`, fourni par le
+client. Propriété du client — aucune licence tierce, aucune attribution
+requise, aucune image générée.
+
+**Manquant :** une **version claire ou inversée** pour les surfaces sombres.
+Le logo actuel est dessiné pour fond clair et son texte devient illisible
+sur le forêt (voir `DESIGN_SYSTEM.md` § 9 ter).

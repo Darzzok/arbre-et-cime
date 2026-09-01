@@ -227,7 +227,7 @@ côté d'ancrage d'une section à l'autre.
 
 ### Deux colonnes asymétriques — motif « éditorial / arguments »
 
-Livré au correctif de la phase 8, section « Pourquoi Arbre & Cime ». C'est la
+Livré au correctif de la phase 8, section « Pourquoi Arbres & Cimes ». C'est la
 réponse du projet au besoin « présenter trois à cinq arguments » **sans**
 retomber sur une grille de cartes.
 
@@ -643,7 +643,7 @@ Composants dans `src/components/layout/`, montés une seule fois dans
 fourni, l'identité repose entièrement sur la typographie :
 
 ```
-Arbre & Cime          Fraunces, esperluette en italique
+Arbres & Cimes          Fraunces, esperluette en italique
 ÉLAGAGE · ROUEN       Manrope, surtitre interlettré, point médian jaune
 ```
 
@@ -791,7 +791,7 @@ aplats coup sur coup enfreindraient la règle de parcimonie du § 1.
 >
 > La phase 8 a d'abord tenté une **seconde issue** — une surface charbon, marche
 > tonale sans panneau. Rejetée : deux masses sombres consécutives restent deux
-> masses sombres, quelle que soit la nuance. La section « Pourquoi Arbre & Cime »
+> masses sombres, quelle que soit la nuance. La section « Pourquoi Arbres & Cimes »
 > est donc **claire**, ce qui règle la question sans mécanisme. Retenir l'ordre
 > des recours : section claire d'abord, panneau sombre encadré ensuite, nouvelle
 > surface jamais. Le pied de page porte en outre un filet supérieur.
@@ -1224,3 +1224,129 @@ viewport.
 
 Les contenus larges par nature (tableaux de la style guide) défilent dans leur
 propre conteneur `overflow-x-auto` : ils ne poussent jamais la page.
+
+---
+
+## 9 bis. Règles consolidées par l'audit de phase 15
+
+Trois règles existaient déjà mais n'étaient pas tenues partout. L'audit les
+a mesurées ; elles sont désormais vérifiées.
+
+### Cible tactile : 44 px, sans exception négociable
+
+Le pied de page était le **seul endroit du site** où la règle était
+enfreinte : onze liens à `min-h-9` (36 px). Corrigé en `min-h-11`.
+Le logotype passait de 40 à 44 px.
+
+Une seule exception subsiste, et elle est standard : le **lien d'évitement**,
+à 1 × 1 px tant qu'il n'a pas le focus. Il reprend une taille normale au
+moment précis où il sert.
+
+> **Ne jamais réduire une zone tactile pour resserrer une mise en page.**
+> C'est la hauteur de la zone qui change, jamais celle du texte.
+
+### Le nom accessible doit contenir le texte visible (WCAG 2.5.3)
+
+Le logotype portait `aria-label="Arbres et Cimes Élagage — retour à l'accueil"`
+alors qu'il affiche « Arbres & Cimes / ÉLAGAGE · ROUEN ». Une commande vocale
+« clique sur Arbres et Cimes » ne trouvait pas la cible.
+
+> **Un `aria-label` ne remplace pas un texte visible, il le complète.**
+> Quand un élément porte du texte, ce texte doit faire partie de son nom
+> accessible ; la précision s'ajoute en `sr-only`.
+
+### L'opacité ne remplace pas une couleur mise en sourdine
+
+L'invite de la carte portait `opacity-70` sur de la mousse : contraste
+**2,86**, sous le seuil AA. La couleur `--surface-fg-muted` existe
+précisément pour ça et tient **5,15**.
+
+> **Ne pas empiler une opacité sur un jeton déjà mis en sourdine.** Les
+> contrastes du § 1 sont calculés à pleine opacité ; toute transparence
+> ajoutée les invalide.
+
+### Fondu d'apparition et contraste
+
+Un texte qui apparaît en fondu passe forcément par des états de contraste
+insuffisants. La plage du `Reveal` a été resserrée de `entry 60%`
+à `entry 40%` : le texte devient opaque plus tôt, la fenêtre
+transitoire se réduit. Au repos, les contrastes mesurés sont conformes
+(9,55 sur forêt, 5,15 sur ivoire).
+
+### Animation et LCP
+
+Chrome **exclut des candidats LCP tout élément peint à opacité nulle**.
+Animer l'opacité du plus grand texte d'une page le disqualifie donc pendant
+toute la durée de l'animation.
+
+> **Quand un masque `overflow-hidden` suffit à cacher un élément, ne pas
+> lui ajouter d'animation d'opacité.** Le titre du hero cumulait les deux :
+> l'opacité était redondante visuellement et coûteuse à la mesure.
+
+### Longueur de ligne
+
+Tout paragraphe doit porter une largeur maximale. Un texte laissé libre dans
+`Container` atteignait **164 caractères** en 1440 px.
+
+### Mouvement réduit — vérifié, pas supposé
+
+Sous `--force-prefers-reduced-motion`, une capture pleine page montre
+**tout le contenu visible**, carte comprise. La règle `[data-reveal]` est
+enfermée dans `@media (prefers-reduced-motion: no-preference)` : sous
+`reduce`, aucune `opacity: 0` n'est jamais posée.
+
+> **Aucune section ne doit dépendre d'une animation pour devenir visible.**
+> Se protéger par la règle globale d'annulation ne suffit pas : il faut que
+> l'état masqué ne soit jamais appliqué.
+
+Mesures complètes : `PERFORMANCE_AUDIT.md`.
+
+---
+
+## 9 ter. Logotype réel — livré en phase 15B
+
+Le logo du client remplace le logotype typographique provisoire. Fichiers
+dans `public/brand/`, icônes dans `src/app/`.
+
+### Le nom était faux
+
+Le logo porte **« Arbres et Cimes Élagage »**, au pluriel. Tout le site
+était écrit au singulier — **77 occurrences corrigées dans 22 fichiers**,
+code et documentation compris. La source unique est `src/lib/site.ts`.
+
+### Deux traitements, et pourquoi
+
+Le logo fourni est un **bloc vertical** : feuille, puis le nom sur deux
+lignes, puis « Arboriste Grimpeur ». Le fichier de navigation lui-même fait
+354 × 420 px.
+
+| Variante | Où | Composition |
+| --- | --- | --- |
+| `lockup` (défaut) | en-tête, menu mobile, pied de page | symbole réel + nom dans la typographie du site |
+| `full` | *aucun emplacement à ce jour* | le logo complet, tel que fourni |
+
+**Pourquoi pas le logo complet dans l'en-tête :** dans une barre de 72 px,
+le bloc tiendrait sur ~50 px de large et son texte tomberait sous 8 px.
+
+**Pourquoi pas le logo complet dans le pied de page**, alors que la place y
+est : le logo est dessiné **pour fond clair**. Son contour et son texte sont
+en charbon ; posés sur le forêt du pied de page, « Arbres et Cimes Élagage »
+devient quasi illisible. Vérifié à l'écran, ce n'est pas une précaution
+théorique.
+
+> **À demander au client : une version claire ou inversée du logo.** Elle
+> débloquerait `variant="full"` sur les surfaces sombres. La variante
+> existe déjà dans le composant et n'attend que le fichier.
+
+### Les couleurs du logo ne rejoignent pas la charte
+
+Le logo emploie un vert vif, un gris clair et un orange qui ne figurent pas
+dans les six couleurs `VERROUILLÉES`. **C'est normal et cela reste ainsi** :
+un logo conserve ses couleurs propres. Aucune n'a été ajoutée aux jetons, et
+aucune ne doit être reprise ailleurs dans l'interface.
+
+### Icônes
+
+`favicon.ico` (256), `icon.png` (192), `apple-icon.png` (180) dans
+`src/app/` — détectées automatiquement par Next, aucune déclaration
+manuelle. L'icône typographique provisoire créée en phase 15 a été retirée.

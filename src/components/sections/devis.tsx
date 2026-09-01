@@ -113,7 +113,10 @@ export function Devis() {
             </ButtonLink>
           </div>
 
-          <p className="mt-6 font-sans text-caption text-(--surface-fg-muted)">
+          {/* `max-w-reading` : sans borne, cette ligne atteignait 164
+              caracteres en 1440 px (mesure en phase 15). La colonne de lecture
+              du projet est de 60-75 caracteres. */}
+          <p className="mx-auto mt-6 max-w-reading font-sans text-caption text-(--surface-fg-muted)">
             {area.metro} et jusqu’à {area.maxRadiusKm} km selon le chantier.
             Aucune donnée transmise à des tiers.
           </p>

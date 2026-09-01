@@ -66,14 +66,14 @@ function warnOnServer(message: string): void {
 }
 
 export const site = {
-  name: "Arbre et Cime Élagage",
+  name: "Arbres et Cimes Élagage",
   /**
    * Forme courte, telle que le client l'ecrit lui-meme — esperluette comprise.
    * A employer dans les titres ou le nom complet serait lourd. Ne remplace pas
    * `name` dans les metadonnees, le pied de page ni les donnees structurees.
    */
-  shortName: "Arbre & Cime",
-  legalName: "Arbre et Cime Élagage",
+  shortName: "Arbres & Cimes",
+  legalName: "Arbres et Cimes Élagage",
   trade: "Élagueur-grimpeur",
   /**
    * Origine publique validee, ou `null` si aucune URL exploitable.

@@ -138,7 +138,7 @@ export function serviceSchema(id: RouteId): JsonLdNode | null {
  *
  * C'est le SEUL JSON-LD emis par une page ville, et c'est deliberé.
  *
- * **Aucun `LocalBusiness` par commune.** Arbre & Cime est une entreprise
+ * **Aucun `LocalBusiness` par commune.** Arbres & Cimes est une entreprise
  * unique, basee a Rouen ; declarer vingt-trois etablissements reviendrait a
  * affirmer vingt-trois implantations qui n'existent pas. Une page ville decrit
  * une **zone de service**, pas une agence — et une adresse locale inventee est

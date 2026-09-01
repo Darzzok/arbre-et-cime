@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { NavCta } from "@/components/layout/nav-cta";
 import { Wordmark } from "@/components/layout/wordmark";
 import { Body, Container, Eyebrow, Small } from "@/components/ui";
 import { cn } from "@/lib/cn";
@@ -29,6 +28,21 @@ export function SiteFooter() {
         <div className="flex flex-col items-center gap-10 lg:flex-row lg:items-start lg:justify-center lg:gap-24">
           {/* -------- Identite -------- */}
           <div className="lg:max-w-80">
+            {/*
+              PAS `variant="full"` ici, malgre la place disponible.
+
+              Le logo fourni est dessine POUR FOND CLAIR : son contour et son
+              texte sont en charbon (#3C3C3B). Pose sur le foret du pied de
+              page, « Arbres et Cimes Élagage » devient quasi illisible —
+              verifie a l'ecran, ce n'est pas une precaution theorique.
+
+              Le lockup garde donc le symbole (dont le vert reste lisible) et
+              compose le nom dans la typographie du site, en ivoire.
+
+              `variant="full"` reste disponible et correct : il pourra servir
+              le jour ou le client fournira une version claire/inversee du
+              logo, ou sur une surface claire.
+            */}
             <Wordmark size="lg" />
             <Body className="mt-5 text-(--surface-fg-muted)">
               {site.trade} à {area.city} et dans la {area.metro}. Élagage,
@@ -64,13 +78,14 @@ export function SiteFooter() {
               </ul>
             ) : null}
 
-            {/* CTA éditorial, pas un aplat jaune : chaque page se termine déjà
-                par un bouton plein quelques centaines de pixels plus haut. Deux
-                aplats coup sur coup enfreindraient la règle de parcimonie
-                (DESIGN_SYSTEM.md § 1) et alourdiraient le pied de page. */}
-            <div className="mt-7">
-              <NavCta />
-            </div>
+            {/* Le CTA « Demander un devis » a ete RETIRE du pied de page sur
+                demande du client (phase 15B). Le devis reste accessible depuis
+                l'en-tete sur toutes les pages, depuis la barre d'action mobile,
+                et depuis le bloc de conversion qui termine chaque page — soit
+                trois points d'entree deja presents au moment ou le visiteur
+                atteint le pied de page. Le lien « Devis gratuit » de la colonne
+                de navigation, lui, reste : c'est un lien de liste, pas un
+                appel a l'action. */}
           </div>
 
           {/* -------- Colonnes de liens -------- */}
@@ -86,7 +101,10 @@ export function SiteFooter() {
                         <Link
                           href={route.path}
                           className={cn(
-                            "inline-flex min-h-9 items-center font-sans text-body",
+                            // 44 px : la regle du projet (`CLAUDE.md` § 5). Ces liens etaient a
+// 36 px — mesure en phase 15, seul endroit du site ou la regle etait
+// enfreinte. La hauteur de la zone tactile change, pas celle du texte.
+"inline-flex min-h-11 items-center font-sans text-body",
                             "text-(--surface-fg-muted) no-underline",
                             "transition-colors duration-(--duration-micro) ease-cime",
                             "hover:text-(--surface-fg) focus-visible:text-(--surface-fg)",

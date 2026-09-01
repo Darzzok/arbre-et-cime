@@ -14,7 +14,7 @@ retirée ou réordonnée sans demande explicite du client.
 - Le configurateur **ne calcule aucun prix**. Un chiffrage d'élagage dépend de
   l'accès, de la hauteur, de l'essence, de l'état de l'arbre et de l'évacuation :
   un prix automatique serait faux, décevrait le client et abîmerait la crédibilité
-  de l'entreprise. Le configurateur **qualifie** la demande pour qu'Arbre et Cime
+  de l'entreprise. Le configurateur **qualifie** la demande pour qu'Arbres et Cimes
   chiffre vite et juste.
 - Une décision par étape. Effort croissant, coordonnées en dernier.
 - Rien n'est perdu : retour arrière libre, saisie conservée.

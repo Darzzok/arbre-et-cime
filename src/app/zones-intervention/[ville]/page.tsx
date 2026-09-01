@@ -67,7 +67,7 @@ export function generateStaticParams() {
   return LOCATIONS.map((location) => ({ ville: location.slug }));
 }
 
-/** Titre court et régulier : « Élagueur à X | Arbre & Cime ». */
+/** Titre court et régulier : « Élagueur à X | Arbres & Cimes ». */
 function titleFor(location: Location): string {
   return `Élagueur ${location.a} | ${site.shortName}`;
 }

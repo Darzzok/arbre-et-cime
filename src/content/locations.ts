@@ -97,7 +97,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Normandie",
     voisins: ["mont-saint-aignan", "sotteville-les-rouen", "bois-guillaume", "le-grand-quevilly"],
     intro:
-      "Arbre & Cime est basée à Rouen. C’est le point de départ de tous les chantiers, et la commune où les interventions demandent le moins d’organisation préalable.",
+      "Arbres & Cimes est basée à Rouen. C’est le point de départ de tous les chantiers, et la commune où les interventions demandent le moins d’organisation préalable.",
     contexte:
       "Rouen s’étage entre les quais de Seine et les coteaux qui la ceinturent au nord comme au sud. Cette topographie change beaucoup de choses pour un élagueur : un jardin de coteau se travaille rarement depuis un véhicule garé au pied de l’arbre, et l’évacuation des bois se prépare avant de monter. Le centre ancien ajoute ses propres contraintes — rues étroites, stationnement compté, mitoyenneté immédiate.",
     servicesIntro:
@@ -120,7 +120,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Normandie",
     voisins: ["bois-guillaume", "rouen", "sotteville-les-rouen", "le-grand-quevilly"],
     intro:
-      "Mont-Saint-Aignan est à trois kilomètres de Rouen, sur le plateau nord. Arbre & Cime y intervient pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
+      "Mont-Saint-Aignan est à trois kilomètres de Rouen, sur le plateau nord. Arbres & Cimes y intervient pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
     contexte:
       "La commune occupe le plateau qui domine Rouen, avec une rupture de pente marquée vers la vallée. Les parcelles résidentielles y sont souvent plus généreuses qu’en fond de vallée, et les sujets ont eu la place de vieillir. Sur le plateau, l’exposition au vent est plus franche qu’en contrebas — un paramètre qui compte pour juger de la tenue d’un arbre.",
     servicesIntro:
@@ -143,7 +143,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Normandie",
     voisins: ["mont-saint-aignan", "rouen", "sotteville-les-rouen", "le-grand-quevilly"],
     intro:
-      "Arbre & Cime intervient à Bois-Guillaume pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur. La commune est à quatre kilomètres du centre de Rouen.",
+      "Arbres & Cimes intervient à Bois-Guillaume pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur. La commune est à quatre kilomètres du centre de Rouen.",
     contexte:
       "Bois-Guillaume s’étend sur le plateau nord-est, dans un tissu très majoritairement résidentiel. Les jardins y sont nombreux et les arbres de haute tige fréquents en limite de propriété — configuration où la question de la mitoyenneté et de la chute des bois se pose avant tout le reste. L’accès véhicule y est en général plus simple qu’en centre-ville rouennais.",
     servicesIntro:
@@ -166,7 +166,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Normandie",
     voisins: ["rouen", "saint-etienne-du-rouvray", "le-grand-quevilly", "mont-saint-aignan"],
     intro:
-      "Sotteville-lès-Rouen jouxte Rouen sur la rive gauche. Arbre & Cime y assure l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
+      "Sotteville-lès-Rouen jouxte Rouen sur la rive gauche. Arbres & Cimes y assure l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
     contexte:
       "Le tissu urbain y est dense et de plain-pied, sans le relief de la rive droite. Les parcelles sont souvent étroites et closes, avec des arbres proches des habitations et des limites séparatives. Dans cette configuration, c’est rarement la hauteur qui complique un chantier, mais le peu de place disponible pour faire tomber les bois et les évacuer.",
     servicesIntro:
@@ -189,7 +189,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Normandie",
     voisins: ["sotteville-les-rouen", "rouen", "saint-etienne-du-rouvray", "mont-saint-aignan"],
     intro:
-      "Arbre & Cime intervient au Grand-Quevilly, à cinq kilomètres de Rouen sur la rive gauche, pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
+      "Arbres & Cimes intervient au Grand-Quevilly, à cinq kilomètres de Rouen sur la rive gauche, pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
     contexte:
       "La commune associe des quartiers résidentiels, de larges espaces verts publics et des secteurs d’activité en bord de Seine. Cette mixité se retrouve dans les demandes : un arbre de jardin particulier et un alignement en limite de zone d’activité ne se traitent pas de la même manière, ni avec les mêmes contraintes de circulation autour du chantier.",
     servicesIntro:
@@ -212,7 +212,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Normandie",
     voisins: ["sotteville-les-rouen", "le-grand-quevilly", "rouen", "elbeuf"],
     intro:
-      "Saint-Étienne-du-Rouvray est à six kilomètres de Rouen, en lisière de la forêt du Rouvray. Arbre & Cime y intervient sur l’ensemble de ses prestations.",
+      "Saint-Étienne-du-Rouvray est à six kilomètres de Rouen, en lisière de la forêt du Rouvray. Arbres & Cimes y intervient sur l’ensemble de ses prestations.",
     contexte:
       "La commune borde un massif forestier, ce qui change la nature des demandes : en limite de boisement, les sujets sont plus hauts, filés par la concurrence, et souvent moins équilibrés que des arbres de plein jardin. Une propriété adossée à la forêt pose aussi la question des branches en surplomb et de la limite exacte d’intervention.",
     servicesIntro:
@@ -235,7 +235,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Normandie",
     voisins: ["louviers", "saint-etienne-du-rouvray", "le-grand-quevilly", "sotteville-les-rouen"],
     intro:
-      "Elbeuf appartient à la Métropole Rouen Normandie, à une vingtaine de kilomètres au sud de Rouen. Arbre & Cime y intervient dans les mêmes conditions que sur le reste de la métropole.",
+      "Elbeuf appartient à la Métropole Rouen Normandie, à une vingtaine de kilomètres au sud de Rouen. Arbres & Cimes y intervient dans les mêmes conditions que sur le reste de la métropole.",
     contexte:
       "La ville est installée dans une boucle de la Seine, resserrée entre le fleuve et des coteaux boisés assez raides. Les propriétés de coteau y sont fréquentes, avec les mêmes conséquences qu’à Rouen : accès du matériel à étudier, sortie des bois par le haut ou par le bas selon la parcelle, et une pente qui interdit souvent d’approcher un véhicule.",
     servicesIntro:
@@ -469,7 +469,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Île-de-France",
     voisins: ["vernon", "gisors", "evreux", "louviers"],
     intro:
-      "Un chantier à Mantes-la-Jolie ? Selon son ampleur et son organisation, un déplacement d’Arbre & Cime peut être envisagé depuis Rouen.",
+      "Un chantier à Mantes-la-Jolie ? Selon son ampleur et son organisation, un déplacement d’Arbres & Cimes peut être envisagé depuis Rouen.",
     contexte:
       "Mantes-la-Jolie se trouve dans les Yvelines, hors de la Normandie, à l’extrémité sud-est du rayon de déplacement. La commune reste sur l’axe de la vallée de la Seine, qui la relie directement à Rouen. À cette distance, un déplacement se justifie surtout pour un chantier d’une journée ou pour plusieurs arbres regroupés.",
     servicesIntro:
@@ -492,7 +492,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Normandie",
     voisins: ["bernay", "pont-audemer", "le-havre", "elbeuf"],
     intro:
-      "Un chantier à Lisieux ? Selon son ampleur et son organisation, un déplacement d’Arbre & Cime peut être envisagé depuis Rouen.",
+      "Un chantier à Lisieux ? Selon son ampleur et son organisation, un déplacement d’Arbres & Cimes peut être envisagé depuis Rouen.",
     contexte:
       "Lisieux est au cœur du pays d’Auge, dans le Calvados, à environ soixante-dix kilomètres de Rouen. Le secteur est bocager : arbres de haies, alignements de bord de parcelle et vergers y sont plus présents qu’en milieu urbain. Ce type de patrimoine se travaille souvent par ensembles, ce qui rend un déplacement plus facile à justifier qu’une intervention isolée.",
     servicesIntro:
@@ -538,7 +538,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Normandie",
     voisins: ["dieppe", "abbeville", "yvetot", "bois-guillaume"],
     intro:
-      "Un chantier au Tréport ? Selon son ampleur et son organisation, un déplacement d’Arbre & Cime peut être envisagé depuis Rouen.",
+      "Un chantier au Tréport ? Selon son ampleur et son organisation, un déplacement d’Arbres & Cimes peut être envisagé depuis Rouen.",
     contexte:
       "Le Tréport occupe l’extrémité nord de la Seine-Maritime, à la limite de la Somme, au débouché de la vallée de la Bresle. La commune est adossée à une falaise haute, et les terrains y sont souvent en forte pente. Cette configuration, combinée aux soixante-dix kilomètres qui la séparent de Rouen, demande de bien cadrer le chantier avant de se déplacer.",
     servicesIntro:
@@ -561,7 +561,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Hauts-de-France",
     voisins: ["gisors", "amiens", "mantes-la-jolie", "vernon"],
     intro:
-      "Un chantier à Beauvais ? Selon son ampleur et son organisation, un déplacement d’Arbre & Cime peut être envisagé depuis Rouen.",
+      "Un chantier à Beauvais ? Selon son ampleur et son organisation, un déplacement d’Arbres & Cimes peut être envisagé depuis Rouen.",
     contexte:
       "Beauvais est dans l’Oise, en Hauts-de-France, plein est de Rouen à une soixante-douzaine de kilomètres. La commune est hors Normandie et hors du secteur d’intervention habituel : le déplacement n’a rien d’automatique et se décide chantier par chantier, en fonction du volume de travail à réaliser sur place.",
     servicesIntro:
@@ -607,7 +607,7 @@ export const LOCATIONS: readonly Location[] = [
     region: "Hauts-de-France",
     voisins: ["abbeville", "beauvais", "le-treport", "gisors"],
     intro:
-      "Un chantier à Amiens ? Selon son ampleur et son organisation, un déplacement d’Arbre & Cime peut être envisagé depuis Rouen.",
+      "Un chantier à Amiens ? Selon son ampleur et son organisation, un déplacement d’Arbres & Cimes peut être envisagé depuis Rouen.",
     contexte:
       "Amiens marque la limite du rayon de déplacement annoncé : cent kilomètres depuis Rouen, à vol d’oiseau. C’est le point le plus éloigné présenté sur la carte, et il est là pour donner une échelle, pas pour promettre une intervention. Un chantier amiénois se discute au téléphone avant toute chose.",
     servicesIntro:

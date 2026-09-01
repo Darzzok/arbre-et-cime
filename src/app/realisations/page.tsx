@@ -35,7 +35,7 @@ export const metadata: Metadata = buildMetadata("realisations");
  * page de réalisations appelle naturellement des communes, des dates, des
  * hauteurs d'arbre et des durées de chantier. Aucune de ces informations n'est
  * confirmée : les photographies viennent d'une banque libre de droit et ne
- * documentent aucun chantier d'Arbre et Cime. La page le **dit**, en clair,
+ * documentent aucun chantier d'Arbres et Cimes. La page le **dit**, en clair,
  * plutôt que de laisser croire le contraire par omission — c'est ce qui la rend
  * crédible, pas ce qui l'affaiblit.
  *
@@ -173,7 +173,7 @@ export default function RealisationsPage() {
             <Reveal>
               <Small className="mx-auto mt-10 block max-w-reading lg:mt-12">
                 Visuels illustratifs des types d’intervention proposés. Les
-                réalisations d’Arbre et Cime seront présentées ici avec leurs
+                réalisations d’Arbres et Cimes seront présentées ici avec leurs
                 propres photographies.
               </Small>
             </Reveal>

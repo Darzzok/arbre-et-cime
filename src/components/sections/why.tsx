@@ -14,7 +14,7 @@ import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
 
 /**
- * Section 4 des 7 sections VERROUILLÉES — pourquoi Arbre et Cime.
+ * Section 4 des 7 sections VERROUILLÉES — pourquoi Arbres et Cimes.
  *
  * Surface **claire**. La première version de la phase 8 posait un aplat
  * charbon plein écran juste avant un pied de page forêt : deux masses sombres
@@ -86,7 +86,7 @@ export function Why() {
           {/* ---------------------------------------- Colonne éditoriale --- */}
           <div className="lg:col-span-6 lg:flex lg:flex-col">
             <Reveal>
-              <Eyebrow>Pourquoi Arbre &amp; Cime</Eyebrow>
+              <Eyebrow>Pourquoi Arbres &amp; Cimes</Eyebrow>
 
               {/* H2 volontairement bridé sous sa taille fluide maximale (46 px) :
                   dans une colonne de six douzièmes il occuperait quatre lignes

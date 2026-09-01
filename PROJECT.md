@@ -1,4 +1,4 @@
-# PROJECT.md — Arbre et Cime Élagage
+# PROJECT.md — Arbres et Cimes Élagage
 
 Document de cadrage. Il décrit **le client, le positionnement et les décisions
 verrouillées**. Toute décision marquée `VERROUILLÉ` ne se modifie que sur
@@ -8,7 +8,7 @@ demande explicite du client.
 
 ## 1. Le client
 
-**Arbre et Cime Élagage** — élagueur-grimpeur.
+**Arbres et Cimes Élagage** — élagueur-grimpeur.
 
 - **Zone principale :** Rouen et la Métropole Rouen Normandie.
 - **Zone étendue :** jusqu'à 100 km selon les chantiers. C'est un **argument
@@ -88,7 +88,7 @@ La homepage est **courte**. Sept sections, dans cet ordre, plus le footer.
 | 1 | **Hero photo plein écran** | Impact immédiat, identification du métier et de la zone, double CTA (appeler / devis) |
 | 2 | **Preuves** | Expérience, qualifications, sécurité, chantier propre — crédibilité avant argumentaire |
 | 3 | **Prestations** | Les 8 prestations, entrée vers les pages services |
-| 4 | **Pourquoi Arbre et Cime** | Différenciation : méthode, sécurité, propreté, réactivité |
+| 4 | **Pourquoi Arbres et Cimes** | Différenciation : méthode, sécurité, propreté, réactivité |
 | 5 | **Réalisations** | Photos réelles de chantiers, avant/après si disponible |
 | 6 | **Zone d'intervention** | Rouen et métropole en cœur de cible, carte animée jusqu'à 100 km (phase 10) |
 | 7 | **Devis interactif** | Entrée du configurateur en 5 étapes (cf. `QUOTE_FLOW.md`) |

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Arbre et Cime Elagage — jetons de design
+   Arbres et Cimes Elagage — jetons de design
    Charte VERROUILLEE : voir DESIGN_SYSTEM.md avant toute modification.
 
    Les espaces de noms `--color-*`, `--text-*`, `--radius-*` et `--breakpoint-*`
@@ -284,15 +284,25 @@
   }
 }
 
-/* Le titre monte depuis sous son propre masque. */
+/* Le titre monte depuis sous son propre masque.
+
+   PAS d'`opacity` dans cette animation, et c'est une decision de performance
+   mesuree en phase 15.
+
+   Le titre est enferme dans un parent `overflow-hidden` : la seule
+   translation suffit a le masquer entierement. L'opacite n'ajoutait donc rien
+   visuellement — mais Chrome EXCLUT des candidats LCP tout element peint a
+   opacite nulle. Le plus grand texte de la page etait ainsi disqualifie
+   pendant 990 ms, et le LCP se reportait sur le logotype de l'en-tete
+   (146 x 22 px), mesure a 2,9 s.
+
+   Sans l'opacite, le `h1` redevient candidat des la premiere image. */
 @keyframes cime-hero-unmask {
   from {
-    opacity: 0;
     transform: translateY(105%);
   }
 
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
@@ -368,7 +378,11 @@
     [data-reveal] {
       animation: cime-reveal linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 60%;
+      /* 40 % et non 60 % : au-dela, le texte reste translucide alors qu'il
+         est deja confortablement lu, ce qui abaisse transitoirement son
+         contraste sous le seuil AA (releve par l'audit automatique en phase
+         15). Le fondu se termine plus tot ; le mouvement reste identique. */
+      animation-range: entry 0% entry 40%;
     }
   }
 }

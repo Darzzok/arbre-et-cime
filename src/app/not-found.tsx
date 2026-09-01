@@ -37,7 +37,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: `Page introuvable | ${site.name}` },
   description:
-    "Cette page n’existe pas ou plus. Retrouvez les prestations d’élagage, d’abattage et d’entretien extérieur d’Arbre et Cime, ou demandez un devis.",
+    "Cette page n’existe pas ou plus. Retrouvez les prestations d’élagage, d’abattage et d’entretien extérieur d’Arbres et Cimes, ou demandez un devis.",
   robots: {
     index: false,
     follow: true,

@@ -19,7 +19,7 @@ export const metadata: Metadata = buildMetadata("home");
  *   1. Hero photo plein écran            — livré en phase 5B
  *   2. Preuves                           — livré en phase 6
  *   3. Prestations                       — livré en phase 6
- *   4. Pourquoi Arbre et Cime            — livré en phase 8
+ *   4. Pourquoi Arbres et Cimes            — livré en phase 8
  *   5. Réalisations                      — livré en phase 9
  *   6. Zone d’intervention               — livré en phase 10
  *   7. Devis interactif                  — livré en phase 11 (interface)

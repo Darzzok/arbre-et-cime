@@ -55,7 +55,7 @@ Sept sections `VERROUILLÉES` (cf. `PROJECT.md`). Intentions rédactionnelles :
 | **Hero** ✅ | Dire le métier, la ville, et proposer les deux actions. Un `h1` court, un chapô d'une phrase. Rien d'autre. **Livré en phase 5B** — voir ci-dessous. |
 | **Preuves** ✅ | Aligner des faits vérifiables : années d'expérience, qualifications, sécurité, propreté, devis gratuit. Formulation brève, sans phrase de liaison marketing. **Livré en phase 6.** |
 | **Prestations** ✅ | **Quatre** prestations principales, chacune avec une ligne qui dit ce qu'elle règle, et un lien vers sa page. Les quatre secondaires sont traitées dans leur page parente. **Livré en phase 6.** |
-| **Pourquoi Arbre et Cime** ✅ | Texte d'introduction, puis quatre différenciateurs argumentés de trois lignes — pas une liste d'adjectifs. **Livré en phase 8, réécrit au correctif.** |
+| **Pourquoi Arbres et Cimes** ✅ | Texte d'introduction, puis quatre différenciateurs argumentés de trois lignes — pas une liste d'adjectifs. **Livré en phase 8, réécrit au correctif.** |
 | **Réalisations** ✅ | Trois **types d'intervention**, légende sous la photographie. **Livré en phase 9, revu au correctif 9B** — sans commune ni date, faute de chantiers client documentés. |
 | **Zone d'intervention** ✅ | Rouen et la métropole nommément, puis le rayon de 100 km **présenté comme une possibilité, jamais comme une couverture**. **Livré en phase 10, recomposé au correctif.** |
 | **Devis interactif** | Une promesse simple : décrire le besoin, joindre des photos, être rappelé. Lever la friction avant l'entrée dans le parcours. |
@@ -66,7 +66,7 @@ Sept sections `VERROUILLÉES` (cf. `PROJECT.md`). Intentions rédactionnelles :
 ```
 Surtitre  01 — ÉLAGAGE · ABATTAGE · ENTRETIEN
 Titre     Élagueur-grimpeur à Rouen
-Chapô     Arbre et Cime Élagage intervient sur l'élagage, l'abattage et
+Chapô     Arbres et Cimes Élagage intervient sur l'élagage, l'abattage et
           l'entretien des arbres à Rouen et dans la Métropole Rouen
           Normandie, pour les particuliers, les professionnels et les
           collectivités.
@@ -127,7 +127,7 @@ Une phrase de bas de section rattache explicitement les quatre prestations
 secondaires — abattage difficile, débroussaillage, taille de haies,
 évacuation — à leur page parente, pour qu'aucune ne semble oubliée.
 
-### Texte de « Pourquoi Arbre & Cime » — livré
+### Texte de « Pourquoi Arbres & Cimes » — livré
 
 ```
 Surtitre  POURQUOI ARBRE & CIME
@@ -197,7 +197,7 @@ représenter l'activité, les chantiers, le matériel ou les personnes.
 | 3 | Démontage par sections, rétention | Réalisations, abattage difficile |
 | 4 | Avant / après sur un même chantier | Réalisations — le plus convaincant |
 | 5 | Chantier remis en ordre, sol propre | Preuve « chantier propre » |
-| 6 | Matériel : tronçonneuse d'élagage, EPI, harnais, broyeur | Pourquoi Arbre et Cime |
+| 6 | Matériel : tronçonneuse d'élagage, EPI, harnais, broyeur | Pourquoi Arbres et Cimes |
 | 7 | Portrait de l'élagueur en situation | Preuves, confiance |
 | 8 | Haies taillées, terrain débroussaillé | Pages services |
 
@@ -226,7 +226,7 @@ Critères appliqués à la sélection, et à réappliquer pour tout ajout :
 - **aucune situation de sécurité irréaliste** : une tronçonneuse tenue sans EPI
   ruinerait l'argument « travail sécurisé » ;
 - aucune personne posant face à l'objectif — elle serait prise pour le dirigeant
-  d'Arbre et Cime ;
+  d'Arbres et Cimes ;
 - cohérence chromatique avec la charte : verts, bois, pierre. Les bleus saturés
   et les vêtements criards cassent l'ensemble.
 
@@ -325,7 +325,7 @@ implique techniquement. Deux choses vérifiables sur l'image elle-même.
 En `Small`, juste sous la collection qu'elle qualifie :
 
 > Visuels illustratifs des types d'intervention proposés. Les réalisations
-> d'Arbre et Cime seront présentées ici avec leurs propres photographies.
+> d'Arbres et Cimes seront présentées ici avec leurs propres photographies.
 
 Ce n'est pas une précaution juridique, c'est ce qui rend la page crédible.
 Un visiteur qui reconnaît une photographie de banque non signalée cesse de
@@ -374,7 +374,7 @@ ACCUEIL — « Des interventions adaptées à chaque situation »
 ```
 
 **Le titre de l'accueil a changé au correctif 9B.** « Quelques interventions »
-laissait entendre des chantiers réellement menés par Arbre et Cime — ce que
+laissait entendre des chantiers réellement menés par Arbres et Cimes — ce que
 ces photographies ne documentent pas. « Des interventions adaptées à chaque
 situation » porte sur la **capacité d'adaptation** : c'est exact, et c'est
 accessoirement le meilleur argument commercial de l'entreprise.
@@ -476,13 +476,13 @@ immédiatement, et qui coûte plus cher que le temps gagné.
 ### Textes livrés
 
 **Correctif de la phase 10.** Le titre `h1` de la page est passé de « Zone
-d'intervention d'Arbre & Cime » à **« Zone d'intervention »** : le nom de
+d'intervention d'Arbres & Cimes » à **« Zone d'intervention »** : le nom de
 l'entreprise figure déjà dans le surtitre, dans le pied de page et dans
 l'en-tête. Le répéter dans le `h1` allongeait sans rien apporter.
 
 ```
 ACCUEIL — « Jusqu'à 100 km autour de Rouen »
-  Arbre & Cime intervient principalement dans la Métropole Rouen Normandie,
+  Arbres & Cimes intervient principalement dans la Métropole Rouen Normandie,
   et peut se déplacer plus largement selon les besoins du chantier.
 
   Zone principale  Rouen et la Métropole Rouen Normandie
@@ -490,7 +490,7 @@ ACCUEIL — « Jusqu'à 100 km autour de Rouen »
   Département      Seine-Maritime, et communes limitrophes
 
 /ZONES-INTERVENTION
-  H1   Zone d'intervention d'Arbre & Cime
+  H1   Zone d'intervention d'Arbres & Cimes
   Carte  « Rouen au centre, 100 km au plus loin »
   H2   Rouen et sa métropole
   H2   Jusqu'à 100 km, selon le chantier  — quatre facteurs
@@ -520,7 +520,7 @@ qu'aucune n'est la copie d'une autre. Une page unique n'a pas ce problème.
 | Responsable | Cédric Simon | `site.manager` |
 | Création de l'activité | 2023 | `site.foundedYear` |
 | Ancienneté à son compte | environ 3 ans | `site.selfEmployedYears` |
-| Forme courte de la marque | Arbre & Cime | `site.shortName` |
+| Forme courte de la marque | Arbres & Cimes | `site.shortName` |
 | Intitulés des qualifications | CS + BP | `qualifications` |
 
 Tous passent par `src/lib/site.ts`, jamais recopiés en dur. `selfEmployedYears`
@@ -532,7 +532,7 @@ le commentaire du fichier le dit.
 ```
 Hero
   Surtitre  L'ENTREPRISE
-  Titre     À propos d'Arbre & Cime
+  Titre     À propos d'Arbres & Cimes
   Chapô     Une activité d'élagage, d'abattage et d'entretien des arbres
             installée à Rouen et dans la Métropole Rouen Normandie. Derrière
             l'entreprise, un élagueur-grimpeur : Cédric Simon.
@@ -554,7 +554,7 @@ Manière de travailler  « Comment se déroule une intervention »
   contraintes du terrain, la préparation et la fin de chantier, puis les
   types de clients.
 
-Zone        « Où intervient Arbre & Cime »
+Zone        « Où intervient Arbres & Cimes »
   Rouen et la métropole, déplacements jusqu'à 100 km selon le chantier.
 
 Conversion  « Parlons de votre chantier » + devis gratuit

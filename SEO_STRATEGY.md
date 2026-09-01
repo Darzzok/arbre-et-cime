@@ -209,7 +209,7 @@ nécessaire : le chapô et la section zone.
 
 La `description` a été réécrite après confirmation du nom du responsable :
 
-> Arbre et Cime Élagage, c'est Cédric Simon : élagueur-grimpeur diplômé, une
+> Arbres et Cimes Élagage, c'est Cédric Simon : élagueur-grimpeur diplômé, une
 > dizaine d'années de métier, installé dans la métropole rouennaise depuis 2023.
 
 153 caractères, la marque et la personne en tête — c'est ce que cherche
@@ -374,7 +374,7 @@ département — et à ce qu'elle implique concrètement pour organiser un chant
 
 ### Données structurées
 
-**Aucun `LocalBusiness` par commune.** Arbre & Cime est une entreprise
+**Aucun `LocalBusiness` par commune.** Arbres & Cimes est une entreprise
 unique basée à Rouen ; déclarer vingt-trois établissements affirmerait
 vingt-trois implantations qui n'existent pas. Une page ville décrit une **zone
 de service**, pas une agence. Seul un `BreadcrumbList` est émis, et
@@ -388,7 +388,7 @@ uniquement quand le site est indexable.
 page ne compose ses métadonnées à la main.
 
 - Titre, description et indexabilité proviennent de `src/lib/routes.ts`.
-- Gabarit de titre : `%s | Arbre et Cime Élagage`. La racine utilise un titre
+- Gabarit de titre : `%s | Arbres et Cimes Élagage`. La racine utilise un titre
   `absolute` pour éviter la répétition du nom.
 - `title` de page : 55–60 caractères, **la ville dans la première moitié**.
 - `description` : 140–155 caractères, un bénéfice concret, « Devis gratuit »

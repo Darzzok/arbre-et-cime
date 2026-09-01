@@ -32,7 +32,7 @@ Trois profils, trois urgences différentes :
   grandeur. → Preuves, réalisations, pages services, configurateur.
 - **Le professionnel ou la collectivité** — copropriété, gestionnaire, mairie.
   Il veut du sérieux administratif : qualifications, assurances, capacité,
-  propreté du chantier. → Section « Pourquoi Arbre et Cime », mentions de
+  propreté du chantier. → Section « Pourquoi Arbres et Cimes », mentions de
   qualifications, références professionnelles.
 
 Le site sert les trois sans se disperser : l'urgent est servi par le châssis

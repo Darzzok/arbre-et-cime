@@ -423,7 +423,13 @@ export function ZoneMap({
             ) : null}
           </span>
         ) : (
-          <span className="opacity-70">
+          /*
+            PAS d'`opacity-70` ici : la mousse tombe alors a 2,86 sur ivoire,
+            sous le seuil AA. Mesure en phase 15. La couleur mise en sourdine
+            suffit a distinguer cette invite du contenu — l'opacite n'ajoutait
+            rien qu'un echec de contraste.
+          */
+          <span>
             Touchez ou survolez une commune pour connaître sa distance depuis{" "}
             {area.city}.
           </span>

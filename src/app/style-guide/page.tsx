@@ -202,7 +202,7 @@ export default function StyleGuidePage() {
             Design system
           </Display>
           <Lead className="mt-6 max-w-reading">
-            Reference visuelle des jetons et des primitives d’Arbre et Cime.
+            Reference visuelle des jetons et des primitives d’Arbres et Cimes.
             Cette page sert au developpement : elle n’est pas indexee, n’apparait
             dans aucune navigation et ne represente pas le site final.
           </Lead>

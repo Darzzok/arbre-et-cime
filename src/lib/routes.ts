@@ -45,7 +45,7 @@ export type RouteDefinition = {
    * intitules metier proches. Purement editorial, sans effet SEO.
    */
   navTagline?: string;
-  /** Titre de page. Passe dans le gabarit `%s | Arbre et Cime Élagage`. */
+  /** Titre de page. Passe dans le gabarit `%s | Arbres et Cimes Élagage`. */
   title: string;
   /** Titre non gabarise — reserve a la racine. */
   titleAbsolute?: boolean;
@@ -80,7 +80,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     id: "home",
     path: "/",
     navLabel: "Accueil",
-    title: "Arbre et Cime Élagage — Élagueur-grimpeur à Rouen",
+    title: "Arbres et Cimes Élagage — Élagueur-grimpeur à Rouen",
     titleAbsolute: true,
     description:
       "Élagueur-grimpeur à Rouen et dans la métropole rouennaise : élagage, abattage, dessouchage et entretien extérieur. Devis gratuit, intervention rapide.",
@@ -151,10 +151,10 @@ const definitions: Record<RouteId, RouteDefinition> = {
     path: "/entretien-exterieur",
     navLabel: "Entretien extérieur",
     navTagline: "Haies et débroussaillage",
-    // 36 caracteres : avec le gabarit « | Arbre et Cime Élagage », le titre
+    // 36 caracteres : avec le gabarit « | Arbres et Cimes Élagage », le titre
     // complet tient en 60, la cible de SEO_STRATEGY.md § 6. « Entretien
     // exterieur » reste porte par le h1 de la page.
-    title: "Taille de haies et entretien à Rouen",
+    title: "Entretien extérieur à Rouen",
     description:
       "Taille de haies, débroussaillage et entretien extérieur à Rouen et dans la métropole rouennaise. Évacuation des déchets comprise. Devis gratuit.",
     intent:
@@ -192,7 +192,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     id: "zones-intervention",
     path: "/zones-intervention",
     navLabel: "Zone d’intervention",
-    title: "Zones d’intervention autour de Rouen",
+    title: "Zones d’intervention depuis Rouen",
     description:
       "Rouen et la Métropole Rouen Normandie en zone principale, et déplacement possible jusqu’à 100 km selon les chantiers. Devis gratuit.",
     intent:
@@ -209,7 +209,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     id: "devis",
     path: "/devis",
     navLabel: "Devis gratuit",
-    title: "Demander un devis d’élagage gratuit",
+    title: "Devis d’élagage gratuit",
     description:
       "Décrivez votre chantier à Rouen ou dans la métropole, ajoutez des photos et recevez un devis gratuit et sans engagement, établi rapidement.",
     intent: "devis élagage Rouen — intention commerciale la plus qualifiée",
@@ -230,7 +230,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     // Rouen » : ce mot-clé appartient a la page d'accueil, et deux pages qui le
     // visent se cannibalisent (SEO_STRATEGY.md § 3).
     description:
-      "Arbre et Cime Élagage, c’est Cédric Simon : élagueur-grimpeur diplômé, une dizaine d’années de métier, installé dans la métropole rouennaise depuis 2023.",
+      "Arbres et Cimes Élagage, c’est Cédric Simon : élagueur-grimpeur diplômé, une dizaine d’années de métier, installé dans la métropole rouennaise depuis 2023.",
     intent:
       "requêtes de marque et vérification de confiance avant prise de contact",
     group: "entreprise",
@@ -247,7 +247,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     navLabel: "Contact",
     title: "Contacter un élagueur à Rouen",
     description:
-      "Joindre Arbre et Cime Élagage pour un chantier à Rouen ou dans la métropole rouennaise, y compris pour une intervention en urgence.",
+      "Joindre Arbres et Cimes Élagage pour un chantier à Rouen ou dans la métropole rouennaise, y compris pour une intervention en urgence.",
     intent: "contact et urgence — intention immédiate, souvent au téléphone",
     group: "conversion",
     headerVariant: "solid",
@@ -263,7 +263,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     navLabel: "Mentions légales",
     title: "Mentions légales",
     description:
-      "Informations légales relatives à l’entreprise Arbre et Cime Élagage et au présent site.",
+      "Informations légales relatives à l’entreprise Arbres et Cimes Élagage et au présent site.",
     intent: "obligation légale — aucune intention de recherche",
     group: "legal",
     headerVariant: "solid",
