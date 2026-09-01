@@ -65,6 +65,73 @@ function warnOnServer(message: string): void {
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/* Contact — source de verite unique                                          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Adresse publique de l'entreprise.
+ *
+ * CONFIRMEE par le client (phase 15B.2). Elle est ecrite ici parce qu'elle est
+ * destinee a etre affichee : une adresse de contact publique figure de toute
+ * facon en clair dans le HTML servi. Ce n'est pas un secret, et la regle
+ * `CLAUDE.md` § 9 vise les cles et jetons, pas les coordonnees publiques.
+ *
+ * Reste surchargeable par l'environnement, pour pouvoir changer d'adresse sans
+ * redeployer le code.
+ */
+const PUBLIC_EMAIL =
+  process.env.NEXT_PUBLIC_EMAIL?.trim() || "aec.elagage76@gmail.com";
+
+/**
+ * Telephone public.
+ *
+ * NON CONFIRME a ce jour : aucune valeur par defaut n'est ecrite ici. Un
+ * numero invente serait la pire erreur possible sur un site de depannage — il
+ * enverrait des appels reels chez quelqu'un d'autre.
+ */
+const PUBLIC_PHONE = process.env.NEXT_PUBLIC_PHONE?.trim() ?? "";
+const PUBLIC_PHONE_DISPLAY =
+  process.env.NEXT_PUBLIC_PHONE_DISPLAY?.trim() ?? "";
+
+/**
+ * Etat des canaux de contact.
+ *
+ * POURQUOI UN DRAPEAU DE CONFIRMATION
+ * -----------------------------------
+ * « La valeur est vide » et « la valeur n'est pas confirmee » sont deux choses
+ * differentes, et les composants doivent pouvoir les distinguer sans deviner.
+ * Un canal non confirme n'est jamais affiche : ni bouton, ni lien, ni mention.
+ *
+ * C'est ce drapeau — et lui seul — qui decide de l'apparition du bouton
+ * « Appeler » dans l'en-tete, le menu mobile, la barre d'action et le pied de
+ * page. Renseigner `NEXT_PUBLIC_PHONE` suffit a le faire apparaitre partout.
+ */
+export const contact = {
+  email: PUBLIC_EMAIL,
+  emailConfirmed: PUBLIC_EMAIL.length > 0,
+
+  phone: PUBLIC_PHONE,
+  /** Forme lisible (« 06 12 34 56 78 »). Repli sur `phone` si absente. */
+  phoneDisplay: PUBLIC_PHONE_DISPLAY || PUBLIC_PHONE,
+  phoneConfirmed: PUBLIC_PHONE.length > 0,
+
+  /** Chemins des deux points de conversion. Ecrits ici pour eviter une
+      dependance circulaire : `routes.ts` importe deja `site.ts`. */
+  quotePath: "/devis",
+  contactPath: "/contact",
+} as const;
+
+/** `mailto:` pret a l'emploi, ou `null` si aucun e-mail confirme. */
+export function mailtoHref(): string | null {
+  return contact.emailConfirmed ? `mailto:${contact.email}` : null;
+}
+
+/** `tel:` pret a l'emploi, ou `null` tant que le numero n'est pas confirme. */
+export function telHref(): string | null {
+  return contact.phoneConfirmed ? `tel:${contact.phone}` : null;
+}
+
 export const site = {
   name: "Arbres et Cimes Élagage",
   /**
@@ -80,9 +147,14 @@ export const site = {
    * Ne jamais passer directement a `new URL()` sans verifier la nullite.
    */
   url: resolveSiteOrigin(),
-  phone: process.env.NEXT_PUBLIC_PHONE ?? "",
-  phoneDisplay: process.env.NEXT_PUBLIC_PHONE_DISPLAY ?? "",
-  email: process.env.NEXT_PUBLIC_EMAIL ?? "",
+  /**
+   * Coordonnees — conservees ici pour compatibilite. La source de verite est
+   * `contact` ci-dessous, qui porte en plus l'etat de CONFIRMATION de chaque
+   * canal. Preferer `contact` dans tout nouveau code.
+   */
+  phone: PUBLIC_PHONE,
+  phoneDisplay: PUBLIC_PHONE_DISPLAY,
+  email: PUBLIC_EMAIL,
   /** Nom du responsable. Confirme par le client en phase 8. */
   manager: "Cédric Simon",
   experienceYears: 10,

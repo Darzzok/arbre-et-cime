@@ -201,3 +201,121 @@ De même pour le **clavier virtuel mobile** : le redimensionnement du viewport �
 l'ouverture du clavier ne se simule pas fidèlement. Les garde-fous sont en
 place (champs à 16 px, cibles à 44 px, pas de `position: fixed` sur le
 formulaire), mais un test sur téléphone réel reste nécessaire.
+
+---
+
+# Mesures de la phase 15B.2
+
+Même protocole que la phase 15 : build de production servi sur `:3100`,
+Lighthouse 13.4.1 en headless, profil mobile. **La variance reste de ±0,3 s
+sur le LCP et ±5 points de performance** ; un écart inférieur ne prouve rien.
+
+## 1. Résultats — 15 passages, 13 routes
+
+| Route | Perf | A11y | Best pract. | SEO | FCP | LCP | CLS | TBT |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `/` (1) | 92 | **100** | **100** | 66 | 0,9 s | 3,3 s | **0** | 30 ms |
+| `/` (2) | 92 | **100** | **100** | 66 | 0,9 s | 3,3 s | **0** | 40 ms |
+| `/` (3) | 93 | **100** | **100** | 66 | 0,9 s | 3,2 s | **0** | 70 ms |
+| `/elagage` | 95 | **100** | **100** | 66 | 0,8 s | 2,9 s | **0** | 40 ms |
+| `/abattage` | 95 | **100** | **100** | 66 | 0,8 s | 2,9 s | **0** | 30 ms |
+| `/dessouchage` | 95 | **100** | **100** | 66 | 0,8 s | 2,9 s | **0** | 40 ms |
+| `/entretien-exterieur` | 93 | **100** | **100** | 66 | 0,8 s | 3,2 s | **0** | 30 ms |
+| `/contact` | 97 | **100** | **100** | 63 | 0,8 s | 2,6 s | **0** | 60 ms |
+| `/devis` | 96 | **100** | **100** | 66 | 0,8 s | 2,7 s | **0** | 30 ms |
+| `/a-propos` | 95 | **100** | **100** | 66 | 0,8 s | 3,0 s | **0** | 30 ms |
+| `/realisations` | 92 | **100** | **100** | 66 | 0,9 s | 3,3 s | **0** | 30 ms |
+| `/zones-intervention` | 96 | **100** | **100** | 63 | 0,9 s | 2,8 s | **0** | 50 ms |
+| `/zones-intervention/rouen` | 96 | **100** | **100** | 63 | 0,9 s | 2,8 s | **0** | 60 ms |
+| `/zones-intervention/amiens` | 99 | **100** | **100** | 63 | 0,9 s | 2,3 s | **0** | 50 ms |
+| `/style-guide` | 96 | **100** | **100** | 63 | 0,9 s | 2,7 s | **0** | 40 ms |
+
+**Accessibilité 100 et bonnes pratiques 100 sur les 15 passages. CLS 0
+partout.** Le SEO à 63-66 reste le `noindex` de préproduction — voir § 2 de
+l'audit de phase 15, ce score ne doit pas être « corrigé ».
+
+## 2. Trois défauts trouvés et corrigés
+
+### a. Le fondu du `Reveal` faisait échouer le contraste — effet supprimé
+
+Mesuré à **2,10** sur `/zones-intervention/rouen` et **1,22** sur
+`/realisations` : un bloc `[data-reveal]` était échantillonné à 51 %
+d'opacité, et ses huit textes avec lui.
+
+Deux réglages ont été tentés et ont échoué de façon identique — la phase 15
+avait resserré la plage de `entry 60%` à `entry 40%`, la phase 15B.2 l'a
+plafonnée à `min(40%, 180px)` pour la rendre indépendante de la hauteur du
+bloc. **Aucun des deux ne pouvait fonctionner** : un fondu lié au défilement
+traverse toujours des valeurs intermédiaires, en réduire la durée ne fait que
+déplacer le moment où on les observe.
+
+`CLAUDE.md` § 7 tranche : l'effet est **supprimé, pas optimisé**. Le
+`Reveal` n'anime plus que `translateY`. Le mouvement se lit toujours, et une
+transformation ne coûte ni contraste ni décalage de mise en page.
+
+**Ces deux routes n'avaient jamais été auditées** : `/realisations` était
+absente du tableau de la phase 15. Ce n'est donc pas une régression de la
+phase 15B.2 mais un défaut préexistant, révélé par un périmètre d'audit
+élargi de 8 à 13 routes.
+
+### b. Le préchargement de la photo LCP n'avait pas `fetchpriority`
+
+`priority` sur `<Image>` pose bien le `<link rel="preload">`, mais Next n'y
+ajoute pas `fetchpriority="high"`. Le navigateur téléchargeait donc la photo
+du hero à priorité normale, derrière la feuille de style.
+
+Signalé par `lcp-discovery` sur `/elagage`, corrigé sur les trois composants
+concernés (`service-page.tsx`, `/a-propos`, `/realisations`) et **vérifié
+dans le HTML servi**, pas seulement dans le code.
+
+L'accueil n'était pas touché : son hero utilise `getImageProps` et un
+`preload()` écrit à la main, qui posait déjà l'attribut.
+
+### c. Le menu mobile décrivait un logotype de 0 × 0 px
+
+Le panneau restait monté sous `hidden`, ce qui laissait dans le DOM une
+seconde image de logotype dans une boîte nulle. `image-aspect-ratio`
+calculait un rapport sur cette boîte et signalait une image déformée qui n'a
+jamais été affichée. Le contenu du panneau n'est plus monté que lorsqu'il est
+ouvert.
+
+## 3. Un faux positif écarté, et pourquoi il faut le savoir
+
+Le premier passage après la refonte donnait **a11y 96, best practices 88** et
+un `500` sur un chunk JavaScript. Le serveur servait un build remplacé à
+chaud. Après redémarrage propre, sans **aucune** modification de code :
+a11y 100, best practices 96.
+
+> **Redémarrer le serveur de production après chaque `npm run build` avant de
+> mesurer.** Trois « régressions » de cette phase n'existaient pas.
+
+## 4. Deux limites de l'outillage, à ne pas confondre avec des défauts
+
+Le pilotage headless du navigateur ne restitue pas :
+
+- **`:focus`** — `document.activeElement` est correct, mais `element.matches(':focus')`
+  reste faux car le document n'a pas le focus fenêtre. Le lien d'évitement
+  mesure donc 1 × 1 px même au focus. Vérifié autrement, dans le CSS produit :
+  la règle `.focus\:not-sr-only:focus` existe, et `focus:absolute` est déclarée
+  **après** elle — `position: absolute` l'emporte donc bien sur le
+  `position: static` de `not-sr-only`. Le lien est sain.
+- **`largest-contentful-paint`** — aucune entrée n'est enregistrée dans
+  l'onglet piloté. L'attribution du LCP ne peut être lue que par Lighthouse.
+
+> Ne jamais conclure à un défaut d'accessibilité à partir d'une mesure de
+> focus prise dans l'onglet piloté.
+
+## 5. Le point du § 5 de la phase 15 reste OUVERT
+
+Sur `/`, le LCP n'a toujours **aucune phase de chargement de ressource** dans
+la décomposition Lighthouse — il reste attribué à un élément de **texte**,
+alors que la photographie du hero mesure 412 × 823 = 339 076 px², affiche
+`opacity: 1` et n'a aucun ancêtre animé (vérifié sur toute la chaîne).
+
+Ce qui a changé depuis la phase 15 : la piste « police d'affichage » désigne
+désormais **Sora**, pas Fraunces, la typographie ayant été remplacée en phase
+15B.1. Les deux fichiers de police se chargent en 27-30 ms.
+
+**Reste à vérifier sur le domaine de production, avec un vrai réseau.** FCP
+0,9 s, Speed Index 0,9 s, CLS 0 et TBT 30-70 ms : rien n'indique une page
+réellement lente.

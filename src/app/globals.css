@@ -448,14 +448,29 @@
   }
 }
 
+/* REVEAL SANS FONDU — decide en phase 15B.2.
+
+   Le reveal faisait varier `opacity` de 0 a 1 le long de l entree dans le
+   cadre. Tant que le bloc entre, son texte est donc partiellement
+   transparent, et son contraste reel passe sous le seuil AA : mesure a 2,1
+   sur /zones-intervention/rouen et 1,2 sur /realisations.
+
+   Deux tentatives de reglage ont echoue, et devaient echouer : la phase 15
+   avait ramene la plage de 60 % a 40 %, la phase 15B.2 l avait plafonnee a
+   180 px. Aucune des deux ne supprime la cause — un fondu lie au defilement
+   traverse TOUJOURS des valeurs intermediaires, quelle que soit sa duree.
+
+   CLAUDE.md 7 tranche : un effet qui coute de l accessibilite est supprime,
+   pas optimise. Le fondu part donc ; la translation reste. Le mouvement se
+   lit toujours, et il ne touche pas au contraste — une transformation ne
+   modifie ni la couleur du texte ni celle du fond, et ne provoque aucun
+   decalage de mise en page. */
 @keyframes cime-reveal {
   from {
-    opacity: 0;
     transform: translateY(var(--reveal-shift));
   }
 
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
@@ -465,10 +480,9 @@
     [data-reveal] {
       animation: cime-reveal linear both;
       animation-timeline: view();
-      /* 40 % et non 60 % : au-dela, le texte reste translucide alors qu'il
-         est deja confortablement lu, ce qui abaisse transitoirement son
-         contraste sous le seuil AA (releve par l'audit automatique en phase
-         15). Le fondu se termine plus tot ; le mouvement reste identique. */
+      /* La plage ne sert plus qu a doser le MOUVEMENT : le fondu a ete retire
+         (voir les keyframes ci-dessus). Elle n a donc plus aucun effet sur le
+         contraste, et 40 % peut rester tel quel. */
       animation-range: entry 0% entry 40%;
     }
   }

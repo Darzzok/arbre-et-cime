@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useScrollPast } from "@/components/layout/use-scroll-past";
 import { cn } from "@/lib/cn";
 import { ctaRouteId, getRoute, routeList, type RouteId } from "@/lib/routes";
-import { site } from "@/lib/site";
+import { contact } from "@/lib/site";
 
 /**
  * Barre d'action persistante, mobile uniquement.
@@ -55,10 +55,13 @@ export function MobileActionBar() {
     return null;
   }
 
-  // Aucun numéro n'est inventé : tant que `NEXT_PUBLIC_PHONE` n'est pas
-  // renseignée, l'action téléphone disparaît et le devis occupe toute la
-  // largeur. Renseigner la variable suffit à la faire apparaître.
-  const hasPhone = site.phone.length > 0;
+  /*
+   * Aucun numéro n'est inventé. Depuis la phase 15B.2 la décision passe par
+   * `contact.phoneConfirmed`, source unique partagée avec l'en-tête, le menu
+   * mobile et le pied de page : renseigner `NEXT_PUBLIC_PHONE` fait apparaître
+   * l'action aux quatre endroits d'un coup.
+   */
+  const hasPhone = contact.phoneConfirmed;
 
   return (
     <>
@@ -95,11 +98,11 @@ export function MobileActionBar() {
         >
           {hasPhone ? (
             <a
-              href={`tel:${site.phone}`}
+              href={`tel:${contact.phone}`}
               tabIndex={visible ? undefined : -1}
               className={cn(
                 "flex min-h-15 flex-1 items-center justify-center gap-2.5",
-                "font-sans text-body font-semibold text-(--surface-fg)",
+                "font-sans text-ui font-semibold text-(--surface-fg)",
                 "no-underline",
               )}
             >

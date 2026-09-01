@@ -77,7 +77,9 @@ export default function RealisationsPage() {
             src="/images/realisations/chantier-abattage-foret-tronconneuse.jpg"
             alt="Bûcheron en casque et visière réalisant une coupe d’abattage à la tronçonneuse au pied d’un hêtre"
             fill
+            /* Voir service-page.tsx : `priority` seul ne suffit pas au prechargement. */
             priority
+            fetchPriority="high"
             sizes="100vw"
             className="-z-10 object-cover object-[60%_center]"
           />
@@ -111,11 +113,7 @@ export default function RealisationsPage() {
           <Container>
             <Reveal className="mx-auto max-w-reading">
               <Eyebrow>Types d’intervention</Eyebrow>
-              <Title
-                id="realisations-collection"
-                as="h2"
-                className="mt-4"
-              >
+              <Title id="realisations-collection" as="h2" className="mt-4">
                 Ce que montre un chantier
               </Title>
 
@@ -249,10 +247,10 @@ export default function RealisationsPage() {
                   Un chantier à nous montrer ?
                 </Title>
                 <Body className="mx-auto mt-5 max-w-reading text-(--surface-fg-muted)">
-                  Quelques photos valent souvent mieux qu’une longue
-                  description : l’accès, l’environnement immédiat et l’état de
-                  l’arbre s’y lisent d’un coup d’œil. Joignez-les à votre
-                  demande, le devis est gratuit.
+                  Quelques photos valent souvent mieux qu’une longue description
+                  : l’accès, l’environnement immédiat et l’état de l’arbre s’y
+                  lisent d’un coup d’œil. Joignez-les à votre demande, le devis
+                  est gratuit.
                 </Body>
                 <div className="mt-8 w-full sm:mx-auto sm:w-fit">
                   <ButtonLink
@@ -315,7 +313,6 @@ export default function RealisationsPage() {
                   </li>
                 ))}
               </ul>
-
             </Reveal>
           </Container>
         </Section>

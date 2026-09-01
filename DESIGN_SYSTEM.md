@@ -1265,13 +1265,38 @@ précisément pour ça et tient **5,15**.
 > contrastes du § 1 sont calculés à pleine opacité ; toute transparence
 > ajoutée les invalide.
 
-### Fondu d'apparition et contraste
+### Fondu d'apparition et contraste — règle remplacée en phase 15B.2
 
-Un texte qui apparaît en fondu passe forcément par des états de contraste
-insuffisants. La plage du `Reveal` a été resserrée de `entry 60%`
-à `entry 40%` : le texte devient opaque plus tôt, la fenêtre
-transitoire se réduit. Au repos, les contrastes mesurés sont conformes
-(9,55 sur forêt, 5,15 sur ivoire).
+**La règle de phase 15 était fausse, et deux réglages successifs l'ont
+prouvé.** Elle disait : resserrer la plage du fondu pour réduire la fenêtre
+de contraste insuffisant. La plage est passée de `entry 60%` à `entry 40%`
+en phase 15, puis a été plafonnée à `min(40%, 180px)` en phase 15B.2 pour la
+rendre indépendante de la hauteur du bloc.
+
+Les deux fois, l'audit a mesuré exactement le même défaut : contraste
+**2,10** sur `/zones-intervention/rouen`, **1,22** sur `/realisations`.
+
+La raison est structurelle. Un fondu lié au défilement traverse **toujours**
+des valeurs intermédiaires ; en réduire la durée déplace le moment où on les
+observe, sans jamais les supprimer. Un réglage ne pouvait donc pas régler ce
+problème.
+
+`CLAUDE.md` § 7 tranche : *un effet visuel qui coûte de l'accessibilité est
+supprimé, pas optimisé*.
+
+> **Le `Reveal` n'anime plus l'opacité.** Il n'anime que `translateY`. Une
+> transformation ne modifie ni la couleur du texte, ni celle du fond, et ne
+> provoque aucun décalage de mise en page : son coût en accessibilité est
+> nul. Le mouvement se lit toujours.
+
+> **Règle : ne jamais lier l'opacité d'un texte au défilement.** Un fondu
+> déclenché au chargement, borné dans le temps (520 ms pour le hero), ne pose
+> pas le même problème : il est terminé avant que le texte ne soit lu, et
+> aucun audit ne l'a signalé. C'est la liaison au **défilement** qui est en
+> cause, parce qu'elle maintient l'état intermédiaire aussi longtemps que le
+> visiteur ne fait pas défiler.
+>
+> Le fondu d'entrée du hero (`cime-hero-rise`) est donc conservé tel quel.
 
 ### Animation et LCP
 
@@ -1545,3 +1570,113 @@ texte sur fond clair.
 
 **Accessibilité vérifiée après refonte : 100 sur `/`, `/devis` et
 `/style-guide`.**
+
+---
+
+# Châssis — phase 15B.2
+
+La phase 15B.1 avait refait les jetons sans toucher aux pages. Cette phase
+applique la nouvelle direction au **châssis** : en-tête, navigation, menu
+mobile, CTA, pied de page. Rien d'autre n'a été repris.
+
+## 1. La navigation compte cinq entrées, plus un CTA
+
+| Entrée | Nature |
+| --- | --- |
+| Prestations | groupe, ouvre un menu de 4 liens |
+| Réalisations | lien |
+| Zones | lien (`navShortLabel`) |
+| À propos | lien |
+| Contact | lien |
+| **Demander un devis** | **CTA, pas une entrée de menu** |
+
+`Contact` devient une entrée principale : c'est le second chemin de
+conversion, il ne pouvait pas rester au pied de page seul.
+
+`Zones` plutôt que `Zones d'intervention` : le libellé long faisait passer la
+barre à six entrées visuellement serrées. `navShortLabel` porte cette
+abréviation dans `routes.ts`, pour que le libellé complet reste celui des
+titres et du fil d'ariane.
+
+## 2. Le CTA est un bouton plein, plus un lien souligné
+
+Le CTA devis était un lien souligné d'un filet jaune. Dans une barre de
+navigation, un lien souligné **se lit comme une sixième entrée de menu** —
+il ne remplit donc pas le rôle que `CONVERSION_STRATEGY.md` § 3 lui donne.
+
+Il devient un `Button` primaire : aplat jaune sécurité, texte forêt,
+contraste **8,06**. C'est la seule occurrence pleine de jaune de l'en-tête,
+ce qui est exactement la règle d'usage du § 1.
+
+## 3. Le bouton « Appeler » dépend d'un fait, pas d'une envie
+
+Tout ce qui touche à l'appel passe par `contact.phoneConfirmed`
+(`src/lib/site.ts`). Tant que le numéro n'est pas confirmé par le client :
+**ni bouton, ni ligne, ni mention**, nulle part.
+
+Renseigner `NEXT_PUBLIC_PHONE` le fait apparaître partout à la fois —
+en-tête, menu mobile, barre d'action, pied de page — sans toucher une ligne
+de composant. L'adresse e-mail suit le même mécanisme
+(`contact.emailConfirmed`, `mailtoHref()`).
+
+> **Aucun numéro n'est écrit en dur dans un composant.** C'est la règle
+> `CLAUDE.md` § 4 appliquée au contact, et la garantie qu'aucun numéro
+> fictif ne peut atteindre la production.
+
+## 4. Le menu mobile n'est monté que lorsqu'il est ouvert
+
+Le panneau restait monté en permanence sous `hidden`. Conséquence mesurée :
+le logotype existait **en double** dans le DOM, dans une boîte de 0 × 0 px,
+et tout audit calculant un rapport largeur/hauteur sur cette boîte signalait
+une image déformée qui n'a jamais été affichée.
+
+L'attribut `hidden` reste — il porte la sémantique pour les technologies
+d'assistance. C'est le contenu qui devient conditionnel.
+
+Comportement vérifié après le changement : focus déplacé sur « Fermer » à
+l'ouverture, rendu au bouton « Menu » à la fermeture, défilement du corps
+verrouillé puis restauré, aucune cible sous 44 px, aucun débordement.
+
+## 5. Pied de page — deux zones
+
+Sur **forêt profond**, avec le motif `rings` à 5 % d'opacité.
+
+1. **Zone de conversion** : capsule « Devis gratuit », titre, CTA. C'est la
+   dernière occasion de convertir un visiteur qui a fait défiler toute une
+   page sans cliquer. Le CTA y avait été retiré en phase 15B sur demande du
+   client ; il revient sous une forme différente — un bloc identifié, pas un
+   lien perdu dans une colonne.
+2. **Pied compact** : l'identité et les coordonnées à gauche, **trois**
+   colonnes de liens à droite, le légal en bas.
+
+### Les coordonnées ne sont pas une colonne de liens
+
+Elles en occupaient une quatrième. Mesuré : l'adresse `aec.elagage76@gmail.com`
+a besoin d'environ **180 px** pour tenir sur une ligne, et cette colonne n'en
+faisait que **76 px à 480 px** et **98 px à 1024 px**. Le `break-all` la
+coupait alors au milieu de « gmail ».
+
+Le bloc d'identité fait 288 px : l'adresse y tient d'un tenant **à toutes les
+largeurs mesurées** (179 à 204 px, de 320 à 1440 px), et les coordonnées se
+lisent avec le nom de l'entreprise plutôt qu'en bout de rangée. Les trois
+colonnes restantes y gagnent aussi — « Politique de confidentialité » ne se
+casse plus non plus.
+
+Le lien « Demander un devis » du pied a été retiré : il doublait le CTA situé
+juste au-dessus.
+
+> **Une adresse e-mail n'est pas un libellé de menu.** Lui réserver une
+> colonne de largeur égale à celle de mots de huit caractères garantit
+> qu'elle se cassera.
+
+Les liens de pied de page portent `min-h-11`. Ils étaient à 36 px avant la
+phase 15 — c'était le seul endroit du site où la règle des 44 px était
+enfreinte.
+
+## 6. Ce que la phase a mesuré
+
+- **Accessibilité 100 et bonnes pratiques 100** sur les 15 passages
+  Lighthouse (13 routes, 3 passages sur l'accueil).
+- **CLS 0** partout.
+- **48 combinaisons** (8 routes × 6 largeurs : 320, 390, 430, 768, 1024,
+  1440) : aucun débordement horizontal, aucune cible tactile sous 44 px.

@@ -119,7 +119,9 @@ export default function AProposPage() {
             src="/images/hero/elagueur-ascension-arbre-hiver.jpg"
             alt="Élagueur-grimpeur encordé dans la charpente d’un grand arbre dépourvu de feuilles, en hiver"
             fill
+            /* Voir service-page.tsx : `priority` seul ne suffit pas au prechargement. */
             priority
+            fetchPriority="high"
             sizes="100vw"
             className="-z-10 object-cover object-[center_35%]"
           />

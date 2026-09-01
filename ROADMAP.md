@@ -1290,6 +1290,102 @@ dépendance ajoutée**.
 
 ---
 
+### Phase 15B.2 — Châssis : en-tête, navigation, CTA, pied de page ✅
+
+La 15B.1 avait refait les jetons sans toucher aux pages. Cette sous-phase
+applique la nouvelle direction au **châssis**, et à lui seul.
+
+### Ce qui change
+
+- **Cinq entrées de navigation** — Prestations (groupe), Réalisations, Zones,
+  À propos, **Contact** — plus le CTA devis. `Contact` devient une entrée
+  principale : c'est le second chemin de conversion.
+- **Le CTA devis devient un bouton plein** (jaune sécurité, texte forêt,
+  contraste 8,06) au lieu d'un lien souligné. Dans une barre de navigation,
+  un lien souligné se lit comme une entrée de menu de plus.
+- **Contact centralisé** dans `src/lib/site.ts` : `contact.phoneConfirmed`,
+  `contact.emailConfirmed`, `mailtoHref()`, `telHref()`.
+- **Pied de page sur forêt profond**, en deux zones : conversion, puis
+  pied compact — identité et coordonnées à gauche, trois colonnes de liens
+  à droite. Les coordonnées ont quitté la grille : l’adresse e-mail a besoin
+  de 180 px et la colonne n’en faisait que 76.
+- **Menu mobile monté à l'ouverture seulement.**
+- **Le `Reveal` n'anime plus l'opacité** (voir ci-dessous).
+
+### Le bouton « Appeler » n'existe pas, et c'est voulu
+
+Le numéro du client n'est pas confirmé. `contact.phoneConfirmed` est donc
+faux, et **aucun bouton d'appel n'est rendu** — ni en-tête, ni menu mobile,
+ni barre d'action, ni pied de page. Aucun numéro fictif n'a été écrit nulle
+part.
+
+Renseigner `NEXT_PUBLIC_PHONE` les fait tous apparaître d'un coup, sans
+toucher une ligne de composant.
+
+> **Conséquence pour la phase 16 :** le parcours d'appel n'est pas mesurable
+> aujourd'hui. Les repères `data-cta="appel"` existent mais ne sont rendus
+> par aucun élément.
+
+### Un effet supprimé plutôt qu'optimisé une troisième fois
+
+Le fondu du `Reveal` faisait tomber le contraste à **2,10** sur
+`/zones-intervention/rouen` et **1,22** sur `/realisations`. La phase 15
+avait resserré sa plage de 60 % à 40 % ; cette phase l'a d'abord plafonnée à
+`min(40%, 180px)`. **Les deux réglages ont échoué de façon identique** — un
+fondu lié au défilement traverse toujours des valeurs intermédiaires.
+
+`CLAUDE.md` § 7 tranche : l'effet est supprimé, pas optimisé. Le `Reveal`
+n'anime plus que `translateY`.
+
+Ces deux routes n'avaient jamais été auditées — `/realisations` était absente
+du tableau de la phase 15. Le défaut est donc **préexistant**, révélé par un
+périmètre d'audit élargi de 8 à 13 routes.
+
+### Le point laissé ouvert en 15B.1 est résolu
+
+`image-aspect-ratio` était mis sur le compte d'un arrondi de l'optimiseur
+(0,4 %). La vraie cause est ailleurs : le menu mobile, monté en permanence,
+laissait une **seconde image de logotype dans une boîte de 0 × 0 px**.
+L'audit calculait un rapport sur cette boîte. Le montage conditionnel du
+panneau supprime le signalement — l'emblème de l'en-tête, lui, était
+conforme.
+
+### Un défaut d'outillage, pas de site
+
+Le premier passage donnait a11y 96 et best practices 88, avec un `500` sur un
+chunk JavaScript : le serveur servait un build remplacé à chaud. Après
+redémarrage propre et **sans aucune modification de code**, a11y 100.
+
+> **Redémarrer le serveur de production après chaque build avant de mesurer.**
+
+### Mesures
+
+| | Phase 15 | Phase 15B.2 |
+| --- | --- | --- |
+| Routes auditées | 8 | **13** (15 passages) |
+| Accessibilité | 100 | **100 partout** |
+| Bonnes pratiques | 100 | **100 partout** |
+| Performance | 94-99 | 92-99 |
+| CLS | 0 | **0 partout** |
+| Débordement horizontal | — | **0 sur 48 combinaisons** |
+| Cibles sous 44 px | 0 | **0** |
+
+Balayage responsive : 8 routes × 6 largeurs (320, 390, 430, 768, 1024,
+1440 px).
+
+*Corrigé au passage :* le préchargement des photos LCP ne portait pas
+`fetchpriority="high"` — `priority` sur `<Image>` pose le `<link>` mais pas
+l'attribut. Corrigé sur `service-page.tsx`, `/a-propos` et `/realisations`,
+vérifié dans le HTML servi.
+
+*Reste ouvert :* l'attribution du LCP sur `/` (voir `PERFORMANCE_AUDIT.md`
+§ 5). À revérifier sur le domaine de production.
+
+**Sortie atteinte :** lint, typecheck et build au vert, `SITE_INDEXABLE`
+toujours `false`, **aucune dépendance ajoutée**, aucun numéro inventé.
+
+---
+
 ## Phase 16 — Analytics et conversions ⬜
 
 - Analytics respectueux de la vie privée

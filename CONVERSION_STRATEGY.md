@@ -44,8 +44,16 @@ Le site sert les trois sans se disperser : l'urgent est servi par le châssis
 
 - **Un seul CTA primaire par écran visible.** Le jaune sécurité rempli est
   réservé à cela.
+- **Primaire = « Demander un devis ». Secondaire = « Appeler ».** Précisé en
+  phase 15B.2 : dans l'en-tête, le menu mobile et le pied de page, le devis
+  est un bouton plein, l'appel un bouton secondaire. Un lien souligné ne peut
+  pas tenir le rôle de CTA primaire dans une barre de navigation — il s'y lit
+  comme une entrée de menu de plus.
 - **« Appeler » et « Devis gratuit » vont toujours ensemble** dans le hero et
   dans la barre d'action mobile. L'un ne remplace pas l'autre.
+- **`Contact` est une entrée de navigation principale** depuis la phase
+  15B.2. C'est le second chemin de conversion, pour le visiteur qui ne veut
+  ni téléphoner ni remplir un configurateur.
 - Libellés explicites et orientés bénéfice : « Demander un devis gratuit »,
   « Appeler maintenant », « Envoyer mes photos ». Jamais « En savoir plus »
   seul, jamais « Cliquez ici ».
@@ -53,6 +61,25 @@ Le site sert les trois sans se disperser : l'urgent est servi par le châssis
   texte brut.
 - Chaque page prestation se termine par un bloc de conversion : appel + devis,
   avec un rappel de la zone.
+
+### Un CTA d'appel ne s'affiche pas tant que le numéro n'est pas confirmé
+
+Règle posée en phase 15B.2, et vérifiable en une ligne :
+`contact.phoneConfirmed` dans `src/lib/site.ts`.
+
+Tant qu'elle est fausse, **aucun bouton « Appeler » n'existe** — ni en-tête,
+ni menu mobile, ni barre d'action, ni pied de page. C'est l'état actuel du
+site : le numéro du client n'a pas encore été confirmé, et **aucun numéro
+n'est inventé pour combler le vide**.
+
+Renseigner `NEXT_PUBLIC_PHONE` et `NEXT_PUBLIC_PHONE_DISPLAY` les fait tous
+apparaître d'un coup. La bascule est une variable d'environnement, pas une
+modification de composant.
+
+> Conséquence à assumer : **le parcours d'appel n'est pas mesurable
+> aujourd'hui.** Les repères `data-cta="appel"` existent dans le code mais ne
+> sont rendus par aucun élément. La phase 16 devra le vérifier avant de
+> conclure quoi que ce soit sur la répartition appel / devis.
 
 ---
 

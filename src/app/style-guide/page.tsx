@@ -778,22 +778,25 @@ export default function StyleGuidePage() {
                 </Frame>
               </div>
 
-              <Label>CTA éditorial de navigation</Label>
+              <Label>CTA de navigation</Label>
               <div className="grid gap-6 md:grid-cols-2">
                 <Frame surface="dark">
-                  <Label>En-tête — survol / focus trace l’accent</Label>
-                  <NavCta />
+                  <Label>En-tête — en ligne</Label>
+                  <NavCta source="style-guide" />
                 </Frame>
                 <Frame surface="dark">
-                  <Label>Menu mobile — accent permanent</Label>
-                  <NavCta layout="row" />
+                  <Label>Menu mobile et pied de page — empilé</Label>
+                  <NavCta layout="stack" size="lg" source="style-guide" />
                 </Frame>
               </div>
               <Small className="mt-4 max-w-reading">
-                Le jaune sécurité n’est plus un aplat plein : il ne reste que le
-                filet de 2 px et la flèche. L’en-tête étant toujours sur surface
-                sombre, l’accent conserve un contraste de 7,16 — impossible sur
-                un en-tête ivoire, où il tomberait à 1,96.
+                Depuis la phase 15B.2 le CTA devis est un <strong>bouton
+                primaire plein</strong>, plus un lien souligné : dans une barre
+                de navigation, un lien souligné se lit comme une entrée de menu
+                de plus. C’est la seule occurrence pleine de jaune de l’en-tête.
+                Le bouton « Appeler » n’apparaît que si{" "}
+                <code>contact.phoneConfirmed</code> est vrai — à ce jour le
+                numéro n’est pas confirmé, il est donc absent partout.
               </Small>
 
               <Label>Éléments de châssis</Label>

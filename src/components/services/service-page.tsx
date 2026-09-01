@@ -80,7 +80,12 @@ export function ServicePage({ id }: { id: RouteId }) {
             src={content.hero.image}
             alt={content.hero.alt}
             fill
+            /* `priority` pose bien le lien de prechargement, mais Next ne lui ajoute
+               pas `fetchpriority=high` : sans cet attribut le navigateur telecharge
+               la photo LCP a priorite normale, derriere la feuille de style. Mesure en
+               phase 15B.2 sur /elagage — Lighthouse le signale sous lcp-discovery. */
             priority
+            fetchPriority="high"
             sizes="100vw"
             className={cn("-z-10 object-cover", content.hero.position)}
           />
@@ -262,7 +267,11 @@ export function ServicePage({ id }: { id: RouteId }) {
 
                 <Rule className="mt-7" />
 
-                <Title id="service-cta" as="h2" className="mx-auto mt-9 max-w-[16ch]">
+                <Title
+                  id="service-cta"
+                  as="h2"
+                  className="mx-auto mt-9 max-w-[16ch]"
+                >
                   Parlons de votre chantier
                 </Title>
                 <Body className="mx-auto mt-5 max-w-reading text-(--surface-fg-muted)">

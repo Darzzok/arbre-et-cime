@@ -17,7 +17,7 @@ import {
   type NavItem,
   type RouteDefinition,
 } from "@/lib/routes";
-import { area } from "@/lib/site";
+import { area, contact, mailtoHref } from "@/lib/site";
 
 /**
  * En-tête du site.
@@ -48,6 +48,7 @@ function isActive(pathname: string, route: RouteDefinition): boolean {
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const mailto = mailtoHref();
   const variant = headerVariantFor(pathname);
 
   /* Au-delà de quelques pixels, l'en-tête se referme sur lui-même. */
@@ -199,7 +200,7 @@ export function SiteHeader() {
         <div
           aria-hidden="true"
           data-surface="dark"
-          className="h-18 bg-(--surface-bg) lg:h-28"
+          className="h-16 bg-(--surface-bg) lg:h-20"
         />
       ) : null}
 
@@ -207,169 +208,206 @@ export function SiteHeader() {
         data-surface="dark"
         className={cn(
           "fixed inset-x-0 top-0 z-40",
-        "border-b transition-[background-color,border-color]",
-        "duration-(--duration-reveal) ease-cime",
-        showBackdrop
-          ? "border-(--surface-rule) bg-forest/95"
-          : "border-transparent bg-transparent",
-      )}
-    >
-      <Container
-        className={cn(
-          "flex items-center justify-between gap-6",
-          "transition-[height] duration-(--duration-reveal) ease-cime",
-          scrolled ? "h-14 lg:h-20" : "h-18 lg:h-28",
+          "border-b transition-[background-color,border-color]",
+          "duration-(--duration-reveal) ease-cime",
+          showBackdrop
+            ? "border-(--surface-rule) bg-forest/95"
+            : "border-transparent bg-transparent",
         )}
       >
-        <Wordmark size={scrolled ? "sm" : "md"} />
-
-        {/* ---------------- Navigation desktop ---------------- */}
-        <nav
-          ref={navRef}
-          aria-label="Navigation principale"
-          className="hidden lg:block"
+        <Container
+          className={cn(
+            "flex items-center justify-between gap-6",
+            // Hauteurs resserrees en phase 15B.2 : 112 px au repos sur desktop
+            // produisaient une barre a moitie vide. 80 px suffisent au logotype
+            // et laissent le contenu monter.
+            "transition-[height] duration-(--duration-reveal) ease-cime",
+            scrolled ? "h-14 lg:h-16" : "h-16 lg:h-20",
+          )}
         >
-          <ul className="flex items-center gap-8">
-            {primaryNav.map((item) => (
-              <li key={navKey(item)} className="relative">
-                {item.kind === "route" ? (
-                  <DesktopLink
-                    route={getRoute(item.id)}
-                    active={isActive(pathname, getRoute(item.id))}
-                  />
-                ) : (
-                  <DesktopGroup
-                    item={item}
-                    pathname={pathname}
-                    open={openGroup === item.label}
-                    onToggle={() =>
-                      setOpenGroup((current) =>
-                        current === item.label ? null : item.label,
-                      )
-                    }
-                  />
-                )}
-              </li>
-            ))}
-          </ul>
-        </nav>
+          {/* Taille constante : l'ecart de hauteur entre les deux etats est
+            desormais de 16 px, trop faible pour justifier que la marque
+            change de taille en cours de defilement. */}
+          <Wordmark size="sm" />
 
-        <div className="flex items-center">
-          <div className="hidden lg:block">
-            <NavCta />
-          </div>
-
-          {/* ---------------- Bouton menu mobile ---------------- */}
-          <button
-            ref={toggleRef}
-            type="button"
-            aria-expanded={menuOpen}
-            aria-controls={menuId}
-            onClick={() => setMenuOpen((open) => !open)}
-            className={cn(
-              "group inline-flex min-h-11 items-center gap-3 lg:hidden",
-              "font-sans text-eyebrow font-semibold uppercase",
-              "text-(--surface-fg)",
-            )}
+          {/* ---------------- Navigation desktop ---------------- */}
+          <nav
+            ref={navRef}
+            aria-label="Navigation principale"
+            className="hidden lg:block"
           >
-            Menu
-            <MenuGlyph />
-          </button>
-        </div>
-      </Container>
-
-      {/* ---------------- Panneau mobile ---------------- */}
-      <div
-        id={menuId}
-        ref={panelRef}
-        data-surface="dark"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Menu de navigation"
-        hidden={!menuOpen}
-        className={cn(
-          "fixed inset-0 z-50 flex flex-col overflow-y-auto",
-          "bg-(--surface-bg) text-(--surface-fg) lg:hidden",
-        )}
-      >
-        <Container className="flex h-18 shrink-0 items-center justify-between gap-6">
-          <Wordmark />
-          <button
-            ref={closeRef}
-            type="button"
-            onClick={closeMenu}
-            className={cn(
-              "inline-flex min-h-11 items-center gap-3",
-              "font-sans text-eyebrow font-semibold uppercase",
-              "text-(--surface-fg)",
-            )}
-          >
-            Fermer
-            <CloseGlyph />
-          </button>
-        </Container>
-
-        <Container className="flex flex-1 flex-col pt-4 pb-[calc(2.5rem+env(safe-area-inset-bottom))]">
-          <nav aria-label="Navigation principale (mobile)">
-            <ul className="border-t border-(--surface-rule)">
-              {primaryNav.map((item, index) =>
-                item.kind === "group" ? (
-                  <MobileGroup
-                    key={item.label}
-                    item={item}
-                    index={index}
-                    pathname={pathname}
-                    panelId={mobileGroupId}
-                    open={mobileGroupOpen}
-                    onToggle={() => setMobileGroupOpen((open) => !open)}
-                  />
-                ) : (
-                  <MobileRow
-                    key={item.id}
-                    index={index}
-                    route={getRoute(item.id)}
-                    active={isActive(pathname, getRoute(item.id))}
-                  />
-                ),
-              )}
+            <ul className="flex items-center gap-7 xl:gap-9">
+              {primaryNav.map((item) => (
+                <li key={navKey(item)} className="relative">
+                  {item.kind === "route" ? (
+                    <DesktopLink
+                      route={getRoute(item.id)}
+                      active={isActive(pathname, getRoute(item.id))}
+                    />
+                  ) : (
+                    <DesktopGroup
+                      item={item}
+                      pathname={pathname}
+                      open={openGroup === item.label}
+                      onToggle={() =>
+                        setOpenGroup((current) =>
+                          current === item.label ? null : item.label,
+                        )
+                      }
+                    />
+                  )}
+                </li>
+              ))}
             </ul>
           </nav>
 
-          <div
-            data-menu-item
-            style={{ "--menu-index": primaryNav.length } as CSSProperties}
-            className="mt-10"
-          >
-            <NavCta layout="row" />
-          </div>
-
-          <div
-            data-menu-item
-            style={{ "--menu-index": primaryNav.length + 1 } as CSSProperties}
-            className="mt-8"
-          >
-            <p className="font-sans text-eyebrow font-semibold uppercase text-(--surface-fg-muted)">
-              Zone d’intervention
-            </p>
-            <p className="mt-2 font-sans text-body text-(--surface-fg-muted)">
-              {area.city} et la {area.metro}, jusqu’à {area.maxRadiusKm} km
-              selon les chantiers.
-            </p>
-            <div className="mt-3">
-              <Link
-                href={getRoute("contact").path}
-                className={cn(
-                  "inline-flex min-h-11 items-center font-sans text-body",
-                  "font-semibold text-(--surface-fg) underline decoration-1",
-                  "underline-offset-[0.3em] decoration-(--surface-rule)",
-                )}
-              >
-                Nous joindre
-              </Link>
+          <div className="flex items-center">
+            <div className="hidden lg:block">
+              <NavCta source="header" />
             </div>
+
+            {/* ---------------- Bouton menu mobile ---------------- */}
+            <button
+              ref={toggleRef}
+              type="button"
+              aria-expanded={menuOpen}
+              aria-controls={menuId}
+              onClick={() => setMenuOpen((open) => !open)}
+              className={cn(
+                "group inline-flex min-h-11 items-center gap-2.5 lg:hidden",
+                "rounded-control px-3 font-sans text-ui font-semibold",
+                "text-(--surface-fg)",
+                "motion-safe:transition-colors motion-safe:duration-(--duration-micro)",
+                "hover:bg-(--surface-inset)",
+              )}
+            >
+              Menu
+              <MenuGlyph />
+            </button>
           </div>
         </Container>
-      </div>
+
+        {/* ---------------- Panneau mobile ---------------- */}
+        <div
+          id={menuId}
+          ref={panelRef}
+          data-surface="dark"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu de navigation"
+          hidden={!menuOpen}
+          className={cn(
+            "fixed inset-0 z-50 flex flex-col overflow-y-auto",
+            "bg-(--surface-bg) text-(--surface-fg) lg:hidden",
+          )}
+        >
+          {/*
+          CONTENU MONTE UNIQUEMENT MENU OUVERT.
+
+          Le panneau restait monte en permanence sous `hidden`. Consequence
+          relevee en phase 15B.2 : le logotype du panneau existait en double
+          dans le DOM, dans une boite de 0 x 0 px. Un audit qui calcule un
+          rapport largeur/hauteur sur cette boite obtient une division par
+          zero et signale une image deformee qui n a jamais ete affichee.
+
+          Le `hidden` reste : il porte la semantique pour les technologies
+          d assistance. Le montage conditionnel, lui, evite de decrire au
+          navigateur une interface que personne ne regarde.
+        */}
+          {menuOpen ? (
+            <>
+              <Container className="flex h-16 shrink-0 items-center justify-between gap-6">
+                <Wordmark size="sm" />
+                <button
+                  ref={closeRef}
+                  type="button"
+                  onClick={closeMenu}
+                  className={cn(
+                    "inline-flex min-h-11 items-center gap-2.5",
+                    "rounded-control px-3 font-sans text-ui font-semibold",
+                    "text-(--surface-fg)",
+                    "motion-safe:transition-colors motion-safe:duration-(--duration-micro)",
+                    "hover:bg-(--surface-inset)",
+                  )}
+                >
+                  Fermer
+                  <CloseGlyph />
+                </button>
+              </Container>
+
+              <Container className="flex flex-1 flex-col pt-4 pb-[calc(2.5rem+env(safe-area-inset-bottom))]">
+                <nav aria-label="Navigation principale (mobile)">
+                  <ul className="border-t border-(--surface-rule)">
+                    {primaryNav.map((item, index) =>
+                      item.kind === "group" ? (
+                        <MobileGroup
+                          key={item.label}
+                          item={item}
+                          index={index}
+                          pathname={pathname}
+                          panelId={mobileGroupId}
+                          open={mobileGroupOpen}
+                          onToggle={() => setMobileGroupOpen((open) => !open)}
+                        />
+                      ) : (
+                        <MobileRow
+                          key={item.id}
+                          index={index}
+                          route={getRoute(item.id)}
+                          active={isActive(pathname, getRoute(item.id))}
+                        />
+                      ),
+                    )}
+                  </ul>
+                </nav>
+
+                {/*
+              Zone d'actions — separee de la navigation par une respiration, et
+              non par un filet de plus. Les boutons y sont pleine largeur : sur
+              un ecran tactile, une cible qui occupe la largeur est la plus sure
+              a atteindre au pouce.
+            */}
+                <div
+                  data-menu-item
+                  style={{ "--menu-index": primaryNav.length } as CSSProperties}
+                  className="mt-10"
+                >
+                  <NavCta layout="stack" size="lg" source="menu-mobile" />
+                </div>
+
+                <div
+                  data-menu-item
+                  style={
+                    { "--menu-index": primaryNav.length + 1 } as CSSProperties
+                  }
+                  className="mt-8 border-t border-(--surface-rule) pt-6 text-left"
+                >
+                  <p className="font-sans text-eyebrow font-semibold uppercase text-(--surface-fg-muted)">
+                    Zone d’intervention
+                  </p>
+                  <p className="mt-2 font-sans text-body text-(--surface-fg-muted)">
+                    {area.city} et la {area.metro}, jusqu’à {area.maxRadiusKm}{" "}
+                    km selon les chantiers.
+                  </p>
+
+                  {mailto ? (
+                    <a
+                      href={mailto}
+                      className={cn(
+                        "mt-4 inline-flex min-h-11 items-center break-all",
+                        "font-sans text-body font-semibold text-(--surface-fg)",
+                        "underline decoration-1 underline-offset-[0.3em]",
+                        "decoration-(--surface-rule)",
+                      )}
+                    >
+                      {contact.email}
+                    </a>
+                  ) : null}
+                </div>
+              </Container>
+            </>
+          ) : null}
+        </div>
       </header>
     </>
   );
@@ -408,7 +446,7 @@ function NavUnderline({ active }: { active: boolean }) {
 }
 
 const desktopTriggerClasses =
-  "group relative inline-flex min-h-11 items-center font-sans text-body " +
+  "group relative inline-flex min-h-11 items-center font-sans text-ui " +
   "text-(--surface-fg) no-underline";
 
 function DesktopLink({
@@ -425,7 +463,7 @@ function DesktopLink({
       className={cn(desktopTriggerClasses, active && "font-semibold")}
     >
       <span className="relative">
-        {route.navLabel}
+        {route.navShortLabel ?? route.navLabel}
         <NavUnderline active={active} />
       </span>
     </Link>
@@ -477,16 +515,27 @@ function DesktopGroup({
         <Chevron open={open} />
       </button>
 
+      {/*
+        Sous-menu — refait en phase 15B.2.
+
+        Deux colonnes de quatre liens, plaque a coins arrondis, filet fin.
+        Compact a dessein : ce n'est pas un mega-menu, et la description sous
+        chaque intitule suffit a departager quatre metiers proches.
+
+        L'index numerote a disparu : il appartenait au registre editorial.
+      */}
       <div
         id={panelId}
         hidden={!open}
+        data-surface="dark"
         className={cn(
-          "absolute left-0 top-full z-50 mt-4 w-80",
-          "border border-(--surface-rule) bg-forest",
+          "absolute left-1/2 top-full z-50 mt-3 w-[34rem] -translate-x-1/2",
+          "rounded-card border border-(--surface-rule) bg-forest p-2",
+          "shadow-none",
         )}
       >
-        <ul>
-          {routes.map((route, index) => {
+        <ul className="grid grid-cols-2 gap-1">
+          {routes.map((route) => {
             const active = isActive(pathname, route);
 
             return (
@@ -495,40 +544,27 @@ function DesktopGroup({
                   href={route.path}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "group flex items-baseline gap-4 px-5 py-4",
-                    "border-b border-(--surface-rule) last:border-b-0",
-                    "no-underline transition-colors",
-                    "duration-(--duration-micro) ease-cime",
-                    "hover:bg-(--surface-inset) focus-visible:bg-(--surface-inset)",
+                    "group flex h-full flex-col gap-1 rounded-control p-4",
+                    "no-underline motion-safe:transition-colors",
+                    "motion-safe:duration-(--duration-micro) motion-safe:ease-cime",
+                    active
+                      ? "bg-(--surface-inset)"
+                      : "hover:bg-(--surface-inset) focus-visible:bg-(--surface-inset)",
                   )}
                 >
                   <span
-                    aria-hidden="true"
                     className={cn(
-                      "font-sans text-eyebrow font-semibold tabular-nums",
-                      active
-                        ? "text-(--color-safety)"
-                        : "text-(--surface-fg-muted)",
+                      "font-display text-ui font-semibold leading-tight",
+                      "text-(--surface-heading)",
                     )}
                   >
-                    {String(index + 1).padStart(2, "0")}
+                    {route.navLabel}
                   </span>
-
-                  <span className="flex flex-col gap-0.5">
-                    <span
-                      className={cn(
-                        "font-display text-subtitle leading-none",
-                        "text-(--surface-heading)",
-                      )}
-                    >
-                      {route.navLabel}
+                  {route.navTagline ? (
+                    <span className="font-sans text-caption text-(--surface-fg-muted)">
+                      {route.navTagline}
                     </span>
-                    {route.navTagline ? (
-                      <span className="font-sans text-caption text-(--surface-fg-muted)">
-                        {route.navTagline}
-                      </span>
-                    ) : null}
-                  </span>
+                  ) : null}
                 </Link>
               </li>
             );
@@ -544,22 +580,8 @@ function DesktopGroup({
 /* -------------------------------------------------------------------------- */
 
 const mobileRowClasses =
-  "group flex w-full items-baseline gap-5 border-b border-(--surface-rule) " +
-  "py-5 text-left no-underline";
-
-function MobileIndex({ index, active }: { index: number; active: boolean }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        "font-sans text-eyebrow font-semibold tabular-nums",
-        active ? "text-(--color-safety)" : "text-(--surface-fg-muted)",
-      )}
-    >
-      {String(index + 1).padStart(2, "0")}
-    </span>
-  );
-}
+  "group flex w-full items-baseline gap-4 border-b border-(--surface-rule) " +
+  "py-4 text-left no-underline";
 
 function MobileRow({
   index,
@@ -577,14 +599,16 @@ function MobileRow({
         aria-current={active ? "page" : undefined}
         className={mobileRowClasses}
       >
-        <MobileIndex index={index} active={active} />
         <span
           className={cn(
-            "font-display text-title leading-none text-(--surface-heading)",
+            // `text-subtitle` et non `text-title` : a 56 px, « Zone
+            // d'intervention » prenait deux lignes et le menu devenait une
+            // affiche. La direction demande un menu qui se SCANNE.
+            "font-display text-subtitle leading-tight text-(--surface-heading)",
             active && "text-(--color-safety)",
           )}
         >
-          {route.navLabel}
+          {route.navShortLabel ?? route.navLabel}
         </span>
       </Link>
     </li>
@@ -618,11 +642,10 @@ function MobileGroup({
         onClick={onToggle}
         className={cn(mobileRowClasses, "justify-between")}
       >
-        <span className="flex items-baseline gap-5">
-          <MobileIndex index={index} active={containsActive} />
+        <span className="flex items-baseline">
           <span
             className={cn(
-              "font-display text-title leading-none text-(--surface-heading)",
+              "font-display text-subtitle leading-tight text-(--surface-heading)",
               containsActive && "text-(--color-safety)",
             )}
           >
@@ -632,7 +655,7 @@ function MobileGroup({
         <Chevron open={open} />
       </button>
 
-      <ul id={panelId} hidden={!open} className="pb-2 pl-11">
+      <ul id={panelId} hidden={!open} className="pb-2 pl-4">
         {routes.map((route, subIndex) => {
           const active = isActive(pathname, route);
 

@@ -40,6 +40,14 @@ export type RouteDefinition = {
   /** Libelle court, pour la navigation et le fil d'Ariane. */
   navLabel: string;
   /**
+   * Libelle encore plus court, RESERVE a la barre de navigation.
+   *
+   * Existe pour un seul cas : « Zone d'intervention » tient mal dans une barre
+   * a cinq entrees. Le fil d'Ariane et le pied de page gardent `navLabel`,
+   * qui reste le libelle descriptif.
+   */
+  navShortLabel?: string;
+  /**
    * Sous-libelle de navigation, 2 a 4 mots. Sert uniquement au sous-menu
    * Prestations : il dit ce que la page resout, pour departager quatre
    * intitules metier proches. Purement editorial, sans effet SEO.
@@ -192,6 +200,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     id: "zones-intervention",
     path: "/zones-intervention",
     navLabel: "Zone d’intervention",
+    navShortLabel: "Zones",
     title: "Zones d’intervention depuis Rouen",
     description:
       "Rouen et la Métropole Rouen Normandie en zone principale, et déplacement possible jusqu’à 100 km selon les chantiers. Devis gratuit.",
@@ -346,8 +355,14 @@ export type NavItem =
 
 /**
  * Navigation principale, identique au desktop et au mobile.
- * `Contact` n'y figure pas : la prise de contact passe par le CTA devis, la
- * barre d'action mobile et le footer (cf. CONVERSION_STRATEGY.md).
+ *
+ * `Contact` y entre en phase 15B.2, sur demande. Il en etait absent parce que
+ * la prise de contact passait par le CTA devis et le pied de page — mais une
+ * entreprise de service locale sans « Contact » visible cree un doute que
+ * l'absence d'un lien ne compense pas.
+ *
+ * Cinq entrees, et pas une de plus : au-dela, une barre horizontale se
+ * compresse et le CTA perd sa place.
  */
 export const primaryNav: readonly NavItem[] = [
   {
@@ -358,6 +373,7 @@ export const primaryNav: readonly NavItem[] = [
   { kind: "route", id: "realisations" },
   { kind: "route", id: "zones-intervention" },
   { kind: "route", id: "a-propos" },
+  { kind: "route", id: "contact" },
 ];
 
 /** Route du CTA primaire, traitee a part de la navigation. */
