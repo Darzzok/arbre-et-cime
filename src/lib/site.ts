@@ -84,15 +84,30 @@ const PUBLIC_EMAIL =
   process.env.NEXT_PUBLIC_EMAIL?.trim() || "aec.elagage76@gmail.com";
 
 /**
- * Telephone public.
+ * Telephone public — CONFIRME par le client.
  *
- * NON CONFIRME a ce jour : aucune valeur par defaut n'est ecrite ici. Un
- * numero invente serait la pire erreur possible sur un site de depannage — il
- * enverrait des appels reels chez quelqu'un d'autre.
+ * Il est reste vide de la phase 4 a la phase 15B.6, et le site s'est construit
+ * autour de cette absence : aucun bouton « Appeler » n'etait rendu, nulle part.
+ * Le mecanisme n'a pas change, seule la valeur est arrivee — et elle fait
+ * apparaitre le bouton dans la soixantaine d'emplacements deja prevus.
+ *
+ * DEUX FORMES, DEUX USAGES
+ * ------------------------
+ * `tel:` exige le format international sans espaces ; l'affichage exige les
+ * groupes de deux chiffres a la francaise. Les deux decrivent le meme numero,
+ * et c'est cette source unique qui garantit qu'ils ne divergeront pas.
+ *
+ * Ecrit ici plutot que reserve a l'environnement, exactement comme l'e-mail :
+ * une coordonnee publique confirmee n'est pas un secret (`CLAUDE.md` § 9 vise
+ * les cles et les jetons), et un site deploye ne doit pas perdre son numero
+ * parce qu'une variable manque sur l'hebergeur.
+ *
+ * Reste surchargeable par l'environnement, pour pouvoir changer de numero sans
+ * redeployer le code.
  */
-const PUBLIC_PHONE = process.env.NEXT_PUBLIC_PHONE?.trim() ?? "";
+const PUBLIC_PHONE = process.env.NEXT_PUBLIC_PHONE?.trim() || "+33628778240";
 const PUBLIC_PHONE_DISPLAY =
-  process.env.NEXT_PUBLIC_PHONE_DISPLAY?.trim() ?? "";
+  process.env.NEXT_PUBLIC_PHONE_DISPLAY?.trim() || "06 28 77 82 40";
 
 /**
  * Etat des canaux de contact.

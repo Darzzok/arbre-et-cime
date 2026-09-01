@@ -365,3 +365,57 @@ fonction, pas sur la forme.
 
 Le repère de mesure `data-cta-source="footer"` n'est donc plus émis. La
 phase 16 ne doit pas l'attendre.
+
+---
+
+## 13. État final des parcours — phase 15B.6
+
+### `/contact` remplit enfin sa fonction
+
+Elle ne proposait aucun moyen de contact. Elle porte maintenant, dans cet
+ordre : l'e-mail, l'entrée vers le devis, la zone. **L'e-mail d'abord** — une
+page de contact qui pousse d'emblée vers un parcours de cinq étapes ne répond
+pas à la question posée.
+
+### Hiérarchie vérifiée sur les douze routes
+
+| Niveau | Libellé | Où |
+| --- | --- | --- |
+| Primaire | **Demander un devis** | en-tête, barre mobile, hero, carte finale |
+| Secondaire | **Appeler** | mêmes emplacements, si le numéro est confirmé |
+| Tertiaire | **Envoyer un e-mail** | `/contact` uniquement |
+
+Mesuré : **1 à 2 liens `/devis` par page** dans le corps, jamais plus. Aucune
+page n'aligne cinq boutons de devis. `/devis` elle-même n'en porte aucun — le
+visiteur y est déjà.
+
+### Le basculement du téléphone, testé de bout en bout
+
+Un build de test avec `NEXT_PUBLIC_PHONE` renseigné — **aucun numéro écrit en
+dur, uniquement la configuration centrale** — fait apparaître le bouton
+« Appeler » partout où il est prévu :
+
+| Emplacement | Vérifié |
+| --- | --- |
+| En-tête | oui |
+| Menu mobile | oui (`menu-mobile:appel`) |
+| Barre d'action mobile | oui (`tel:` + `/devis`) |
+| Hero de page | oui |
+| Carte de conversion finale | oui |
+| Carte téléphone de `/contact` | oui |
+
+Retour à la configuration réelle : **0 lien `tel:` sur 13 routes**.
+
+### Un piège désamorcé dans `.env.example`
+
+Le fichier livrait `NEXT_PUBLIC_PHONE=+33000000000` et
+`NEXT_PUBLIC_PHONE_DISPLAY=00 00 00 00 00` — des valeurs **syntaxiquement
+valides**. Copier `.env.example` en `.env.local` au déploiement, geste courant,
+suffisait à faire passer `contact.phoneConfirmed` à vrai et à publier un numéro
+fictif dans une soixantaine d'emplacements.
+
+Les trois valeurs de contact sont désormais **vides**, avec le pourquoi écrit
+dans le fichier.
+
+> **Un exemple d'environnement ne doit jamais contenir une valeur qui
+> déclencherait un affichage public.**

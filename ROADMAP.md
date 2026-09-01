@@ -1722,6 +1722,96 @@ bonnes pratiques **100**, **CLS 0** conservés. Lint, typecheck et build au vert
 
 ---
 
+### Phase 15B.6 — Contact, devis et cohérence finale ✅
+
+Dernière sous-phase de la refonte visuelle.
+
+### `/contact` n'existait pas
+
+Elle rendait `PlaceholderPage` : **0 lien `mailto:`, 0 lien `tel:`**. C'était
+la seule page du site dont la fonction n'était pas remplie.
+
+Quatre blocs : hero forêt profond, cartes de contact, entrée vers le devis,
+zone. **2 406 px en 1440, 2 147 px en 390** — la page la plus courte du site
+après `/devis`, et c'est le point.
+
+La carte téléphone n'existe que si le numéro est confirmé ; sans elle, la
+grille se rééquilibre d'elle-même.
+
+### `/devis` avait déjà hérité du design system
+
+Mesuré avant modification : Sora + Inter, rayons 18 / 12 / 2 / pill. Le
+configurateur, écrit en phases 11-12, a suivi la réécriture de jetons de la
+15B.1 **sans être rouvert** — les noms de jetons n'avaient pas changé, seules
+leurs valeurs. C'est la démonstration que le système tient.
+
+Il restait à faire : une entrée à capsules, un rythme sable → ivoire, et les
+repères en capsules. **La logique du configurateur n'a pas été touchée.**
+
+Le `h1` reste « Demander un devis » : une soixantaine de boutons du site
+portent ces trois mots, et la continuité entre le bouton et la page d'arrivée
+vaut plus qu'une formulation plus jolie. « Parlons de votre chantier » est allé
+à `/contact`.
+
+### Un piège désamorcé dans `.env.example`
+
+Le fichier livrait `NEXT_PUBLIC_PHONE=+33000000000` — une valeur
+**syntaxiquement valide**. Le copier en `.env.local` au déploiement suffisait à
+publier un numéro fictif dans une soixantaine d'emplacements, ce que
+`CLAUDE.md` interdit. Les trois valeurs de contact sont désormais vides.
+
+### Parcours du devis vérifié de bout en bout à 390 px
+
+Les cinq étapes, la validation bloquante et ses deux messages d'erreur, l'ajout
+de photos, la phrase de réserve sur la zone, le récapitulatif intégré à
+l'étape 5 avec ses quatre boutons « Modifier », et l'envoi : **0 requête
+réseau**, écran « Votre demande est prête », aucune fausse confirmation.
+
+### Basculement du téléphone, testé
+
+Build de test avec `NEXT_PUBLIC_PHONE` renseigné — **aucun numéro en dur** :
+le bouton « Appeler » apparaît en en-tête, dans le menu mobile, la barre
+d'action mobile, les heros, les cartes de conversion et la carte contact.
+Retour à la configuration réelle : **0 lien `tel:` sur 13 routes**.
+
+### Mesures finales
+
+| Route | Perf | A11y | BP | LCP | CLS | 1440 | 390 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `/contact` | **97** | **100** | **100** | 2,5 s | **0** | 2 406 | 2 147 |
+| `/devis` | **96** | **100** | **100** | 2,7 s | **0** | 2 000 | 2 238 |
+| `/` | 92 | **100** | **100** | 3,4 s | **0** | 8 141 | 8 457 |
+
+**72 combinaisons** (12 routes × 6 largeurs) : 0 débordement, 0 cible sous
+44 px, un seul `h1` par page, **0 surface adjacente identique**.
+
+Cohérence : deux polices (Sora, Inter), **aucun reliquat Fraunces ni Manrope**,
+une famille de rayons, une famille de boutons. Variété : douze suites de
+surfaces différentes, quatre anatomies de carte, trois compositions de hero.
+
+**Sortie atteinte :** lint, typecheck et build au vert, 43 routes statiques,
+`SITE_INDEXABLE` toujours `false`, métadonnées, sitemap, robots, données
+structurées et pages villes **non touchés**, **aucune dépendance ajoutée**.
+
+---
+
+## Phase 15B — TERMINÉE
+
+Six sous-phases, douze routes refondues plus les 22 autres pages villes.
+
+| Sous-phase | Objet |
+| --- | --- |
+| 15B.1 | jetons, typographies, primitives |
+| 15B.2 | en-tête, navigation, pied de page, CTA |
+| 15B.3 | page d'accueil |
+| 15B.4 | services, à propos, réalisations |
+| 15B.5 | zones, carte, 23 pages villes |
+| 15B.6 | contact, devis, cohérence finale |
+
+**Aucune dépendance ajoutée sur l'ensemble des six sous-phases.**
+
+---
+
 ## Phase 16 — Analytics et conversions ⬜
 
 - Analytics respectueux de la vie privée

@@ -856,3 +856,50 @@ vérifié à 0 occurrence sur le HTML servi. Le visiteur lit « Zone principale
 d'intervention », « Interventions possibles selon le chantier » ou
 « Déplacement à étudier ». Ces trois phrases disent le niveau d'engagement en
 clair, et jamais plus que ce qui est vrai.
+
+---
+
+# Contact et devis — phase 15B.6
+
+## 1. Ce qui a été écrit, et ce qui ne l'a pas été
+
+`/contact` n'avait aucun contenu réel. Les textes ajoutés se limitent à ce que
+la page doit dire pour remplir sa fonction : deux phrases de chapô, une ligne
+par canal, et le rappel de la zone.
+
+**Aucune promesse n'a été créée.** Pas de délai de réponse, pas d'horaires, pas
+de « nous vous répondons sous 24 h » — rien de tout cela n'est confirmé.
+
+## 2. L'intention SEO de la route est préservée dans le chapô
+
+`SEO_STRATEGY.md` donne à `/contact` l'intention « contacter un élagueur à
+Rouen ». Le `h1` demandé au brief — « Parlons de votre chantier » — ne la porte
+pas. Le chapô la reprend donc explicitement : « élagueur-grimpeur à Rouen et
+dans la Métropole Rouen Normandie ».
+
+Les métadonnées de `routes.ts` sont **inchangées** : le `title` reste
+« Contacter un élagueur à Rouen ».
+
+> **Un `h1` conversationnel se compense dans le chapô, jamais en réécrivant
+> les métadonnées.**
+
+## 3. Deux pages, deux besoins — la formulation les sépare
+
+| Page | `h1` | Ce qu'il promet |
+| --- | --- | --- |
+| `/contact` | Parlons de votre chantier | une conversation |
+| `/devis` | Demander un devis | un chiffrage |
+
+Le `h1` de `/devis` n'a pas été changé : une soixantaine de boutons du site
+portent ces trois mots exacts. La continuité de formulation entre le bouton et
+la page d'arrivée vaut plus qu'une variation stylistique.
+
+## 4. Le configurateur n'a pas été retouché sur le fond
+
+Ni ses questions, ni ses libellés, ni ses messages d'erreur, ni ses réserves.
+La phrase imposée en phase 12 est toujours là, mot pour mot :
+
+> « La zone exacte sera confirmée lors de l'étude de votre demande. »
+
+Et l'écran final continue de dire « Votre demande est prête », jamais « votre
+demande a été envoyée » : **aucune requête réseau n'est émise** — vérifié à 0.

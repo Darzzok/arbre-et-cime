@@ -451,3 +451,56 @@ Les **25 déclarations `animation:`** du projet sont sous
 `@media (prefers-reduced-motion: no-preference)` — vérifié une à une en
 remontant la garde englobante de chaque déclaration. Sous `reduce`, aucune
 n'est appliquée : rien ne peut rester masqué par une animation non jouée.
+
+---
+
+# État final après la phase 15B — les douze routes
+
+Build de production servi sur `:3100`, Lighthouse 13.4.1 headless, profil
+mobile. Variance de ±0,3 s sur le LCP et ±5 points de performance : un écart
+inférieur ne prouve rien.
+
+| Route | Perf | A11y | Best pract. | SEO | LCP | CLS |
+| --- | --- | --- | --- | --- | --- | --- |
+| `/` | 92 | **100** | **100** | 66 | 3,4 s | **0** |
+| `/elagage` | 96 | **100** | **100** | 66 | 2,8 s | **0** |
+| `/abattage` | 96 | **100** | **100** | 66 | 2,8 s | **0** |
+| `/dessouchage` | 97 | **100** | **100** | 66 | 2,6 s | **0** |
+| `/entretien-exterieur` | 97 | **100** | **100** | 66 | 2,6 s | **0** |
+| `/a-propos` | 95 | **100** | **100** | 66 | 2,9 s | **0** |
+| `/realisations` | 96 | **100** | **100** | 66 | 2,8 s | **0** |
+| `/zones-intervention` | 95 | **100** | **100** | 63 | 2,8 s | **0** |
+| `…/rouen` | 95 | **100** | **100** | 63 | 2,8 s | **0** |
+| `…/amiens` | 96 | **100** | **100** | 63 | 2,8 s | **0** |
+| `/contact` | **97** | **100** | **100** | 63 | 2,5 s | **0** |
+| `/devis` | **96** | **100** | **100** | 66 | 2,7 s | **0** |
+
+**Accessibilité 100 et bonnes pratiques 100 sur les douze routes. CLS 0
+partout.** Le SEO à 63-66 reste le `noindex` de préproduction — il remontera
+seul en phase 18.
+
+## La page d'accueil reste la plus lente, et on sait pourquoi
+
+92 contre 95-97 ailleurs, LCP 3,4 s contre 2,5-2,9 s. C'est la **seule page du
+site dont le hero porte encore une photographie**, et donc la seule dont
+l'élément LCP est une image plein cadre plutôt qu'un texte.
+
+Ce n'est pas une anomalie à corriger : c'est le coût assumé d'une page
+d'accueil photographique. Les onze autres pages ont perdu leur image de hero
+sur demande du client, et leur LCP a suivi.
+
+## Une seule image prioritaire sur tout le site
+
+Le hero de `/`. Vérifié : exactement un `fetchpriority="high"` par page, et
+zéro sur les onze autres routes.
+
+## Ce qui reste OUVERT
+
+L'attribution du LCP de `/` était le point ouvert de la phase 15. Il est
+**résolu** depuis la 15B.3 : le LCP est désormais la photographie du hero, avec
+une décomposition de chargement complète, alors qu'il était auparavant attribué
+à un élément de texte.
+
+Reste à revérifier sur le domaine de production, avec un vrai réseau — la
+valeur de 3,4 s est une projection sous throttling simulé, pour un FCP réel de
+0,9 s et un Speed Index de 0,9 s.

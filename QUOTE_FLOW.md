@@ -427,3 +427,44 @@ un mensonge affiché, pas un placeholder.
 - Le brouillon est **purgé** à la fin du parcours, et sur « Recommencer ».
 - Aucune donnée personnelle en paramètre d'URL — seul le numéro d'étape y
   figure.
+
+---
+
+## Présentation revue en phase 15B.6 — la logique est intacte
+
+**Rien de ce que décrit ce document n'a changé.** Ni les cinq étapes, ni les
+questions, ni les règles conditionnelles, ni la validation, ni la persistance,
+ni les limites photo (5 fichiers, 10 Mo), ni le comportement d'envoi.
+
+Ce qui a changé est autour du configurateur :
+
+| | Avant | Après |
+| --- | --- | --- |
+| Entrée de page | surtitre + `h1` + chapô | **capsules** + `h1` + chapô |
+| Surfaces de la page | 3 sections ivoire | **sable → ivoire** |
+| Repères de confiance | ligne de texte à filets | **capsules** |
+| Largeur du parcours | 52 rem | 56 rem |
+
+### Ce qui a été vérifié après refonte, à 390 px
+
+Parcours complet, étape par étape :
+
+- 5 choix à l'étape 1, sélection fonctionnelle, progression `01/05` → `05/05` ;
+- validation bloquante à l'étape 2, **deux messages d'erreur** rendus sous les
+  contrôles concernés ;
+- étape 3 : « Prendre une photo » / « Choisir des photos », `input[type=file]`
+  natif, `multiple`, `accept` inchangé ;
+- étape 4 : la phrase « La zone exacte sera confirmée lors de l'étude de votre
+  demande. » est toujours là ;
+- étape 5 : récapitulatif intégré avec quatre boutons « Modifier »,
+  **aucune sixième étape** ;
+- envoi : **0 requête réseau**, écran « Votre demande est prête », aucune
+  fausse confirmation serveur.
+
+### Les contrôles natifs n'ont pas été remplacés
+
+Les cartes de l'étape 1 et les pastilles de l'étape 2 sont des `label`
+enveloppant un `input` natif en `sr-only`. Mesuré : l'`input` fait 1 × 1 px,
+**sa cible réelle — le label — fait 308 × 208 px**. Un audit qui liste les
+cibles tactiles signalera les `input` ; c'est un faux positif, et c'est le
+motif correct.

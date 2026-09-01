@@ -2137,3 +2137,115 @@ visible en permanence, dans la **barre d'action mobile**, persistante, et dans
 la **carte de conversion que porte chaque page**. Il était présent quatre fois
 sur un même écran de fin de page ; il l'est trois fois, ce qui suffit
 largement.
+
+---
+
+# Contact, devis et clôture de la phase 15B
+
+## 1. `/contact` n'existait pas
+
+Elle rendait `PlaceholderPage` : un titre, une liste de ce qui viendrait
+« en phase 4 », et **aucun moyen de joindre qui que ce soit** — 0 lien
+`mailto:`, 0 lien `tel:`. C'était la seule page du site dont la fonction
+n'était pas remplie.
+
+### Quatre blocs, et pas un de plus
+
+| # | Bloc | Surface |
+| --- | --- | --- |
+| 1 | Hero | **forêt profond** + motif `rings` |
+| 2 | Cartes de contact | ivoire |
+| 3 | Entrée vers le devis | **sable**, carte forêt profond |
+| 4 | Zone d'intervention | ivoire, carte compacte |
+
+**2 406 px en 1440, 2 147 px en 390** — la page la plus courte du site après
+`/devis`. C'est le point : on doit comprendre comment joindre l'entreprise en
+quelques secondes.
+
+### Elle n'est pas un doublon de `/devis`
+
+| Page | Le visiteur veut… |
+| --- | --- |
+| `/contact` | poser une question, parler à quelqu'un |
+| `/devis` | faire chiffrer un chantier qu'il a déjà en tête |
+
+D'où l'ordre : l'e-mail **d'abord**, le devis ensuite. Une page de contact qui
+renvoie immédiatement vers un parcours de cinq étapes ne répond pas à la
+question posée.
+
+### La grille se rééquilibre sans le téléphone
+
+La carte téléphone n'existe que si `contact.phoneConfirmed` est vrai. Sans
+elle : `max-w-xl` et une seule colonne, plutôt qu'une moitié vide. Pas de carte
+vide, pas de bouton désactivé, pas de « bientôt disponible ».
+
+> **Un canal non confirmé ne se signale pas, il n'existe pas.**
+
+## 2. `/devis` avait déjà hérité du design system
+
+Mesuré avant modification : Sora + Inter, rayons 18 / 12 / 2 / pill. Le
+configurateur, écrit en phases 11-12 avec les anciens jetons, a suivi
+automatiquement la réécriture de la phase 15B.1 — les **noms** de jetons
+n'avaient pas changé, seules leurs valeurs.
+
+C'est la démonstration que le système fonctionne : trois phases de refonte
+visuelle plus tard, un composant jamais rouvert est resté cohérent.
+
+Ce qui restait à faire était donc mince : une entrée compacte à capsules, un
+rythme de surfaces (sable → ivoire), et les repères de confiance en capsules.
+**La logique du configurateur n'a pas été touchée.**
+
+### Le `h1` reste « Demander un devis »
+
+Le brief proposait « Parlons de votre chantier ». Cette formulation est allée à
+`/contact`, où elle décrit ce que le visiteur vient faire. Sur `/devis`, une
+soixantaine de boutons du site portent exactement les mots « Demander un
+devis » : arriver sur une page qui les répète est ce qui confirme au visiteur
+qu'il est au bon endroit.
+
+> **Le titre d'une page de destination répète le libellé du bouton qui y
+> mène.** Rompre cette continuité coûte plus qu'une formulation plus jolie
+> n'apporte.
+
+## 3. État final — les douze routes
+
+| Route | 1440 | 390 | Surfaces |
+| --- | --- | --- | --- |
+| `/` | 8 141 | 8 457 | light>sand>light>deep>sand>light>sand |
+| `/elagage` | 4 162 | 5 503 | dark>light>deep>light>sand |
+| `/abattage` | 4 188 | 5 431 | deep>sand>dark>light>sand |
+| `/dessouchage` | 4 073 | 5 076 | sand>light>deep>sand>light |
+| `/entretien-exterieur` | 4 124 | 5 046 | light>sand>dark>light>sand |
+| `/a-propos` | 5 054 | 5 968 | dark>sand>deep>light>sand>light |
+| `/realisations` | 4 939 | 5 821 | dark>sand>deep>light |
+| `/zones-intervention` | 6 299 | 6 730 | deep>sand>light>sand>deep>light |
+| `…/rouen` | 4 525 | 3 947 | dark>light>deep>light>sand>light |
+| `…/amiens` | 4 506 | 3 877 | light>sand>deep>light>sand>light |
+| `/contact` | **2 406** | **2 147** | deep>light>sand>light |
+| `/devis` | **2 000** | **2 238** | sand>light |
+
+**72 combinaisons vérifiées** (12 routes × 6 largeurs) : 0 débordement,
+0 cible sous 44 px, un seul `h1` par page, **0 surface adjacente identique**.
+
+## 4. Cohérence sans uniformité
+
+Le risque de cinq phases de refonte est d'avoir remplacé « toutes les pages
+éditoriales identiques » par « toutes les pages à quatre cartes identiques ».
+Vérification :
+
+- **Douze suites de surfaces différentes** sur douze routes ; aucune page
+  n'ouvre comme sa voisine.
+- **Quatre anatomies de carte** — KPI sans image, texte incrusté sur
+  photographie, photographie en tête de carte, carte de conversion.
+- **Trois compositions de hero** — photographie plein cadre (accueil
+  uniquement), texte seul sur surface teintée, texte + carte de repère.
+- **Grilles asymétriques** : 7/5 puis 5/7 sur les prestations et le portfolio,
+  2+1 / 1+1+1 sur les situations, 3+3 / 2+2+2 sur les critères.
+
+Deux polices, une famille de rayons, une famille de boutons — mais pas deux
+pages qui se déroulent pareil.
+
+## 5. La phase 15B est close
+
+Douze routes refondues, plus les 21 autres pages villes qui partagent leur
+gabarit. Aucune dépendance ajoutée sur l'ensemble des six sous-phases.
