@@ -1,53 +1,112 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
   Body,
   ButtonLink,
+  Capsule,
+  CapsuleGroup,
+  Card,
+  CardLink,
   Container,
   Display,
   Eyebrow,
-  HeroScrim,
   Lead,
   Reveal,
-  Rule,
   Section,
-  Subtitle,
+  SectionPattern,
   Title,
 } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { getRoute, type RouteId } from "@/lib/routes";
 import { servicesContent } from "@/lib/services-content";
-import { area, site } from "@/lib/site";
+import { area, contact, site, telHref } from "@/lib/site";
 import { breadcrumbSchema, serviceSchema } from "@/lib/structured-data";
 
 /**
- * Gabarit des quatre pages services.
+ * Gabarit des quatre pages services — refait en phase 15B.4.
  *
- * La **structure** est commune — c'est ce qui rend le site cohérent et ce que
- * les moteurs attendent d'un ensemble de pages sœurs. Ce qui doit différer,
- * c'est le **contenu** : il vit intégralement dans `src/lib/services-content.ts`,
- * réuni là pour être relu d'un bloc et vérifier qu'aucune page n'est la copie
- * d'une autre avec un mot-clé permuté.
+ * CE QUI ÉTAIT À REFAIRE
+ * ----------------------
+ * Mesuré avant modification : les quatre pages avaient **le même hero de
+ * 608 px, les mêmes cinq sections, la même dernière section de 1 158 px**, et
+ * des totaux compris entre 4 144 et 4 487 px. Surtout, **toutes les sections
+ * hors hero étaient ivoire** — quatre pages qui se déroulaient exactement de la
+ * même façon.
  *
- * Cinq blocs, pas plus : hero, intention, cas, méthode, conversion.
+ * UN GABARIT, QUATRE PARCOURS DE SURFACES
+ * ---------------------------------------
+ * La structure reste unique : c'est ce que les moteurs attendent de pages
+ * sœurs, et ce qui empêche l'une de dériver. Ce qui varie est déclaré dans
+ * `services-content.ts` sous `theme` — la suite des surfaces, les motifs, la
+ * forme de la carte photographique.
+ *
+ * LE HERO N A PLUS DE PHOTOGRAPHIE
+ * ---------------------------------
+ * Retirée sur demande du client après la phase 15B.4. Ce qui différencie les
+ * quatre pages reste entier — la surface d ouverture et le motif de fond —
+ * mais la page n a plus d image prioritaire : son LCP est un élément de texte,
+ * et sa première photographie est celle de la méthode, paresseuse.
  */
 
 const devis = getRoute("devis");
 
 /**
- * Repères repris des pages, en version **courte** : la bande de la page
- * d'accueil serait redondante ici, et alourdirait une page déjà dense.
+ * Les quatre temps d'une intervention.
+ *
+ * **Rien n'est inventé ici** : ces quatre étapes sont la reformulation directe
+ * de ce que `/a-propos` décrit déjà en toutes lettres — comprendre la demande,
+ * sécuriser la zone avant la première coupe, travailler avec du matériel adapté,
+ * puis débiter, broyer ou évacuer selon la prestation.
+ *
+ * Elles sont communes aux quatre services parce qu'elles le sont réellement.
+ * Ce qui distingue les pages, ce sont les `points` propres à chaque prestation,
+ * rendus juste en dessous.
+ */
+const STEPS = [
+  {
+    numero: "01",
+    titre: "Analyser",
+    detail: "Ce que vous attendez de l’arbre, et ce que le terrain permet.",
+  },
+  {
+    numero: "02",
+    titre: "Sécuriser",
+    detail: "Zone de chantier établie avant la première coupe.",
+  },
+  {
+    numero: "03",
+    titre: "Intervenir",
+    detail: "Matériel professionnel adapté à l’arbre comme à l’accès.",
+  },
+  {
+    numero: "04",
+    titre: "Nettoyer",
+    detail: "Débitage, broyage ou évacuation selon la prestation.",
+  },
+] as const;
+
+/**
+ * Trois repères, pas six.
+ *
+ * La version précédente en alignait **six** sur une ligne repliable, dans le
+ * panneau de conversion. Le brief de la phase 15B.4 en demande deux ou trois :
+ * au-delà, ils cessent d'être lus. « Devis gratuit » n'y figure pas — c'est
+ * déjà une capsule du hero, et le répéter en bas de page ne le rend pas plus
+ * vrai.
  */
 const proofs = [
-  `${site.experienceYears} ans d’expérience`,
+  `${site.experienceYears}+ ans de métier`,
   "Professionnel diplômé",
+  "Matériel professionnel",
+];
+
+/** Trois capsules maximum, toutes vérifiables dans `PROJECT.md`. */
+const CAPSULES = [
+  `${area.city} & Métropole`,
   "Devis gratuit",
-  "Intervention rapide",
-  "Chantier propre",
-  `Jusqu’à ${area.maxRadiusKm} km`,
+  "Travail sécurisé",
 ];
 
 export function ServicePage({ id }: { id: RouteId }) {
@@ -57,85 +116,160 @@ export function ServicePage({ id }: { id: RouteId }) {
     throw new Error(`Contenu de service manquant pour la route « ${id} ».`);
   }
 
+  const { theme } = content;
+  const tel = telHref();
+
+  /* Capsules et cartes sombres : la variante suit la surface qui les porte. */
+  const capsuleVariant =
+    theme.hero === "dark" || theme.hero === "deep-forest" ? "dark" : "light";
+
+  const conversionCapsule =
+    theme.conversion === "dark" || theme.conversion === "deep-forest"
+      ? "dark"
+      : "light";
+
   return (
     <>
       <JsonLd data={breadcrumbSchema(id)} />
       {/* Gelé tant que `LocalBusiness` n'est pas publiable : la fabrique
-          retourne `null` et rien n'est rendu. S'activera seule en phase 14. */}
+          retourne `null` et rien n'est rendu. */}
       <JsonLd data={serviceSchema(id)} />
 
       <main id={MAIN_CONTENT_ID} tabIndex={-1}>
-        {/* ---------------------------------------------------- 1. Hero --- */}
-        <section
-          aria-labelledby="service-titre"
-          data-surface="dark"
-          className={cn(
-            "relative isolate flex items-end overflow-hidden",
-            // Assez haut pour que la photographie existe au-dessus du texte,
-            // assez court pour que le CTA reste dans le premier écran.
-            "min-h-[30rem] sm:min-h-[34rem] lg:min-h-[38rem]",
-          )}
-        >
-          <Image
-            src={content.hero.image}
-            alt={content.hero.alt}
-            fill
-            /* `priority` pose bien le lien de prechargement, mais Next ne lui ajoute
-               pas `fetchpriority=high` : sans cet attribut le navigateur telecharge
-               la photo LCP a priorite normale, derriere la feuille de style. Mesure en
-               phase 15B.2 sur /elagage — Lighthouse le signale sous lcp-discovery. */
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className={cn("-z-10 object-cover", content.hero.position)}
-          />
-          <HeroScrim />
+        {/* ---------------------------------------------------- 1. Hero ---
+            HERO SANS PHOTOGRAPHIE — demande client, après la phase 15B.4.
 
-          <Container className="relative py-12 lg:py-16">
-            <div className="mx-auto max-w-reading">
-              {/* Surtitre en ivoire, pas en pierre : posé haut dans le hero, il
-                  tombe là où le dégradé est le plus faible. Sur `/elagage`, la
-                  pierre le faisait descendre à 4,51 de contraste — l'ivoire le
-                  remonte à 6,6. Rendu à la main plutôt qu'avec `Eyebrow` :
-                  `cn()` ne fusionne pas deux classes de couleur concurrentes
-                  (cf. DESIGN_SYSTEM.md § 8). */}
-              <p className="font-sans text-eyebrow font-semibold uppercase text-(--surface-fg)">
-                {content.eyebrow}
-              </p>
-              <Display id="service-titre" as="h1" className="mt-4">
+            La carte photographique a été retirée. Ce qui différencie les quatre
+            pages reste entier : la surface d'ouverture (forêt, forêt profond,
+            sable, ivoire) et le motif de fond. C'est le seul endroit du site où
+            quatre pages sœurs ouvrent sur quatre teintes différentes.
+
+            Conséquence à connaître : ces pages n'ont plus d'image prioritaire.
+            Leur LCP est désormais un élément de texte, et la première
+            photographie de la page est celle de la méthode — paresseuse. */}
+        <Section
+          surface={theme.hero}
+          spacing="standard"
+          aria-labelledby="service-titre"
+        >
+          {theme.heroPattern ? (
+            <SectionPattern pattern={theme.heroPattern} opacity={0.045} />
+          ) : null}
+
+          <Container className="relative">
+            <Reveal className="mx-auto max-w-reading">
+              <CapsuleGroup>
+                {CAPSULES.map((label) => (
+                  <Capsule key={label} variant={capsuleVariant} dot>
+                    {label}
+                  </Capsule>
+                ))}
+              </CapsuleGroup>
+
+              <Display
+                id="service-titre"
+                as="h1"
+                className="mt-6 lg:text-[3.25rem] lg:leading-[1.06]"
+              >
                 {content.heading}
               </Display>
-              <Lead className="mt-5">{content.lead}</Lead>
-              <div className="mt-8 w-full sm:mx-auto sm:w-fit">
-                <ButtonLink href={devis.path} variant="primary" size="lg" block>
-                  Demander un devis
-                </ButtonLink>
-              </div>
-            </div>
-          </Container>
-        </section>
 
-        {/* ----------------------------------------------- 2. Intention --- */}
-        <Section surface="light" aria-labelledby="service-intention">
-          <Container>
-            <Reveal className="mx-auto max-w-reading">
-              <Title id="service-intention" as="h2">
-                {content.intro.title}
-              </Title>
-              {content.intro.paragraphs.map((paragraph) => (
-                <Body key={paragraph} className="mt-5">
-                  {paragraph}
-                </Body>
-              ))}
+              <Lead className="mt-5 text-(--surface-fg-muted)">
+                {content.lead}
+              </Lead>
+
+              <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+                {/* La largeur est portée par une ENVELOPPE : `cn()` ne
+                    fusionne pas les classes concurrentes. */}
+                <div className="w-full sm:w-fit">
+                  <ButtonLink
+                    href={devis.path}
+                    variant="primary"
+                    size="lg"
+                    block
+                    data-cta="devis"
+                    data-cta-source={`service-${id}-hero`}
+                  >
+                    Demander un devis
+                  </ButtonLink>
+                </div>
+
+                {tel ? (
+                  <div className="w-full sm:w-fit">
+                    <ButtonLink
+                      href={tel}
+                      variant="outline"
+                      size="lg"
+                      block
+                      data-cta="appel"
+                      data-cta-source={`service-${id}-hero`}
+                    >
+                      Appeler
+                    </ButtonLink>
+                  </div>
+                ) : null}
+              </div>
             </Reveal>
           </Container>
         </Section>
 
-        {/* ---------------------------------------------------- 3. Cas --- */}
-        <Section surface="light" spacing="tight" aria-labelledby="service-cas">
+        {/* ----------------------------------------------- 2. Intention ---
+            Le texte d'introduction et la précision propre au service, côte à
+            côte. La précision était jusqu'ici enterrée au bas de la colonne de
+            méthode, où personne ne la trouvait : elle devient une carte. */}
+        <Section surface={theme.intro} aria-labelledby="service-intention">
           <Container>
+            <div className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-(--gutter)">
+              <Reveal className="lg:col-span-7">
+                <Eyebrow>{content.eyebrow}</Eyebrow>
+                <Title
+                  id="service-intention"
+                  as="h2"
+                  className="mt-4 lg:text-[2.5rem] lg:leading-[1.08]"
+                >
+                  {content.intro.title}
+                </Title>
+                {content.intro.paragraphs.map((paragraph) => (
+                  <Body
+                    key={paragraph}
+                    className="mx-auto mt-5 max-w-reading text-(--surface-fg-muted)"
+                  >
+                    {paragraph}
+                  </Body>
+                ))}
+              </Reveal>
+
+              <Reveal className="lg:col-span-5">
+                <Card as="div" tone="plain" padding="lg" className="h-full">
+                  <span
+                    aria-hidden="true"
+                    className="mx-auto block h-0.5 w-4 bg-safety"
+                  />
+                  <h3 className="mt-5 font-display text-subtitle leading-tight text-(--surface-heading)">
+                    {content.note.title}
+                  </h3>
+                  <Body className="mt-3 text-(--surface-fg-muted)">
+                    {content.note.body}
+                  </Body>
+                </Card>
+              </Reveal>
+            </div>
+          </Container>
+        </Section>
+
+        {/* ---------------------------------------------- 3. Situations --- */}
+        <Section surface={theme.cases} aria-labelledby="service-cas">
+          {theme.casesPattern ? (
+            <SectionPattern pattern={theme.casesPattern} opacity={0.04} />
+          ) : null}
+
+          <Container className="relative">
             <Reveal className="mx-auto max-w-reading">
-              <Title id="service-cas" as="h2">
+              <Title
+                id="service-cas"
+                as="h2"
+                className="lg:text-[2.5rem] lg:leading-[1.08]"
+              >
                 {content.cases.title}
               </Title>
               <Body className="mt-4 text-(--surface-fg-muted)">
@@ -143,189 +277,256 @@ export function ServicePage({ id }: { id: RouteId }) {
               </Body>
             </Reveal>
 
-            <ul className="mt-10 grid gap-4 md:grid-cols-2 lg:mt-12 lg:gap-5">
-              {content.cases.items.map((item, index) => (
-                <Reveal
-                  as="li"
-                  key={item.title}
-                  className={cn(
-                    "rounded-soft border border-(--surface-rule)",
-                    "bg-(--surface-inset) p-6 lg:p-7",
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="font-sans text-eyebrow font-semibold tabular-nums text-(--surface-fg-muted)"
+            {/*
+              GRILLE ASYMÉTRIQUE QUI SE REMPLIT EXACTEMENT.
+
+              Trois colonnes à partir de 1024 px. La première carte en occupe
+              deux ; avec quatre situations, la dernière aussi. Dans les deux
+              cas — quatre ou cinq situations — la grille tombe juste sur deux
+              rangées, sans cellule vide et sans cinq rectangles identiques.
+            */}
+            <ul className="mt-10 grid gap-(--card-gap) sm:grid-cols-2 lg:mt-14 lg:grid-cols-3">
+              {content.cases.items.map((item, index) => {
+                const large =
+                  index === 0 ||
+                  (content.cases.items.length === 4 && index === 3);
+
+                return (
+                  <Reveal
+                    as="li"
+                    key={item.title}
+                    className={cn("h-full", large && "lg:col-span-2")}
                   >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <Subtitle as="h3" className="mt-2.5">
-                    {item.title}
-                  </Subtitle>
-                  <Body className="mt-3 text-(--surface-fg-muted)">
-                    {item.body}
-                  </Body>
-                </Reveal>
-              ))}
+                    <Card
+                      as="div"
+                      tone={theme.caseCardTone}
+                      padding="md"
+                      className="h-full"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="font-sans text-eyebrow font-semibold tabular-nums tracking-[0.2em] text-(--surface-fg-muted)"
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="mt-3 font-display text-subtitle leading-tight text-(--surface-heading)">
+                        {item.title}
+                      </h3>
+                      <Body className="mx-auto mt-3 max-w-[46ch] text-(--surface-fg-muted)">
+                        {item.body}
+                      </Body>
+                    </Card>
+                  </Reveal>
+                );
+              })}
             </ul>
           </Container>
         </Section>
 
         {/* ------------------------------------------------ 4. Méthode --- */}
-        <Section surface="light" aria-labelledby="service-methode">
+        <Section surface={theme.method} aria-labelledby="service-methode">
           <Container>
-            <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-(--gutter)">
-              <Reveal className="lg:col-span-6">
-                <Title id="service-methode" as="h2">
-                  {content.method.title}
-                </Title>
-                {content.method.paragraphs.map((paragraph) => (
-                  <Body key={paragraph} className="mx-auto mt-5 max-w-reading">
-                    {paragraph}
-                  </Body>
-                ))}
+            <Reveal className="mx-auto max-w-reading">
+              <Title
+                id="service-methode"
+                as="h2"
+                className="lg:text-[2.5rem] lg:leading-[1.08]"
+              >
+                {content.method.title}
+              </Title>
+              {content.method.paragraphs.map((paragraph) => (
+                <Body
+                  key={paragraph}
+                  className="mt-5 text-(--surface-fg-muted)"
+                >
+                  {paragraph}
+                </Body>
+              ))}
+            </Reveal>
 
-                <ul className="mt-8">
-                  {content.method.points.map((point) => (
-                    <li
-                      key={point}
-                      className="border-t border-(--surface-rule) py-5"
-                    >
-                      {/* Tiret au-dessus, centré — en rangée il restait collé
-                          au bord gauche pendant que le texte se centrait. */}
-                      <span
-                        aria-hidden="true"
-                        className="mx-auto mb-3 block h-px w-4 bg-safety"
-                      />
-                      <Body as="span" className="block">
-                        {point}
-                      </Body>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-10 rounded-soft border border-(--surface-rule) p-6">
-                  <Subtitle as="h3" className="text-subtitle">
-                    {content.note.title}
-                  </Subtitle>
-                  <Body className="mt-3 text-(--surface-fg-muted)">
-                    {content.note.body}
-                  </Body>
-                </div>
-              </Reveal>
-
-              <Reveal className="lg:col-span-6 lg:sticky lg:top-32">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-card">
+            <div className="mt-12 grid gap-(--card-gap) lg:mt-14 lg:grid-cols-12 lg:items-stretch">
+              {/* Photographie de méthode — paresseuse, jamais prioritaire. */}
+              <Reveal className="lg:col-span-5">
+                <figure className="relative m-0 aspect-[16/9] overflow-hidden rounded-card lg:aspect-auto lg:h-full lg:min-h-72">
                   <Image
                     src={content.method.image}
                     alt={content.method.alt}
                     fill
-                    sizes="(min-width: 64rem) 46vw, 100vw"
+                    loading="lazy"
+                    sizes="(min-width: 64rem) 40rem, 100vw"
                     className={cn("object-cover", content.method.position)}
                   />
-                </div>
+                </figure>
               </Reveal>
+
+              {/* Les quatre temps, en 2 × 2. */}
+              {/* Deux colonnes dès 390 px : un mot de titre et une ligne de détail
+                  tiennent dans 171 px, et quatre cartes empilées coûtaient
+                  684 px de haut pour quatre phrases courtes. */}
+              <ol className="grid grid-cols-2 gap-(--card-gap) lg:col-span-7">
+                {/* Le numéro suit la surface, il n est PAS en jaune sécurité.
+                  Mesuré : 1,76 sur ivoire et 1,51 sur sable — la règle du § 1
+                  du design system (« le jaune ne passe pas en texte sur fond
+                  clair ») vaut aussi pour deux chiffres de 12 px. */}
+                {STEPS.map((step) => (
+                  <Reveal as="li" key={step.numero} className="h-full">
+                    <Card as="div" tone="plain" padding="md" className="h-full">
+                      <span
+                        aria-hidden="true"
+                        className="font-sans text-eyebrow font-semibold tabular-nums tracking-[0.24em] text-(--surface-fg-muted)"
+                      >
+                        {step.numero}
+                      </span>
+                      <h3 className="mt-3 font-display text-subtitle leading-tight text-(--surface-heading)">
+                        {step.titre}
+                      </h3>
+                      <Body className="mx-auto mt-2.5 max-w-[34ch] text-(--surface-fg-muted)">
+                        {step.detail}
+                      </Body>
+                    </Card>
+                  </Reveal>
+                ))}
+              </ol>
             </div>
+
+            {/* Ce qui est propre à CETTE prestation, sous les quatre temps
+                communs. C'est la partie qui distingue les pages entre elles. */}
+            <Reveal className="mt-10 lg:mt-12">
+              <ul className="mx-auto grid max-w-4xl gap-x-8 gap-y-4 sm:grid-cols-3">
+                {content.method.points.map((point) => (
+                  <li
+                    key={point}
+                    className="border-t border-(--surface-rule) pt-4"
+                  >
+                    <span className="font-sans text-caption leading-relaxed text-(--surface-fg-muted) text-pretty">
+                      {point}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
           </Container>
         </Section>
 
-        {/* --------------------------------------------- 5. Conversion ---
-            Section CLAIRE contenant un panneau sombre.
-
-            Une section entièrement en forêt tomberait directement sur le pied
-            de page, lui aussi en forêt : les deux se confondaient en un seul
-            bloc sombre de plus de 1 700 px, soit deux écrans mobiles d'affilée.
-            Le panneau concentre le poids visuel du CTA, et la gouttière claire
-            qui l'entoure rend au pied de page son statut de bande de clôture.
-            --------------------------------------------------------------- */}
-        <Section surface="light" aria-labelledby="service-cta">
+        {/* --------------------------------------------- 5. Conversion --- */}
+        <Section surface={theme.conversion} aria-labelledby="service-cta">
           <Container>
+            {/* -------- Trois repères, en capsules --------
+
+                Ils ont d'abord été rendus en cartes. Mesuré : **390 px de
+                hauteur à 390 px de large** pour trois faits de quatre mots,
+                soit un tiers d'écran mobile. Les capsules disent la même chose
+                en 80 px, et reprennent le motif déjà employé par le hero — la
+                page ne gagne pas un objet de plus. */}
             <Reveal>
-              <div
-                data-surface="dark"
-                className={cn(
-                  "rounded-card bg-(--surface-bg) text-(--surface-fg)",
-                  "p-7 sm:p-10 lg:p-14",
-                )}
-              >
-                {/* Repères en version courte, sur une ligne qui se replie. */}
-                <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3">
-                  {proofs.map((proof) => (
-                    <li
-                      key={proof}
-                      className={cn(
-                        "font-sans text-caption text-(--surface-fg-muted)",
-                        "flex items-center gap-6",
-                        "after:block after:h-3 after:w-px after:bg-(--surface-rule)",
-                        "last:after:hidden",
-                      )}
-                    >
-                      {proof}
-                    </li>
-                  ))}
-                </ul>
-
-                <Rule className="mt-7" />
-
-                <Title
-                  id="service-cta"
-                  as="h2"
-                  className="mx-auto mt-9 max-w-[16ch]"
-                >
-                  Parlons de votre chantier
-                </Title>
-                <Body className="mx-auto mt-5 max-w-reading text-(--surface-fg-muted)">
-                  Décrivez la situation en quelques lignes, ajoutez des photos
-                  si vous en avez : c’est souvent suffisant pour établir un
-                  devis sans visite préalable.
-                </Body>
-                <div className="mt-8 w-full sm:mx-auto sm:w-fit">
-                  <ButtonLink
-                    href={devis.path}
-                    variant="primary"
-                    size="lg"
-                    block
-                  >
-                    Demander un devis
-                  </ButtonLink>
-                </div>
-              </div>
+              <CapsuleGroup>
+                {proofs.map((proof) => (
+                  <Capsule key={proof} variant={conversionCapsule} dot>
+                    {proof}
+                  </Capsule>
+                ))}
+              </CapsuleGroup>
             </Reveal>
 
-            {/* -------------------------------------- Maillage interne ---
-                Sur fond clair, entre le panneau sombre et le pied de page :
-                c'est cette bande claire qui sépare les deux. */}
+            {/* -------- Carte de conversion --------
+                Forêt profond, quelle que soit la surface de la section : c'est
+                le point d'ancrage de la page. La bande claire ou sable qui
+                l'entoure est ce qui l'empêche de fusionner avec le pied de
+                page, lui aussi sombre. */}
+            <Reveal className="mt-(--card-gap)">
+              <Card
+                as="div"
+                tone="deep"
+                padding="none"
+                className="mx-auto max-w-5xl"
+              >
+                <SectionPattern pattern="contour" opacity={0.05} />
+
+                <div className="relative px-6 py-14 sm:px-10 lg:px-16 lg:py-20">
+                  <Capsule variant="accent">Devis gratuit</Capsule>
+
+                  <Title
+                    id="service-cta"
+                    as="h2"
+                    className="mx-auto mt-6 max-w-[18ch] lg:text-[3rem] lg:leading-[1.04]"
+                  >
+                    {content.ctaTitle}
+                  </Title>
+
+                  <Body className="mx-auto mt-5 max-w-[48ch] text-(--surface-fg-muted)">
+                    Décrivez la situation en quelques lignes, ajoutez des photos
+                    si vous en avez : c’est souvent suffisant pour établir un
+                    devis sans visite préalable.
+                  </Body>
+
+                  <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+                    <div className="w-full sm:w-fit">
+                      <ButtonLink
+                        href={contact.quotePath}
+                        variant="primary"
+                        size="lg"
+                        block
+                        data-cta="devis"
+                        data-cta-source={`service-${id}-final`}
+                      >
+                        Demander un devis
+                      </ButtonLink>
+                    </div>
+
+                    {tel ? (
+                      <div className="w-full sm:w-fit">
+                        <ButtonLink
+                          href={tel}
+                          variant="light"
+                          size="lg"
+                          block
+                          data-cta="appel"
+                          data-cta-source={`service-${id}-final`}
+                        >
+                          Appeler
+                        </ButtonLink>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              </Card>
+            </Reveal>
+
+            {/* -------- Maillage interne : trois cartes compactes -------- */}
             <Reveal className="mt-16 lg:mt-20">
               <Eyebrow as="h2">Autres interventions</Eyebrow>
-              <ul className="mt-5">
+
+              <ul className="mt-6 grid grid-cols-2 gap-(--card-gap) sm:grid-cols-3">
                 {content.related.map((relatedId) => {
                   const related = getRoute(relatedId);
 
                   return (
-                    <li key={relatedId}>
-                      <Link
+                    <li key={relatedId} className="h-full">
+                      <CardLink
                         href={related.path}
-                        className={cn(
-                          "group flex flex-col items-center gap-2",
-                          "border-t border-(--surface-rule) py-5 no-underline",
-                        )}
+                        tone="plain"
+                        padding="md"
+                        className="flex h-full flex-col justify-center"
                       >
-                        <span className="font-display text-subtitle text-(--surface-heading)">
+                        <span className="font-display text-subtitle leading-tight text-(--surface-heading)">
                           {related.navLabel}
                         </span>
-                        <span className="flex items-center justify-center gap-3">
-                          {related.navTagline ? (
-                            <span className="hidden font-sans text-caption text-(--surface-fg-muted) sm:inline">
-                              {related.navTagline}
-                            </span>
-                          ) : null}
+
+                        {related.navTagline ? (
+                          <span className="mt-2 font-sans text-caption text-(--surface-fg-muted)">
+                            {related.navTagline}
+                          </span>
+                        ) : null}
+
+                        <span className="mt-4 inline-flex items-center justify-center gap-2.5 font-sans text-caption font-semibold text-(--surface-fg)">
+                          Découvrir
                           <svg
                             aria-hidden="true"
                             viewBox="0 0 16 16"
                             className={cn(
                               // Suit la surface : le jaune sécurité ne
                               // contraste qu'à 1,96 sur ivoire.
-                              "size-4 shrink-0 text-(--surface-fg-muted)",
+                              "size-3.5 shrink-0 text-(--surface-fg-muted)",
                               "motion-safe:transition-transform",
                               "motion-safe:duration-(--duration-micro)",
                               "motion-safe:ease-cime",
@@ -342,7 +543,7 @@ export function ServicePage({ id }: { id: RouteId }) {
                             />
                           </svg>
                         </span>
-                      </Link>
+                      </CardLink>
                     </li>
                   );
                 })}

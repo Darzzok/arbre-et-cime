@@ -271,3 +271,42 @@ Repères de mesure posés pour la phase 16 : `data-cta-source="accueil-hero"` et
 
 **Rappel** — le CTA « Appeler » n'est toujours rendu nulle part : le numéro
 n'est pas confirmé (`contact.phoneConfirmed`). Voir § 3.
+
+---
+
+## 10. Chemins vers le devis sur les pages internes — phase 15B.4
+
+Chaque page service porte désormais **deux** appels à l'action, et deux
+seulement dans le corps de page : un dans le hero, un dans la carte finale.
+
+### Le titre final n'est plus interchangeable
+
+« Parlons de votre chantier » était identique sur les quatre pages services,
+sur `/a-propos` et sur `/realisations` — la formulation la plus interchangeable
+du site. Chaque page service porte maintenant le sien :
+
+| Page | Titre de conversion |
+| --- | --- |
+| `/elagage` | Un arbre à élaguer ? |
+| `/abattage` | Un arbre à abattre ? |
+| `/dessouchage` | Une souche à retirer ? |
+| `/entretien-exterieur` | Un extérieur à entretenir ? |
+| `/a-propos` | Parlons de votre chantier |
+| `/realisations` | Un chantier à nous montrer ? |
+
+### La carte de conversion est toujours en forêt profond
+
+Quelle que soit la surface de la section qui la porte. C'est le point d'ancrage
+de la page — et la bande claire ou sable qui l'entoure est **ce qui l'empêche
+de fusionner avec le pied de page**, lui aussi sombre. Le problème est
+documenté depuis la phase 11 ; la forme retenue le rend structurellement
+impossible.
+
+### Repères de mesure pour la phase 16
+
+`service-<id>-hero`, `service-<id>-final`, `a-propos-final`,
+`realisations-final`.
+
+**Rappel** — le CTA « Appeler » n'est rendu nulle part : le numéro n'est pas
+confirmé (`contact.phoneConfirmed`). Il apparaîtra dans les douze emplacements
+d'un coup le jour où la variable sera renseignée.

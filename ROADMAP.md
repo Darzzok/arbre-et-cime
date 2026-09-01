@@ -1479,6 +1479,144 @@ générée, aucune nouvelle photographie téléchargée.
 
 ---
 
+### Phase 15B.4 — Pages services, À propos et Réalisations ✅
+
+Après les jetons (15B.1), le châssis (15B.2) et la page d'accueil (15B.3),
+cette sous-phase refait **six pages** : les quatre services, `/a-propos` et
+`/realisations`. `/zones-intervention`, les pages villes, `/contact` et
+`/devis` ne sont pas touchés.
+
+### Quatre pages services qui étaient quatre clones
+
+Mesuré avant modification : **même hero de 608 px, mêmes cinq sections, même
+dernière section de 1 158 px**, totaux entre 4 144 et 4 487 px. Et sur les six
+pages, la seule rupture de surface était le hero — tout le reste était ivoire.
+
+Le gabarit reste unique ; c'est le **parcours de surfaces** qui change, déclaré
+dans `services-content.ts` :
+
+| Page | Ouvre sur |
+| --- | --- |
+| `/elagage` | forêt — le hero se fond dans la barre d'en-tête |
+| `/abattage` | forêt profond — la teinte la plus dense, la prestation la plus technique |
+| `/dessouchage` | sable — une prestation de sol, photographie panoramique |
+| `/entretien-exterieur` | ivoire — la plus claire, cadrage 21/9 |
+
+Dans chaque page, deux sections voisines ne partagent jamais la même surface.
+
+### La forme de la photo décide de la composition
+
+`heroLayout` vaut `cote` ou `dessous` : une carte verticale se pose à côté du
+texte, une carte panoramique dessous, pleine largeur. Champ **déclaré**, pas
+déduit d'une classe CSS — une première version cherchait `16/` dans le nom de
+la classe de cadrage, ce qui se serait cassé en silence au premier changement
+de ratio.
+
+### Aucune perte de contenu, et c'est vérifié automatiquement
+
+Un contrôle compare chaque chaîne rédactionnelle de `services-content.ts` au
+HTML servi, texte visible et attributs `alt` compris :
+
+```
+Chaînes rédactionnelles vérifiées : 66
+Absentes du HTML servi            : 0
+```
+
+### Deux défauts trouvés en mesurant
+
+1. **Le jaune sécurité en texte sur fond clair, encore.** Les numéros d'étapes
+   étaient en `--color-safety` : **1,76 sur ivoire, 1,51 sur sable**. La règle
+   est celle du § 1 du design system, enfreinte dans un fichier qui la cite
+   trois fois en commentaire. Accessibilité revenue à **100** après correction.
+2. **Un ajout non confirmé.** La refonte avait donné aux trois publics une
+   ligne de détail chacun — « copropriétés », « gestionnaires de patrimoine ».
+   Rien ne les confirme : `PROJECT.md` liste trois intitulés, pas des segments.
+   Retirés, et les publics rendus en capsules.
+
+### Un reliquat de l'ancien nom
+
+L'accroche de `/realisations` disait encore « Arbre et Cime » au singulier, en
+dur. Elle passe par `site.shortName`. Le `h1` de la page, lui, est resté
+inchangé : une première version de cette refonte l'avait réécrit, c'était une
+modification d'intention SEO non demandée, elle a été annulée.
+
+### Ce que « deux colonnes sur mobile » coûte vraiment
+
+| Cartes | 1 colonne | 2 colonnes | Verdict |
+| --- | --- | --- | --- |
+| Étapes des services (1 ligne) | 4 × 171 px | 2 × ~200 px | gain |
+| Étapes de `/a-propos` (2 lignes) | 4 × 225 px | 4 × **410 px** | perte |
+
+La règle n'est donc pas « deux colonnes sur mobile », mais **deux colonnes
+seulement si le détail tient sur une ligne à pleine largeur**.
+
+### Mesures
+
+| Page | Perf | A11y | BP | LCP | CLS | 1440 | 390 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `/elagage` | 94 | **100** | **100** | 3,1 s | **0** | +4 % | +12 % |
+| `/abattage` | 94 | **100** | **100** | 3,1 s | **0** | **−4 %** | +13 % |
+| `/dessouchage` | 94 | **100** | **100** | 3,1 s | **0** | +12 % | +13 % |
+| `/entretien-exterieur` | 93 | **100** | **100** | 3,2 s | **0** | +13 % | +14 % |
+| `/a-propos` | 94 | **100** | **100** | 3,1 s | **0** | **−7 %** | +16 % |
+| `/realisations` | 92 | **100** | **100** | 3,4 s | **0** | **−8 %** | **+1 %** |
+
+**La hausse sur mobile est attribuée, pas subie** : le hero explique 41 % du
+delta des pages services, la photographie étant passée de fond — qui ne coûte
+aucune hauteur — à carte, ce que le brief demandait explicitement.
+
+Six largeurs contrôlées (320 à 1440) : **0 débordement, 0 cible sous 44 px, un
+seul `h1` par page, une seule image prioritaire par page.**
+
+**Sortie atteinte :** lint, typecheck et build au vert, `SITE_INDEXABLE`
+toujours `false`, métadonnées, données structurées, sitemap et pages villes
+**non touchés**, **aucune dépendance ajoutée**, **aucune image téléchargée**.
+
+---
+
+### Correctif après 15B.4 — heros sans photographie ✅
+
+**Demande client :** retirer l'image des sections d'accueil de toutes les pages
+sauf la principale, et n'employer qu'une seule image sur mobile comme sur
+ordinateur.
+
+- **Pages services, `/a-propos`, `/realisations`** : la carte photographique du
+  hero est retirée. Reste un bloc de texte sur la surface d'ouverture, avec son
+  motif. Le parcours de surfaces — forêt, forêt profond, sable, ivoire —
+  continue de différencier les quatre pages services.
+- **Page d'accueil** : la direction artistique à deux sources est supprimée.
+  `<picture>`, `getImageProps` et les deux `preload()` manuels disparaissent au
+  profit d'un simple `<Image priority>`. C'est la source **horizontale** qui est
+  retenue : la verticale est meilleure sur mobile mais ne montre que 37 % de sa
+  hauteur en bandeau large, où le grimpeur se retrouve tranché.
+- **Nettoyage** : `heroLayout`, `heroAspect` et le champ `hero` du contenu ont
+  été retirés — sans image à placer, ils ne décrivaient plus rien.
+
+**Une seule image prioritaire subsiste sur tout le site**, celle du hero de
+l'accueil. Toutes les autres pages n'en ont aucune.
+
+### Mesures
+
+| Page | Perf | LCP | Images | Hauteur 1440 |
+| --- | --- | --- | --- | --- |
+| `/elagage` | 94 → **96** | 3,1 → **2,8 s** | 210 → **68 Ko** | 4 667 → **4 162 px** |
+| `/abattage` | 94 → **96** | 3,1 → **2,8 s** | 204 → **55 Ko** | 4 295 → **4 188 px** |
+| `/dessouchage` | 94 → **97** | 3,1 → **2,6 s** | 216 → **65 Ko** | 4 657 → **4 073 px** |
+| `/entretien-exterieur` | 93 → **97** | 3,2 → **2,6 s** | 231 → **34 Ko** | 4 697 → **4 124 px** |
+| `/a-propos` | 94 → **95** | 3,1 → **2,9 s** | 201 → **111 Ko** | 5 162 → **5 054 px** |
+| `/realisations` | 92 → **96** | 3,4 → **2,8 s** | 473 → **339 Ko** | 5 060 → **4 939 px** |
+| `/` | 91 | 3,4 s | 328 → **283 Ko** | 8 141 px |
+
+**Les six pages repassent sous leur hauteur d'avant la phase 15B.4 en 1440**, et
+l'écart résiduel sur mobile tombe de +12/16 % à +8/12 %. Accessibilité **100**,
+bonnes pratiques **100**, **CLS 0** partout.
+
+Trois photographies deviennent inemployées — les anciens heros de l'accueil
+mobile, de `/a-propos` et de `/realisations`. **Elles sont conservées sur
+disque et restent au registre** (`MEDIA_SOURCES.md` § 12), pas supprimées.
+
+---
+
 ## Phase 16 — Analytics et conversions ⬜
 
 - Analytics respectueux de la vie privée

@@ -229,3 +229,93 @@ Le hero reste à 75 : l'honorer à 78, comme le demandait la phase 5B, le faisai
 passer de 96 à 102 Ko sur l'élément LCP, pour une différence invisible.
 
 > **Une qualité d'image se vérifie dans le HTML servi, pas dans le code.**
+
+---
+
+## 11. Phase 15B.4 — aucune image ajoutée, deux changements d'emploi
+
+**Aucune photographie n'a été téléchargée** pour la refonte des pages services,
+`/a-propos` et `/realisations`. Toutes les images utilisées sont celles déjà
+inscrites aux § 3, 4, 5 et 6, à leurs emplacements prévus.
+
+Deux changements d'**emploi**, pas de source :
+
+1. **Les photographies de hero passent de fond de section à carte.** Elles ne
+   sont plus recouvertes d'un dégradé de lisibilité : elles sont montrées
+   entières, dans un cadre à coins arrondis. Conséquence à connaître pour la
+   photothèque client — **un défaut de cadrage n'est plus masqué par le
+   dégradé**, et le sujet doit tenir dans un rapport 16/9 sur mobile.
+2. **Une seule image prioritaire par page.** Le hero porte `priority` et
+   `fetchPriority` ; toutes les autres sont paresseuses. Vérifié sur les six
+   pages : exactement une image marquée `fetchpriority="high"` par page.
+
+Poids d'images mesuré après refonte, profil mobile :
+
+| Page | Images |
+| --- | --- |
+| `/elagage` | 210 Ko |
+| `/abattage` | 204 Ko |
+| `/dessouchage` | 216 Ko |
+| `/entretien-exterieur` | 231 Ko |
+| `/a-propos` | 201 Ko |
+| `/realisations` | **473 Ko** — sept photographies, c'est le sujet de la page |
+
+---
+
+## 12. Correctif après 15B.4 — plus de photographie dans les heros internes
+
+**Demande client : retirer l'image des sections d'accueil de toutes les pages
+sauf la principale, et n'employer qu'une seule image sur mobile comme sur
+ordinateur.**
+
+### La page d'accueil ne sert plus qu'un fichier
+
+La direction artistique à deux sources (§ 3) est **supprimée**. Le `<picture>`,
+`getImageProps` et les deux `preload()` manuels disparaissent avec elle.
+
+C'est la source **horizontale** qui est retenue :
+
+| Format | Rapport | `elagueur-grimpeur-arbre-mature` (1,333) | `elagueur-ascension-tronc-vertical` (0,669) |
+| --- | --- | --- | --- |
+| Mobile 390 × 640 | 0,61 | 46 % de la largeur visible | 91 % — presque natif |
+| Desktop 1440 × 800 | 1,80 | 74 % de la hauteur visible | **37 %** — le grimpeur est tranché |
+
+La verticale est meilleure sur mobile mais inutilisable en bandeau large ;
+l'horizontale se dégrade des deux côtés sans jamais casser, et elle est la plus
+définie des deux. Son cadrage mobile est rattrapé par `object-position`.
+
+### Cinq photographies ne sont plus employées
+
+| Fichier | Statut |
+| --- | --- |
+| `hero/elagueur-ascension-tronc-vertical.jpg` | **libérée** — était le hero mobile de l'accueil |
+| `hero/elagueur-ascension-arbre-hiver.jpg` | **libérée** — était le hero de `/a-propos` |
+| `realisations/chantier-abattage-foret-tronconneuse.jpg` | **libérée** — était le hero de `/realisations` |
+| `details/materiel-cordage-baudrier.jpg` | inutilisée depuis la phase 8 |
+| `services/abattage-tronconnage-grume.jpg` | **écartée** au correctif 9B — ne pas remettre en production |
+
+**Les trois premières sont conservées sur disque, pas supprimées.** Elles
+restent inscrites au registre : ce sont des candidates valides si un hero
+photographique revient sur une page interne.
+
+Les quatre photographies qui servaient de hero aux pages services ne sont pas
+orphelines pour autant : elles restent les visuels des cartes de prestations de
+la page d'accueil.
+
+### Poids d'images mesuré après le correctif
+
+| Page | Avant | Après |
+| --- | --- | --- |
+| `/elagage` | 210 Ko | **68 Ko** |
+| `/abattage` | 204 Ko | **55 Ko** |
+| `/dessouchage` | 216 Ko | **65 Ko** |
+| `/entretien-exterieur` | 231 Ko | **34 Ko** |
+| `/a-propos` | 201 Ko | **111 Ko** |
+| `/realisations` | 473 Ko | **339 Ko** |
+| `/` | 328 Ko | **283 Ko** |
+
+### Conséquence à retenir pour la photothèque client
+
+Une seule image prioritaire subsiste sur tout le site : **celle du hero de la
+page d'accueil**. C'est désormais la seule photographie dont la qualité et le
+cadrage pèsent directement sur le LCP.

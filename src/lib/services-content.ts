@@ -1,3 +1,5 @@
+import type { PatternName, Surface } from "@/components/ui";
+
 import type { RouteId } from "./routes";
 
 /**
@@ -20,13 +22,52 @@ export type ServiceCase = {
   body: string;
 };
 
+/**
+ * Habillage visuel de la page — ajouté en phase 15B.4.
+ *
+ * POURQUOI CECI VIT DANS LE FICHIER DE CONTENU
+ * --------------------------------------------
+ * Les quatre pages services partageaient un gabarit identique et se
+ * distinguaient uniquement par leur texte. Mesurées avant refonte, elles
+ * avaient **la même hauteur de hero (608 px), le même nombre de sections (5),
+ * la même dernière section (1 158 px)** et des totaux compris entre 4 144 et
+ * 4 487 px. C'étaient quatre clones.
+ *
+ * Le gabarit reste unique — c'est ce que les moteurs attendent de pages sœurs,
+ * et ce qui garantit qu'aucune ne dérive. Ce qui change, c'est la **suite de
+ * surfaces** que chaque page parcourt. Elle est déclarée ici, à côté du texte
+ * qu'elle habille, pour qu'on puisse vérifier d'un seul coup d'œil que deux
+ * pages ne suivent pas le même chemin.
+ *
+ * RÈGLE TENUE PAR CONSTRUCTION
+ * ----------------------------
+ * Dans chaque page, **deux sections voisines ne partagent jamais la même
+ * surface**, et les quatre pages ne commencent pas sur la même. Le tableau
+ * complet est dans `DESIGN_SYSTEM.md`.
+ */
+export type ServiceTheme = {
+  /** Suite des cinq surfaces traversées, dans l'ordre des sections. */
+  hero: Surface;
+  intro: Surface;
+  cases: Surface;
+  method: Surface;
+  conversion: Surface;
+  /** Motif de fond du hero. `null` = aucun. */
+  heroPattern: PatternName | null;
+  /** Motif de fond de la section des situations. */
+  casesPattern: PatternName | null;
+  /**
+   * Ton des cartes de situations. Doit contraster avec `cases` : sur une
+   * surface sombre on remonte d'un demi-ton, sur une claire on descend.
+   */
+  caseCardTone: "plain" | "sand" | "forest" | "deep";
+};
+
 export type ServiceContent = {
   eyebrow: string;
   /** `h1` — une seule occurrence par page. */
   heading: string;
   lead: string;
-
-  hero: { image: string; alt: string; position?: string };
 
   intro: { title: string; paragraphs: readonly string[] };
 
@@ -44,6 +85,16 @@ export type ServiceContent = {
   /** Précision propre à la prestation. Donne à chaque page un temps de plus. */
   note: { title: string; body: string };
 
+  /**
+   * Titre de la section de conversion, propre au service. « Parlons de votre
+   * chantier » était identique sur les quatre pages : c'était la formulation
+   * la plus interchangeable du site.
+   */
+  ctaTitle: string;
+
+  /** Habillage visuel de la page. */
+  theme: ServiceTheme;
+
   /** Trois autres services, pour le maillage interne. */
   related: readonly RouteId[];
 };
@@ -54,12 +105,6 @@ export const servicesContent: Record<string, ServiceContent> = {
     eyebrow: "Prestation",
     heading: "Élagage d’arbres à Rouen",
     lead: "Tailler un arbre que l’on conserve : réduire, éclaircir, sécuriser, sans compromettre sa santé ni sa forme.",
-
-    hero: {
-      image: "/images/services/elagage-travail-sur-corde-securite.jpg",
-      alt: "Élagueur-grimpeur suspendu à sa corde, taillant les branches d’un arbre au pied d’un bâtiment",
-      position: "object-[center_38%]",
-    },
 
     intro: {
       title: "À quoi sert un élagage",
@@ -117,6 +162,24 @@ export const servicesContent: Record<string, ServiceContent> = {
       body: "Il n’y a pas de bonne saison unique : elle dépend de l’essence, de l’âge du sujet et du type de taille envisagé. C’est un point que nous voyons ensemble avant d’intervenir.",
     },
 
+    ctaTitle: "Un arbre à élaguer ?",
+
+    /*
+     * FORÊT — le cœur de métier. La page ouvre sur la même teinte que
+     *   l en-tête : la barre et le hero ne font qu un seul bloc, et la
+     *   photographie verticale du grimpeur y prend toute sa hauteur.
+     */
+    theme: {
+      hero: "dark",
+      intro: "light",
+      cases: "deep-forest",
+      method: "light",
+      conversion: "sand",
+      heroPattern: "rings",
+      casesPattern: "rings",
+      caseCardTone: "forest",
+    },
+
     related: ["abattage", "dessouchage", "entretien-exterieur"],
   },
 
@@ -125,12 +188,6 @@ export const servicesContent: Record<string, ServiceContent> = {
     eyebrow: "Prestation",
     heading: "Abattage d’arbres à Rouen",
     lead: "Retirer un arbre lorsque son maintien n’est plus adapté — y compris quand l’accès interdit la nacelle.",
-
-    hero: {
-      image: "/images/services/abattage-arbre-tombe-intervention-urgence.jpg",
-      alt: "Grand arbre abattu, débité en sections sur un terrain arboré",
-      position: "object-center",
-    },
 
     intro: {
       title: "Quand un abattage s’impose",
@@ -188,6 +245,23 @@ export const servicesContent: Record<string, ServiceContent> = {
       body: "Certaines communes encadrent l’abattage — plan local d’urbanisme, arbre protégé, espace boisé classé. Un renseignement en mairie avant de lancer le chantier évite une mauvaise surprise.",
     },
 
+    ctaTitle: "Un arbre à abattre ?",
+
+    /*
+     * FORÊT PROFOND — la teinte la plus dense de la charte, pour la
+     *   prestation la plus technique et la plus irréversible.
+     */
+    theme: {
+      hero: "deep-forest",
+      intro: "sand",
+      cases: "dark",
+      method: "light",
+      conversion: "sand",
+      heroPattern: "rings",
+      casesPattern: null,
+      caseCardTone: "deep",
+    },
+
     related: ["elagage", "dessouchage", "entretien-exterieur"],
   },
 
@@ -196,12 +270,6 @@ export const servicesContent: Record<string, ServiceContent> = {
     eyebrow: "Prestation",
     heading: "Dessouchage à Rouen",
     lead: "Retirer ou réduire une souche pour libérer la zone et la remettre en état.",
-
-    hero: {
-      image: "/images/services/dessouchage-souche-fraiche-sciure.jpg",
-      alt: "Souche fraîchement coupée, entourée de sciure",
-      position: "object-center",
-    },
 
     intro: {
       title: "Pourquoi retirer une souche",
@@ -254,6 +322,23 @@ export const servicesContent: Record<string, ServiceContent> = {
       body: "Le rognage produit un mélange de copeaux et de terre. Il peut rester sur place pour combler le trou, ou être évacué si la zone doit être aménagée — c’est à décider avec vous.",
     },
 
+    ctaTitle: "Une souche à retirer ?",
+
+    /*
+     * SABLE — une prestation de sol. Le hero est clair et large, la
+     *   photographie cadrée en paysage plutôt qu en portrait.
+     */
+    theme: {
+      hero: "sand",
+      intro: "light",
+      cases: "deep-forest",
+      method: "sand",
+      conversion: "light",
+      heroPattern: "contour",
+      casesPattern: "contour",
+      caseCardTone: "forest",
+    },
+
     related: ["abattage", "elagage", "entretien-exterieur"],
   },
 
@@ -262,12 +347,6 @@ export const servicesContent: Record<string, ServiceContent> = {
     eyebrow: "Prestation",
     heading: "Entretien extérieur à Rouen",
     lead: "Taille de haies, débroussaillage et entretien des espaces extérieurs, en ponctuel comme en suivi.",
-
-    hero: {
-      image: "/images/services/taille-de-haie-taille-haie-thermique.jpg",
-      alt: "Taille d’une haie de conifères au taille-haie thermique",
-      position: "object-[center_42%]",
-    },
 
     intro: {
       title: "Un terrain qui se tient",
@@ -279,8 +358,7 @@ export const servicesContent: Record<string, ServiceContent> = {
 
     cases: {
       title: "Ce que cela recouvre",
-      intro:
-        "Quatre prestations, souvent combinées sur un même passage.",
+      intro: "Quatre prestations, souvent combinées sur un même passage.",
       items: [
         {
           title: "Taille de haies",
@@ -319,6 +397,23 @@ export const servicesContent: Record<string, ServiceContent> = {
     note: {
       title: "Sur l’évacuation",
       body: "Elle est chiffrée à part, selon le volume produit et la facilité d’accès au terrain. Un broyage sur place revient souvent moins cher qu’un emport, quand la zone s’y prête.",
+    },
+
+    ctaTitle: "Un extérieur à entretenir ?",
+
+    /*
+     * IVOIRE — la plus claire des quatre, pour la prestation la plus
+     *   paysagère. Photographie panoramique.
+     */
+    theme: {
+      hero: "light",
+      intro: "sand",
+      cases: "dark",
+      method: "light",
+      conversion: "sand",
+      heroPattern: "contour",
+      casesPattern: null,
+      caseCardTone: "forest",
     },
 
     related: ["elagage", "abattage", "dessouchage"],

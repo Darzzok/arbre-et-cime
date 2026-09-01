@@ -1,52 +1,85 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 
 import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
   Body,
   ButtonLink,
+  Capsule,
+  CapsuleGroup,
+  Card,
+  CardLink,
   Container,
   Display,
   Eyebrow,
-  HeroScrim,
   Lead,
   Reveal,
   Section,
+  SectionPattern,
   Small,
-  Subtitle,
   Title,
 } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { readingCriteria, realisations } from "@/lib/realisations-content";
-import { getRoute, serviceRoutes } from "@/lib/routes";
+import { serviceRoutes } from "@/lib/routes";
 import { buildMetadata } from "@/lib/seo";
+import { contact, site, telHref } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = buildMetadata("realisations");
 
 /**
- * Page `/realisations`. Composant SERVEUR, aucun JavaScript.
+ * Page `/realisations` — refaite en phase 15B.4. Composant SERVEUR.
  *
- * Quatre blocs : hero compact, collection, lecture des chantiers, conversion.
+ * CE QUI ÉTAIT À REFAIRE
+ * ----------------------
+ * La collection était une grille de six fiches strictement identiques, chacune
+ * composée d'une photographie et de trois lignes de légende. Mesurée avant
+ * modification, elle formait **une seule section de 2 575 px en 1440 et de
+ * 3 594 px en 390** — près de quatre écrans mobiles d'affilée, sans une seule
+ * rupture de surface ni de rythme.
  *
- * **Le risque principal de cette page n'est pas visuel, il est factuel.** Une
- * page de réalisations appelle naturellement des communes, des dates, des
- * hauteurs d'arbre et des durées de chantier. Aucune de ces informations n'est
- * confirmée : les photographies viennent d'une banque libre de droit et ne
- * documentent aucun chantier d'Arbres et Cimes. La page le **dit**, en clair,
- * plutôt que de laisser croire le contraire par omission — c'est ce qui la rend
- * crédible, pas ce qui l'affaiblit.
+ * Elle devient un portfolio alterné : une grande carte, une petite, et
+ * l'inverse à la rangée suivante. Six cartes, trois rangées, aucune identique
+ * à sa voisine.
+ *
+ * LE RISQUE PRINCIPAL DE CETTE PAGE N'EST PAS VISUEL, IL EST FACTUEL
+ * -----------------------------------------------------------------
+ * Une page de réalisations appelle naturellement des communes, des dates, des
+ * hauteurs d'arbre et des durées de chantier. **Aucune de ces informations
+ * n'est confirmée** : les photographies viennent d'une banque libre de droit et
+ * ne documentent aucun chantier d'Arbres et Cimes.
+ *
+ * La page le **dit**, en clair, plutôt que de laisser croire le contraire par
+ * omission. La mention de transparence reste unique, en `Small`, juste sous la
+ * collection qu'elle qualifie. Elle n'a pas été déplacée ni atténuée par la
+ * refonte, et elle ne doit pas l'être : elle disparaîtra avec les photographies
+ * du client, pas avant.
  *
  * Aucune route `[slug]` de réalisation n'est créée : il n'y a rien à détailler
- * tant qu'aucun chantier réel n'est documenté. Elles viendront avec les photos
- * du client, avec commune, contexte, contraintes et avant/après.
+ * tant qu'aucun chantier réel n'est documenté.
  */
 
-const devis = getRoute("devis");
+/**
+ * Emprise de chaque carte sur la grille de douze colonnes.
+ *
+ * L'alternance 7/5 puis 5/7 puis 7/5 est ce qui produit le rythme : trois
+ * rangées 7/5 identiques auraient seulement remplacé une monotonie par une
+ * autre. La grande carte change de côté à chaque rangée.
+ */
+const SPANS = [
+  "lg:col-span-7",
+  "lg:col-span-5",
+  "lg:col-span-5",
+  "lg:col-span-7",
+  "lg:col-span-7",
+  "lg:col-span-5",
+];
 
 export default function RealisationsPage() {
+  const tel = telHref();
+
   return (
     <>
       <JsonLd data={breadcrumbSchema("realisations")} />
@@ -55,119 +88,131 @@ export default function RealisationsPage() {
           type d'affirmation non vérifiable que SEO_STRATEGY.md § 1 interdit. */}
 
       <main id={MAIN_CONTENT_ID} tabIndex={-1}>
-        {/* -------------------------------------------- 1. Hero compact --- */}
-        {/* Même hauteur que celui de `/a-propos` (26rem) : sous ce seuil, le
-            bloc de texte remonte dans la partie claire du dégradé et le
-            contraste s'effondre — voir DESIGN_SYSTEM.md § 5. */}
-        <section
-          aria-labelledby="realisations-titre"
-          data-surface="dark"
-          className={cn(
-            "relative isolate flex items-end overflow-hidden",
-            "min-h-[26rem] sm:min-h-[29rem] lg:min-h-[32rem]",
-          )}
-        >
-          {/* Photographie remplacée au correctif 9B. La précédente portait un
-              logo de marque parfaitement lisible sur la tronçonneuse et un
-              avant-bras tatoué très reconnaissable — deux choses à éviter sur
-              une page qui doit rester neutre. Celle-ci est un abattage réel en
-              forêt, EPI complet, visage masqué par la visière, aucune marque
-              lisible. Cadrage 16/9 natif : bien adapté à un hero large. */}
-          <Image
-            src="/images/realisations/chantier-abattage-foret-tronconneuse.jpg"
-            alt="Bûcheron en casque et visière réalisant une coupe d’abattage à la tronçonneuse au pied d’un hêtre"
-            fill
-            /* Voir service-page.tsx : `priority` seul ne suffit pas au prechargement. */
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="-z-10 object-cover object-[60%_center]"
-          />
-          <HeroScrim variant="compact" />
+        {/* ---------------------------------------------- 1. Hero court ---
+            HERO SANS PHOTOGRAPHIE — demande client, après la phase 15B.4.
+            La page en compte six juste en dessous ; une septième en tête
+            n ajoutait rien. Aucune image prioritaire : le portfolio est
+            entièrement paresseux. */}
+        <Section surface="dark" aria-labelledby="realisations-titre">
+          <SectionPattern pattern="rings" opacity={0.045} />
 
-          <Container className="relative py-12 lg:py-14">
-            <div className="mx-auto max-w-reading">
-              {/* Rendu à la main plutôt qu'avec `Eyebrow` : `cn()` ne fusionne
-                  pas deux classes de couleur concurrentes, et il faut ici de
-                  l'ivoire, pas de la pierre (DESIGN_SYSTEM.md § 8). */}
-              <p className="font-sans text-eyebrow font-semibold uppercase text-(--surface-fg)">
-                Preuve par l’exemple
-              </p>
+          <Container className="relative">
+            <Reveal className="mx-auto max-w-reading">
+              <CapsuleGroup>
+                <Capsule variant="dark" dot>
+                  Types d’intervention
+                </Capsule>
+                <Capsule variant="dark" dot>
+                  {realisations.length} situations
+                </Capsule>
+              </CapsuleGroup>
+
               <Display
                 id="realisations-titre"
                 as="h1"
-                className="mt-4 lg:text-[3.25rem] lg:leading-[1.06]"
+                className="mt-6 lg:text-[3.25rem] lg:leading-[1.06]"
               >
                 Réalisations &amp; interventions
               </Display>
-              <Lead className="mt-5">
-                Les principaux types de chantiers pris en charge par Arbre et
-                Cime : ce qu’une situation impose, et comment elle se traite.
-              </Lead>
-            </div>
-          </Container>
-        </section>
 
-        {/* ---------------------------------------------- 2. Collection --- */}
-        <Section surface="light" aria-labelledby="realisations-collection">
+              <Lead className="mt-5 text-(--surface-fg-muted)">
+                {/* « Arbre et Cime » au singulier subsistait ici : reliquat de
+                      l ancien nom, corrigé partout ailleurs en phase 15B. La
+                      source unique évite qu il revienne. */}
+                Les principaux types de chantiers pris en charge par{" "}
+                {site.shortName} : ce qu’une situation impose, et comment elle
+                se traite.
+              </Lead>
+            </Reveal>
+          </Container>
+        </Section>
+
+        {/* ------------------------------------------------ 2. Portfolio --- */}
+        <Section surface="sand" aria-labelledby="realisations-collection">
           <Container>
             <Reveal className="mx-auto max-w-reading">
-              <Eyebrow>Types d’intervention</Eyebrow>
-              <Title id="realisations-collection" as="h2" className="mt-4">
+              <Eyebrow>La collection</Eyebrow>
+              <Title
+                id="realisations-collection"
+                as="h2"
+                className="mt-4 lg:text-[2.5rem] lg:leading-[1.08]"
+              >
                 Ce que montre un chantier
               </Title>
-
               <Body className="mt-4 text-(--surface-fg-muted)">
-                Six situations, des plus courantes aux plus contraintes. Ce
-                qu’elles montrent, et ce qu’elles imposent sur le terrain.
+                {realisations.length} situations, des plus courantes aux plus
+                contraintes. Ce qu’elles montrent, et ce qu’elles imposent sur
+                le terrain.
               </Body>
             </Reveal>
 
-            {/* `max-w` sur chaque carte tant qu'elles sont empilées : sans
-                cela, une photographie plein conteneur atteint 517 px de haut à
-                768 px. */}
-            <ul className="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-2 lg:gap-x-10 lg:gap-y-14">
-              {realisations.map((item) => (
-                <Reveal
-                  as="li"
-                  key={item.id}
-                  className="mx-auto w-full max-w-[30rem] lg:max-w-none"
-                >
-                  <figure className="m-0">
-                    <div className="relative aspect-[4/3] overflow-hidden rounded-card sm:aspect-[3/2]">
-                      <Image
-                        src={item.image}
-                        alt={item.alt}
-                        fill
-                        loading="lazy"
-                        sizes="(min-width: 64rem) 36rem, 100vw"
-                        className={cn("object-cover", item.position)}
-                      />
-                    </div>
+            <ul className="mt-12 grid gap-(--card-gap) md:grid-cols-2 lg:mt-14 lg:grid-cols-12">
+              {realisations.map((item, index) => {
+                const grande = SPANS[index] === "lg:col-span-7";
 
-                    <figcaption>
-                      <p className="mt-5 font-sans text-eyebrow font-semibold uppercase text-(--surface-fg-muted)">
-                        {item.category}
-                      </p>
-                      <Subtitle as="h3" className="mt-2.5">
-                        {item.title}
-                      </Subtitle>
-                      <Body className="mt-3 text-(--surface-fg-muted)">
-                        {item.body}
-                      </Body>
-                    </figcaption>
-                  </figure>
-                </Reveal>
-              ))}
+                return (
+                  <Reveal
+                    as="li"
+                    key={item.id}
+                    className={cn("h-full", SPANS[index])}
+                  >
+                    <Card
+                      as="figure"
+                      tone="plain"
+                      padding="none"
+                      className="m-0 flex h-full flex-col"
+                    >
+                      <div
+                        className={cn(
+                          "relative w-full overflow-hidden",
+                          // La grande carte respire davantage ; la petite reste
+                          // compacte pour que la rangée garde sa dynamique.
+                          grande
+                            ? "aspect-[2/1] lg:aspect-[16/9]"
+                            : "aspect-[2/1] lg:aspect-[4/3]",
+                        )}
+                      >
+                        <Image
+                          src={item.image}
+                          alt={item.alt}
+                          fill
+                          loading="lazy"
+                          sizes={
+                            grande
+                              ? "(min-width: 64rem) 46vw, (min-width: 48rem) 50vw, 100vw"
+                              : "(min-width: 64rem) 34vw, (min-width: 48rem) 50vw, 100vw"
+                          }
+                          className={cn("object-cover", item.position)}
+                        />
+                      </div>
+
+                      <figcaption className="p-5 lg:p-7">
+                        <Capsule variant="light">{item.category}</Capsule>
+
+                        <h3 className="mt-4 font-display text-[1.25rem] leading-tight text-(--surface-heading) text-balance lg:text-subtitle">
+                          {item.title}
+                        </h3>
+
+                        {/* `text-caption` et non `Body` : six légendes de deux à
+                            trois lignes coûtaient 351 px de hauteur chacune à
+                            390 px de large. Le texte est intégralement conservé,
+                            c est son corps qui descend d un cran. */}
+                        <p className="mx-auto mt-3 max-w-[52ch] font-sans text-caption leading-relaxed text-(--surface-fg-muted) text-pretty">
+                          {item.body}
+                        </p>
+                      </figcaption>
+                    </Card>
+                  </Reveal>
+                );
+              })}
             </ul>
 
-            {/* UNIQUE mention de transparence de la page. Elle était doublée
-                au premier jet — un avertissement en tête de collection et un
-                rappel en pied de page —, ce qui la faisait passer d'une
-                précision honnête à une mise en garde insistante. Une seule
-                fois, en `Small`, juste sous la collection qu'elle qualifie :
-                lisible pour qui se pose la question, discrète pour les autres.
-                Elle disparaîtra avec les photographies du client. */}
+            {/* UNIQUE mention de transparence de la page. Elle était doublée au
+                premier jet — un avertissement en tête de collection et un rappel
+                en pied de page —, ce qui la faisait passer d'une précision
+                honnête à une mise en garde insistante. Une seule fois, en
+                `Small`, juste sous la collection qu'elle qualifie : lisible pour
+                qui se pose la question, discrète pour les autres. */}
             <Reveal>
               <Small className="mx-auto mt-10 block max-w-reading lg:mt-12">
                 Visuels illustratifs des types d’intervention proposés. Les
@@ -178,20 +223,20 @@ export default function RealisationsPage() {
           </Container>
         </Section>
 
-        {/* ------------------------------------ 3. Lecture des chantiers --- */}
-        {/* Volontairement compacte : filets et rythme vertical, pas cinq
-            cartes de plus. Ces cinq critères sont ceux qui se lisent sur une
-            photographie — c'est ce qui justifie qu'ils soient ici plutôt que
-            sur une page service. */}
-        <Section
-          surface="light"
-          spacing="tight"
-          aria-labelledby="realisations-lecture"
-        >
-          <Container width="prose">
-            <Reveal>
+        {/* -------------------------------- 3. Chaque chantier est différent ---
+            Cinq critères, cinq cartes compactes. C'est le seul aplat sombre du
+            corps de la page, et il tombe entre le portfolio et la conversion. */}
+        <Section surface="deep-forest" aria-labelledby="realisations-lecture">
+          <SectionPattern pattern="contour" opacity={0.04} />
+
+          <Container className="relative">
+            <Reveal className="mx-auto max-w-reading">
               <Eyebrow>Lire un chantier</Eyebrow>
-              <Title id="realisations-lecture" as="h2" className="mt-4">
+              <Title
+                id="realisations-lecture"
+                as="h2"
+                className="mt-4 lg:text-[2.5rem] lg:leading-[1.08]"
+              >
                 Ce qui décide de la méthode
               </Title>
               <Body className="mt-4 text-(--surface-fg-muted)">
@@ -200,99 +245,133 @@ export default function RealisationsPage() {
               </Body>
             </Reveal>
 
-            <ul className="mt-9">
-              {readingCriteria.map((criterion) => (
+            {/*
+              Six colonnes à partir de 1024 px, cinq critères : les deux
+              premiers en occupent trois chacun, les trois suivants deux. La
+              grille tombe juste sur deux rangées, sans cellule vide.
+            */}
+            <ul className="mt-10 grid grid-cols-2 gap-(--card-gap) lg:mt-14 lg:grid-cols-6">
+              {readingCriteria.map((criterion, index) => (
                 <Reveal
                   as="li"
                   key={criterion.title}
-                  className="border-t border-(--surface-rule) py-6 first:border-t-0 first:pt-0 last:pb-0"
+                  className={cn(
+                    "h-full",
+                    index < 2 ? "lg:col-span-3" : "lg:col-span-2",
+                  )}
                 >
-                  {/* Tiret au-dessus, centré : en rangée il resterait collé au
-                      bord gauche pendant que le texte se centre. */}
-                  <span
-                    aria-hidden="true"
-                    className="mx-auto mb-3 block h-px w-5 bg-safety"
-                  />
-                  <h3 className="font-display text-subtitle leading-tight text-(--surface-heading)">
-                    {criterion.title}
-                  </h3>
-                  <Body className="mt-2.5 text-(--surface-fg-muted)">
-                    {criterion.body}
-                  </Body>
+                  <Card as="div" tone="forest" padding="md" className="h-full">
+                    <span
+                      aria-hidden="true"
+                      className="mx-auto block h-0.5 w-4 bg-safety"
+                    />
+                    <h3 className="mt-5 font-display text-subtitle leading-tight text-(--surface-heading)">
+                      {criterion.title}
+                    </h3>
+                    <Body className="mx-auto mt-3 max-w-[40ch] text-(--surface-fg-muted)">
+                      {criterion.body}
+                    </Body>
+                  </Card>
                 </Reveal>
               ))}
             </ul>
           </Container>
         </Section>
 
-        {/* --------------------------------------------- 4. Conversion ---
-            Section CLAIRE contenant un panneau sombre : une section en forêt
-            tomberait sur un pied de page lui aussi en forêt
-            (DESIGN_SYSTEM.md § 8). */}
+        {/* --------------------------------------------- 4. Conversion --- */}
         <Section surface="light" aria-labelledby="realisations-cta">
           <Container>
             <Reveal>
-              <div
-                data-surface="dark"
-                className={cn(
-                  "rounded-card bg-(--surface-bg) text-(--surface-fg)",
-                  "p-7 sm:p-10 lg:p-14",
-                )}
+              <Card
+                as="div"
+                tone="deep"
+                padding="none"
+                className="mx-auto max-w-5xl"
               >
-                <Title
-                  id="realisations-cta"
-                  as="h2"
-                  className="mx-auto max-w-[18ch]"
-                >
-                  Un chantier à nous montrer ?
-                </Title>
-                <Body className="mx-auto mt-5 max-w-reading text-(--surface-fg-muted)">
-                  Quelques photos valent souvent mieux qu’une longue description
-                  : l’accès, l’environnement immédiat et l’état de l’arbre s’y
-                  lisent d’un coup d’œil. Joignez-les à votre demande, le devis
-                  est gratuit.
-                </Body>
-                <div className="mt-8 w-full sm:mx-auto sm:w-fit">
-                  <ButtonLink
-                    href={devis.path}
-                    variant="primary"
-                    size="lg"
-                    block
+                <SectionPattern pattern="contour" opacity={0.05} />
+
+                <div className="relative px-6 py-14 sm:px-10 lg:px-16 lg:py-20">
+                  <Capsule variant="accent">Devis gratuit</Capsule>
+
+                  <Title
+                    id="realisations-cta"
+                    as="h2"
+                    className="mx-auto mt-6 max-w-[18ch] lg:text-[3rem] lg:leading-[1.04]"
                   >
-                    Demander un devis
-                  </ButtonLink>
+                    Un chantier à nous montrer ?
+                  </Title>
+
+                  <Body className="mx-auto mt-5 max-w-[52ch] text-(--surface-fg-muted)">
+                    Quelques photos valent souvent mieux qu’une longue
+                    description : l’accès, l’environnement immédiat et l’état de
+                    l’arbre s’y lisent d’un coup d’œil.
+                  </Body>
+
+                  <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+                    <div className="w-full sm:w-fit">
+                      <ButtonLink
+                        href={contact.quotePath}
+                        variant="primary"
+                        size="lg"
+                        block
+                        data-cta="devis"
+                        data-cta-source="realisations-final"
+                      >
+                        Demander un devis
+                      </ButtonLink>
+                    </div>
+
+                    {tel ? (
+                      <div className="w-full sm:w-fit">
+                        <ButtonLink
+                          href={tel}
+                          variant="light"
+                          size="lg"
+                          block
+                          data-cta="appel"
+                          data-cta-source="realisations-final"
+                        >
+                          Appeler
+                        </ButtonLink>
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
+              </Card>
             </Reveal>
 
-            {/* Maillage vers les quatre pages services, sur fond clair : c'est
-                cette bande qui sépare le panneau du pied de page. */}
+            {/* Maillage vers les quatre pages services, en cartes compactes. */}
             <Reveal className="mt-16 lg:mt-20">
               <Eyebrow as="h2">Les interventions en détail</Eyebrow>
-              <ul className="mt-5">
+
+              <ul className="mt-6 grid grid-cols-2 gap-(--card-gap) lg:grid-cols-4">
                 {serviceRoutes.map((service) => (
-                  <li key={service.id}>
-                    <Link
+                  <li key={service.id} className="h-full">
+                    <CardLink
                       href={service.path}
-                      className={cn(
-                        "group flex flex-col items-center gap-2",
-                        "border-t border-(--surface-rule) py-5 no-underline",
-                      )}
+                      tone="plain"
+                      padding="md"
+                      className="flex h-full flex-col justify-center"
                     >
-                      <span className="font-display text-subtitle text-(--surface-heading)">
+                      <span className="font-display text-subtitle leading-tight text-(--surface-heading)">
                         {service.navLabel}
                       </span>
-                      <span className="flex items-center justify-center gap-3">
-                        {service.navTagline ? (
-                          <span className="hidden font-sans text-caption text-(--surface-fg-muted) sm:inline">
-                            {service.navTagline}
-                          </span>
-                        ) : null}
+
+                      {service.navTagline ? (
+                        <span className="mt-2 font-sans text-caption text-(--surface-fg-muted)">
+                          {service.navTagline}
+                        </span>
+                      ) : null}
+
+                      <span className="mt-4 inline-flex items-center justify-center gap-2.5 font-sans text-caption font-semibold text-(--surface-fg)">
+                        Découvrir
                         <svg
                           aria-hidden="true"
                           viewBox="0 0 16 16"
                           className={cn(
-                            "size-4 shrink-0 text-(--surface-fg-muted)",
+                            // Suit la surface : le jaune sécurité ne contraste
+                            // qu'à 1,96 sur ivoire.
+                            "size-3.5 shrink-0 text-(--surface-fg-muted)",
                             "motion-safe:transition-transform",
                             "motion-safe:duration-(--duration-micro)",
                             "motion-safe:ease-cime",
@@ -309,7 +388,7 @@ export default function RealisationsPage() {
                           />
                         </svg>
                       </span>
-                    </Link>
+                    </CardLink>
                   </li>
                 ))}
               </ul>

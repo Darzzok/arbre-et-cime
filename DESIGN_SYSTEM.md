@@ -1805,3 +1805,185 @@ gros de la page était celui des réalisations.
 
 La carte finale est le seul titre à dépasser les sections : c'est le moment de
 conversion, il porte plus que les autres.
+
+---
+
+# Pages services, À propos et Réalisations — phase 15B.4
+
+## 1. Le constat, mesuré
+
+| Page | Avant, 1440 | Avant, 390 | Surfaces |
+| --- | --- | --- | --- |
+| `/elagage` | 4 487 px | 5 176 px | dark + **4 × ivoire** |
+| `/abattage` | 4 455 px | 5 044 px | dark + **4 × ivoire** |
+| `/dessouchage` | 4 144 px | 4 692 px | dark + **4 × ivoire** |
+| `/entretien-exterieur` | 4 144 px | 4 745 px | dark + **4 × ivoire** |
+| `/a-propos` | 5 530 px | 5 417 px | dark + **5 × ivoire** |
+| `/realisations` | 5 487 px | 6 077 px | dark + **3 × ivoire** |
+
+Les quatre services avaient **le même hero de 608 px, les mêmes cinq sections,
+la même dernière section de 1 158 px**. C'étaient quatre clones. Et sur les six
+pages, la seule rupture de surface était le hero.
+
+## 2. Un gabarit, quatre parcours de surfaces
+
+La structure des pages services reste **unique** — c'est ce que les moteurs
+attendent de pages sœurs et ce qui empêche l'une de dériver. Ce qui change est
+déclaré dans `services-content.ts` sous `theme` :
+
+| Page | Hero | Intro | Situations | Méthode | Conversion |
+| --- | --- | --- | --- | --- | --- |
+| `/elagage` | **forêt** | ivoire | forêt profond | ivoire | sable |
+| `/abattage` | **forêt profond** | sable | forêt | ivoire | sable |
+| `/dessouchage` | **sable** | ivoire | forêt profond | sable | ivoire |
+| `/entretien-exterieur` | **ivoire** | sable | forêt | ivoire | sable |
+
+> **Deux sections voisines ne partagent jamais la même surface, et les quatre
+> pages ne commencent pas sur la même.** C'est la règle ; le tableau est sa
+> vérification.
+
+L'en-tête des pages internes est `solid` — une barre forêt avec sa cale. Un
+hero sable ou ivoire passe donc sans aucun problème de contraste, et un hero
+forêt se fond dans la barre : sur `/elagage`, l'en-tête et le hero ne font
+qu'un seul bloc.
+
+## 3. La forme de la photo décide de la composition du hero
+
+`heroLayout` vaut `cote` ou `dessous` :
+
+| Valeur | Effet | Pages |
+| --- | --- | --- |
+| `cote` | carte photo **à côté** du texte, 6/12 | élagage (3/4), abattage (4/3) |
+| `dessous` | carte photo **sous** le texte, pleine largeur | dessouchage (16/7), entretien (21/9) |
+
+Le champ est **déclaré, pas déduit**. Une première version lisait la classe de
+cadrage à la recherche de `16/` : une règle qui inspecte une sous-chaîne CSS se
+casse au premier changement de ratio, et en silence.
+
+Sur mobile, tous les heros passent en `aspect-[16/9]`. Un cadrage 4/5 y
+coûtait 448 px de hauteur pour une seule photographie.
+
+## 4. Grille de situations qui se remplit exactement
+
+Trois colonnes à partir de 1024 px. La première carte en occupe deux ; **avec
+quatre situations, la dernière aussi**.
+
+| Situations | Rangée 1 | Rangée 2 | Cellules vides |
+| --- | --- | --- | --- |
+| 5 (élagage, abattage) | 2 + 1 | 1 + 1 + 1 | **0** |
+| 4 (dessouchage, entretien) | 2 + 1 | 1 + 2 | **0** |
+
+Même principe sur `/realisations` : six colonnes, cinq critères — trois pour
+les deux premiers, deux pour les trois suivants.
+
+## 5. Portfolio alterné
+
+Six cartes sur douze colonnes : 7/5, puis **5/7**, puis 7/5. La grande carte
+change de côté à chaque rangée. Trois rangées 7/5 identiques auraient remplacé
+une monotonie par une autre.
+
+## 6. Ce qui a été mesuré, corrigé, puis re-mesuré
+
+### Le jaune sécurité en texte sur fond clair — encore
+
+Les numéros d'étapes (01–04) étaient rendus en `--color-safety`. Mesuré :
+**1,76 sur ivoire, 1,51 sur sable**. C'est la règle du § 1, enfreinte dans un
+fichier qui la cite trois fois en commentaire. Les numéros suivent désormais la
+surface.
+
+> **La règle vaut aussi pour deux chiffres de 12 px.** Un accent n'est pas
+> dispensé du seuil AA parce qu'il est petit.
+
+### Deux colonnes sur mobile : bénéfique ici, nuisible là
+
+Passer les cartes courtes en `grid-cols-2` dès 390 px fait gagner de la hauteur
+— mais **seulement si leur texte tient**. Mesures :
+
+| Cartes | 1 colonne | 2 colonnes | Verdict |
+| --- | --- | --- | --- |
+| Étapes des pages services (1 ligne) | 4 × 171 px | 2 × ~200 px | **gain** |
+| Étapes de `/a-propos` (2 lignes) | 4 × 225 px | 4 × **410 px** | **perte** |
+
+À 171 px de large, un détail de deux lignes en occupe huit. La règle n'est donc
+pas « deux colonnes sur mobile » mais : **deux colonnes seulement si le détail
+tient sur une ligne à pleine largeur.**
+
+## 7. Résultats
+
+| Page | 1440 | 390 |
+| --- | --- | --- |
+| `/elagage` | 4 487 → 4 667 (+4 %) | 5 176 → 5 804 (+12 %) |
+| `/abattage` | 4 455 → 4 295 (**−4 %**) | 5 044 → 5 723 (+13 %) |
+| `/dessouchage` | 4 144 → 4 657 (+12 %) | 4 692 → 5 296 (+13 %) |
+| `/entretien-exterieur` | 4 144 → 4 697 (+13 %) | 4 745 → 5 395 (+14 %) |
+| `/a-propos` | 5 530 → 5 162 (**−7 %**) | 5 417 → 6 270 (+16 %) |
+| `/realisations` | 5 487 → 5 060 (**−8 %**) | 6 077 → 6 108 (+1 %) |
+
+**La hausse sur mobile est attribuée, pas subie.** Le hero explique 41 % du
+delta des pages services : la photographie est passée de **fond** — qui ne
+coûte aucune hauteur — à **carte**, ce que le brief demandait explicitement.
+Les capsules et la carte de précision, elles aussi demandées, expliquent le
+reste.
+
+Aucune section ne dépasse 1 678 px en 390, sauf le portfolio de
+`/realisations` à 3 088 px — six cartes photographiques, contre **3 594 px**
+avant refonte.
+
+---
+
+# Correctif après 15B.4 — heros sans photographie
+
+**Demande client.** L'image est retirée de la section d'accueil de toutes les
+pages **sauf la page d'accueil**, qui n'emploie plus qu'un seul fichier sur
+mobile comme sur ordinateur.
+
+## 1. Ce qui différencie encore les quatre pages services
+
+La carte photographique disparaît ; **le parcours de surfaces reste**. C'est
+lui, et non la photographie, qui portait la différenciation :
+
+| Page | Ouvre sur |
+| --- | --- |
+| `/elagage` | forêt — le hero et la barre d'en-tête ne font qu'un seul bloc |
+| `/abattage` | forêt profond |
+| `/dessouchage` | sable |
+| `/entretien-exterieur` | ivoire |
+
+Les champs `heroLayout` et `heroAspect` ont été **retirés** du thème, ainsi que
+le champ `hero` du contenu : sans image à placer, ils ne décrivaient plus rien.
+Une donnée qui ne sert plus se retire, elle ne se conserve pas « au cas où ».
+
+## 2. Une seule image prioritaire sur tout le site
+
+Le hero de la page d'accueil. **Toutes les autres pages n'en ont aucune** :
+leur LCP est un élément de texte, et leur première photographie est paresseuse.
+
+> **Une page qui ne montre pas de photographie au-dessus de la ligne de
+> flottaison ne doit pas en précharger une.**
+
+## 3. Résultats mesurés
+
+| Page | Perf avant | Perf après | LCP avant | LCP après | Images |
+| --- | --- | --- | --- | --- | --- |
+| `/elagage` | 94 | **96** | 3,1 s | **2,8 s** | 210 → 68 Ko |
+| `/abattage` | 94 | **96** | 3,1 s | **2,8 s** | 204 → 55 Ko |
+| `/dessouchage` | 94 | **97** | 3,1 s | **2,6 s** | 216 → 65 Ko |
+| `/entretien-exterieur` | 93 | **97** | 3,2 s | **2,6 s** | 231 → 34 Ko |
+| `/a-propos` | 94 | **95** | 3,1 s | **2,9 s** | 201 → 111 Ko |
+| `/realisations` | 92 | **96** | 3,4 s | **2,8 s** | 473 → 339 Ko |
+
+Accessibilité **100** et bonnes pratiques **100** conservées, **CLS 0**.
+
+## 4. Les hauteurs redescendent sous leur valeur d'avant refonte
+
+| Page | Avant 15B.4 (1440) | Après correctif |
+| --- | --- | --- |
+| `/elagage` | 4 487 px | **4 162 px** |
+| `/abattage` | 4 455 px | **4 188 px** |
+| `/dessouchage` | 4 144 px | **4 073 px** |
+| `/entretien-exterieur` | 4 144 px | **4 124 px** |
+| `/a-propos` | 5 530 px | **5 054 px** |
+| `/realisations` | 5 487 px | **4 939 px** |
+
+Sur mobile, l'écart résiduel tombe de +12/16 % à **+8/12 %**, et
+`/realisations` passe **sous** sa valeur d'origine (6 077 → 5 880 px).

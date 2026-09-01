@@ -1,6 +1,5 @@
-import { getImageProps } from "next/image";
+import Image from "next/image";
 import type { CSSProperties } from "react";
-import { preload } from "react-dom";
 
 import {
   Body,
@@ -20,50 +19,47 @@ import { area, contact, site, telHref } from "@/lib/site";
  * d'animation. L'entrée au chargement est entièrement portée par des keyframes
  * CSS (voir `globals.css`, bloc « Hero »).
  *
- * Photographie verrouillée en phase 5A : candidate n°1 de `MEDIA_SOURCES.md`.
- * Ne pas la remplacer sans mettre le registre à jour.
+ * C'est la SEULE page du site dont le hero porte encore une photographie :
+ * les pages services, `/a-propos` et `/realisations` l'ont perdue sur demande
+ * du client. Elle est donc aussi la seule image prioritaire de tout le site.
  */
 
 /**
- * DIRECTION ARTISTIQUE — deux sources, un seul téléchargement.
+ * UNE SEULE SOURCE — décision client, après la phase 15B.4.
  *
- * Une photographie en 4:3 ne peut pas remplir un viewport mobile en 0,46 sans
- * en perdre 65 % de la largeur : le grimpeur devient un gros plan et le
- * chantier disparaît. Plutôt que de dégrader le cadrage, on change de source
- * sous 1024 px — c'est exactement l'usage prévu pour la candidate verticale
- * retenue en phase 5A (`MEDIA_SOURCES.md`).
+ * Le hero servait deux fichiers par direction artistique : une photographie
+ * horizontale au-delà de 1024 px, une verticale en dessous, montées dans un
+ * `<picture>` pour que le navigateur n'en télécharge qu'une.
  *
- * Les deux sont servies par un `<picture>` : le navigateur n'en télécharge
- * qu'une, celle que son media query désigne.
+ * Le client a demandé la même image partout. Le mécanisme disparaît donc, et
+ * avec lui `getImageProps`, le `<picture>` et les deux `preload()` manuels :
+ * un `<Image priority>` suffit et pose lui-même son lien de préchargement.
+ *
+ * C'est la source HORIZONTALE qui est retenue, et pas l'autre. Elle mesure
+ * 2400 × 1800 (1,333) contre 1400 × 2094 (0,669), et le hero doit couvrir
+ * deux formats opposés :
+ *
+ * | Format | Rapport | Horizontale | Verticale |
+ * | --- | --- | --- | --- |
+ * | Mobile 390 × 640 | 0,61 | 46 % de la largeur visible | 91 % — presque natif |
+ * | Desktop 1440 × 800 | 1,80 | 74 % de la hauteur visible | **37 %** — le grimpeur est tranché |
+ *
+ * La verticale est meilleure sur mobile mais **inutilisable** en bandeau
+ * large ; l'horizontale se dégrade des deux côtés sans jamais casser. Son
+ * cadrage mobile est rattrapé par `object-position`, qui garde le grimpeur
+ * dans la fenêtre.
+ *
+ * Elle est aussi la plus définie des deux, ce qui compte maintenant qu'un seul
+ * fichier sert toutes les largeurs.
  */
-const HERO_DESKTOP = {
-  src: "/images/hero/elagueur-grimpeur-arbre-mature.jpg",
-  width: 2400,
-  height: 1800,
-};
-
-const HERO_MOBILE = {
-  src: "/images/hero/elagueur-ascension-tronc-vertical.jpg",
-  width: 1400,
-  height: 2094,
-};
+const HERO_IMAGE = "/images/hero/elagueur-grimpeur-arbre-mature.jpg";
 
 /**
- * Un seul texte alternatif : les deux fichiers montrent la même chose — un
- * élagueur-grimpeur au travail dans un arbre, sur cordes. La formulation reste
- * vraie quelle que soit la source servie.
+ * Un seul texte alternatif : la photographie montre un élagueur-grimpeur au
+ * travail dans un arbre, sur cordes.
  */
 const HERO_ALT =
   "Élagueur-grimpeur au travail dans un grand arbre, harnais et cordes de grimpe";
-
-/**
- * Point de rupture de la bascule, aligné sur `lg` (voir DESIGN_SYSTEM.md § 4).
- * Les deux requêtes média sont strictement complémentaires : à toute largeur,
- * une seule des deux sources est désignée — donc une seule est préchargée, et
- * une seule est téléchargée.
- */
-const HERO_MEDIA_DESKTOP = "(min-width: 64rem)";
-const HERO_MEDIA_MOBILE = "(max-width: 63.999rem)";
 
 /**
  * Trois repères, pas un de plus (phase 15B.3).
@@ -95,50 +91,6 @@ export function Hero() {
   // réécrite ici.
   const tel = telHref();
 
-  // `getImageProps` donne les jeux d'URLs optimisées de Next sans passer par le
-  // composant `<Image>`, ce qui permet de les monter dans un vrai `<picture>` —
-  // la seule façon de faire de la direction artistique sans télécharger les
-  // deux fichiers.
-  const shared = {
-    alt: HERO_ALT,
-    sizes: "100vw",
-    priority: true,
-    /* 75 et non 78. La phase 5B demandait 78, mais `images.qualities` n'existait
-       pas dans `next.config.ts` : Next 16 retombait alors sur 75 sans le dire,
-       et c'est donc 75 que le site a TOUJOURS servi. En rendant la valeur
-       effective (phase 15B.3), le hero passait de 96 à 102 Ko — sur l'élément
-       LCP, et pour une différence que personne n'a jamais vue. On garde la
-       valeur réellement éprouvée. */
-    quality: 75,
-  } as const;
-
-  const { props: desktopImage } = getImageProps({ ...shared, ...HERO_DESKTOP });
-  const { props: mobileImage } = getImageProps({ ...shared, ...HERO_MOBILE });
-
-  /*
-   * `getImageProps` ne pose ni `fetchpriority` ni lien de préchargement —
-   * c'est le composant `<Image>` qui s'en charge, et on ne l'utilise pas ici.
-   * Le hero étant l'élément LCP, on les rétablit à la main.
-   *
-   * `media` sur un préchargement d'image est bien pris en charge : chaque
-   * source n'est préchargée que sur le format qui la sert réellement.
-   */
-  preload(desktopImage.src, {
-    as: "image",
-    imageSrcSet: desktopImage.srcSet,
-    imageSizes: desktopImage.sizes,
-    fetchPriority: "high",
-    media: HERO_MEDIA_DESKTOP,
-  });
-
-  preload(mobileImage.src, {
-    as: "image",
-    imageSrcSet: mobileImage.srcSet,
-    imageSizes: mobileImage.sizes,
-    fetchPriority: "high",
-    media: HERO_MEDIA_MOBILE,
-  });
-
   return (
     <section aria-labelledby="hero-titre" className="relative isolate">
       {/* `data-surface="dark"` est indispensable, pas décoratif : c'est lui qui
@@ -164,37 +116,32 @@ export function Hero() {
         {/* ---------------------------------------------------------------
             La photographie, plein cadre.
 
-            `object-cover` sans compromis : l'image remplit toute la section à
-            toutes les largeurs. C'est le `<picture>` qui règle le problème du
-            recadrage mobile — en changeant de source, pas en rétrécissant
-            l'image.
+            `object-cover` sans compromis : une seule source couvre toutes les
+            largeurs. Le recadrage n'est donc plus réglé en changeant de
+            fichier, mais par `object-position` — décalé à gauche sous 1024 px
+            pour garder le grimpeur dans une fenêtre qui ne montre que 46 % de
+            la largeur de l'image, recentré et remonté au-delà.
             --------------------------------------------------------------- */}
-        <picture>
-          <source
-            media={HERO_MEDIA_DESKTOP}
-            srcSet={desktopImage.srcSet}
-            sizes={desktopImage.sizes}
-          />
-          {/* `<img>` et non `<Image>` : c'est le seul moyen de faire de la
-              direction artistique sans télécharger les deux sources. Les URLs,
-              le `srcSet` et l'optimisation restent ceux de next/image, fournis
-              par `getImageProps`. */}
-          <img
-            {...mobileImage}
-            alt={HERO_ALT}
-            fetchPriority="high"
-            loading="eager"
-            className={cn(
-              "absolute inset-0 -z-10 size-full object-cover",
-              // Mobile : léger décalage vers la gauche pour garder le grimpeur
-              // et son point d'ancrage entiers dans le cadre.
-              "object-[32%_center]",
-              // Desktop : recadrage vertical, remonté pour conserver le
-              // houppier et les cordes au-dessus du grimpeur.
-              "lg:object-[center_36%]",
-            )}
-          />
-        </picture>
+        <Image
+          src={HERO_IMAGE}
+          alt={HERO_ALT}
+          fill
+          /* Seule image prioritaire du site. `priority` pose le lien de
+             préchargement, `fetchPriority` l'attribut que Next n'y met pas
+             (mesuré en phase 15B.2). */
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+          /* 75 et non 78 : `images.qualities` ne l'a jamais honoré avant la
+             phase 15B.3, et 78 alourdissait l'élément LCP de 6 Ko pour une
+             différence que personne n'a jamais vue. */
+          quality={75}
+          className={cn(
+            "-z-10 object-cover",
+            "object-[36%_center]",
+            "lg:object-[center_36%]",
+          )}
+        />
 
         {/* Voile de lisibilité mobile — le texte est ancré en bas.
             Le dégradé s'éteint complètement avant la moitié haute : les deux

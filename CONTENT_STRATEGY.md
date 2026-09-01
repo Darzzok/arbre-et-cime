@@ -727,3 +727,78 @@ et le H1 est inchangé.
 - **Le titre des réalisations** : « Des interventions adaptées à chaque
   situation » est une formulation d'exactitude, pas de style. Tant que les
   photographies sont un repli libre, elle ne se change pas.
+
+---
+
+# Texte vers cartes — phase 15B.4
+
+Même règle qu'en 15B.3 : **raccourcir n'est autorisé que si l'information
+survit ailleurs.** Cette phase ajoute une vérification automatique.
+
+## 1. La preuve que rien n'a été perdu, sur les pages services
+
+Les quatre pages services tirent tout leur texte de `services-content.ts`. Un
+contrôle compare chaque chaîne rédactionnelle du fichier au HTML réellement
+servi, texte visible **et attributs `alt`** :
+
+```
+Chaînes rédactionnelles vérifiées : 66
+Absentes du HTML servi            : 0
+```
+
+Aucun champ n'a été supprimé, réécrit ni tronqué. Ce qui a changé, c'est
+l'endroit et la forme :
+
+| Contenu | Avant | Après |
+| --- | --- | --- |
+| `note` (précision par prestation) | enterrée au bas de la colonne de méthode | **carte, à côté de l'introduction** |
+| `cases.items` | blocs `bg-surface-inset` en 2 colonnes | cartes, grille asymétrique |
+| `method.points` | trois blocs à filet et accent | trois colonnes compactes |
+| Six repères en ligne repliable | six | **trois capsules** |
+
+## 2. Les trois « moments » deviennent quatre temps nommés
+
+01 Analyser · 02 Sécuriser · 03 Intervenir · 04 Nettoyer.
+
+**Ces quatre étapes ne sont pas une invention.** Elles reformulent ce que
+`/a-propos` décrivait déjà en toutes lettres : comprendre la demande, sécuriser
+la zone avant la première coupe, travailler avec du matériel adapté, puis
+débiter, broyer ou évacuer *selon la prestation*.
+
+Elles sont communes aux quatre services parce qu'elles le sont réellement. Ce
+qui distingue les pages, ce sont les `method.points`, propres à chacune, rendus
+juste en dessous.
+
+## 3. `/a-propos` — la narration est redistribuée, pas supprimée
+
+Quatre paragraphes de 200 à 326 signes deviennent quatre cartes, **dans l'ordre
+où le récit se déroulait déjà**. Les réserves survivent mot pour mot : « selon
+la prestation » n'est pas une précaution de style, c'est une limite que le
+client a posée.
+
+## 4. Un ajout retiré parce qu'il n'était pas confirmé
+
+La refonte a d'abord donné aux trois publics une ligne de détail chacun :
+« copropriétés », « gestionnaires de patrimoine », « alignements ».
+
+**Ces précisions n'étaient confirmées nulle part.** `PROJECT.md` liste trois
+intitulés de clientèle — particuliers, professionnels, collectivités — pas des
+segments de marché. Elles ont été retirées et les trois publics rendus en
+capsules.
+
+> **Une mise en page qui appelle du texte n'autorise pas à en inventer.** Si la
+> composition demande une ligne de détail et qu'aucune source ne la fournit,
+> c'est la composition qui change.
+
+Bénéfice mesuré au passage : la section passait de 422 px à 1 165 px en 390 px
+de large pour trois mots par carte. En capsules, elle en coûte 80.
+
+## 5. Un reliquat de l'ancien nom, trouvé et corrigé
+
+L'accroche du hero de `/realisations` disait encore « **Arbre et Cime** », au
+singulier — le nom d'avant la correction de la phase 15B. Il était écrit en
+dur. Il passe par `site.shortName`, ce qui l'empêche de revenir.
+
+Le `h1` de la page, lui, est **inchangé** : « Réalisations & interventions ».
+Une première version de cette refonte l'avait réécrit ; c'était une
+modification d'intention SEO non demandée, elle a été annulée.
