@@ -1812,6 +1812,162 @@ Six sous-phases, douze routes refondues plus les 22 autres pages villes.
 
 ---
 
+### Correctif — le téléphone est confirmé ✅
+
+**`06 28 77 82 40`**, communiqué par le client après la phase 15B.6.
+
+Il vit dans `src/lib/site.ts` sous deux formes tirées d'une source unique :
+`+33628778240` pour les liens `tel:`, `06 28 77 82 40` pour l'affichage. Écrit
+là plutôt que réservé à l'environnement, exactement comme l'e-mail : une
+coordonnée publique confirmée n'est pas un secret, et un site déployé ne doit
+pas perdre son numéro parce qu'une variable manque sur l'hébergeur. Les
+variables d'environnement restent des surcharges.
+
+### Aucun bouton n'a eu besoin d'être ajouté
+
+Le site s'est construit pendant six sous-phases autour de l'absence de ce
+numéro : chaque emplacement portait déjà son bouton « Appeler », conditionné à
+`contact.phoneConfirmed`. **Renseigner la valeur a suffi.**
+
+| Emplacement | Vérifié |
+| --- | --- |
+| En-tête, menu mobile, barre d'action mobile | oui |
+| Hero de page — accueil, 4 services, zones, 23 villes | oui |
+| Carte de conversion finale de chaque page | oui |
+| Carte téléphone de `/contact` — apparue d'elle-même | oui |
+| Coordonnées du pied de page | oui |
+| Bouton CTA dans le pied de page | **aucun**, conforme à la demande |
+
+### Mesures
+
+4 à 5 liens `tel:` par page, 2 sur `/devis`. Sur **72 combinaisons** (12 routes
+× 6 largeurs) : 0 débordement, 0 cible tactile sous 44 px, et **aucun autre
+numéro que `+33628778240`**.
+
+Accessibilité **100**, bonnes pratiques **100**, **CLS 0** conservés
+(`/` 92, `/contact` 96, `/elagage` 96). Lint, typecheck et build au vert.
+
+`PROJECT.md` § 7 : le point « numéro de téléphone et e-mail publics » passe de
+**ouvert** à **confirmé**.
+
+---
+
+### Correctif carte — repères littoraux, lisibilité, chevauchements ✅
+
+Trois signalements du client sur la carte.
+
+### « Les points sont en mer » — ils ne l'étaient pas
+
+Test point-dans-polygone contre tous les départements dessinés :
+**0 repère sur 30 ne tombe sur la mer**. Dieppe a 1,20 km de marge au trait de
+côte, Le Tréport 1,28, Fécamp 3,08, Le Havre 2,91.
+
+Le défaut venait de l'**anneau** du point, qui valait `--surface-bg`. Depuis la
+phase 15B.5, la carte est posée dans une carte sur fond sable : les 23 points
+portaient un disque sable sur une terre ivoire, très visible dès qu'ils
+touchaient la mer. L'anneau prend désormais `--map-land` et passe de 2 à
+1,5 px — rayon extérieur 1,20 → **1,09 km**, sous la marge de Dieppe.
+
+Limite assumée : le point étant dimensionné en pixels, son empreinte au sol
+croît quand la carte rétrécit (1,09 km à 1 024 px, 1,80 km à 623 px). En
+dessous d'environ 950 px, aucun point visible ne peut rester à plus de 1,20 km
+d'un rivage.
+
+### « On ne voit pas bien les villes en noir »
+
+Les noms traversent jusqu'à trois fonds et croisent les filets de contour. Ils
+portent désormais un liseré ivoire : **contraste 15,84** quel que soit le fond,
+sans toucher à la couleur du texte.
+
+### Chevauchements — trois causes, toutes corrigées
+
+1. **Amiens** poussait son nom hors du cadre à 768 px : étiquette retournée
+   vers l'intérieur.
+2. **Cartes locales** : `secondary` était levé pour tous les repères, alors
+   qu'il encode « cette étiquette ne tient pas sous 768 px ». Une carte locale
+   mesure 301 px — elle a moins de place, pas plus. Levé pour la commune de la
+   page et Rouen seulement.
+3. **Grappe métropolitaine** : ses rappels en étoile, dessinés pour 1 024 px,
+   s'empilaient à 301 px. Étiquette collée au point sur les cartes locales.
+4. **`side` gauche/droite retombe sous le point en dessous de 480 px** — deux
+   communes voisines se retrouvaient alignées. Les deux noms nommés se placent
+   maintenant sur l'axe vertical.
+
+### Vérification
+
+| Portée | Résultat |
+| --- | --- |
+| Carte générale — 390, 768, 1 024, 1 440 | 0 chevauchement, 0 hors-cadre |
+| Accueil — 390, 1 440 | 0 chevauchement |
+| **23 cartes locales — 390 et 1 440** | **0 chevauchement, 0 hors-cadre** |
+
+Moteur cartographique **non touché** : projection, coordonnées, classification,
+distances, `locations.ts`, `map-data.ts` et les données géographiques sont
+inchangés. Accessibilité **100**, bonnes pratiques **100**, **CLS 0**
+(`/zones-intervention` 96, `…/dieppe` 96, `/` 92). Lint, typecheck et build au
+vert.
+
+---
+
+### Retrait des quatre communes littorales ✅
+
+**Demande du client :** retirer Le Havre, Dieppe, Fécamp et Le Tréport — de la
+carte comme du site.
+
+| | Avant | Après |
+| --- | --- | --- |
+| Communes de travail (`communes.json`) | 30 | **26** |
+| Repères sur la carte générale | 23 | **19** |
+| Pages locales | 23 | **19** |
+| Routes statiques | 43 | **39** |
+
+### Neuf pages citaient ces communes comme voisines
+
+Le contrôle d'intégrité exige 3 à 5 voisins **existants** par page. Plutôt que
+de rapiécer neuf listes à la main, les voisinages ont été **recalculés par
+distance orthodromique** sur les 19 communes restantes : dix pages ont changé
+de voisins, toutes conformes.
+
+Effet de bord assumé, à signaler au client : le nord-est du cadre s'étant vidé,
+les voisins les plus proches d'Abbeville et d'Amiens sont désormais à 87 et
+96 km. Ce sont réellement les plus proches, mais un bloc « Autour d'Abbeville »
+qui cite Mont-Saint-Aignan reste discutable.
+
+### Le générateur de carte est déterministe — vérifié
+
+`src/lib/map-data.ts` a été régénéré par `scripts/build-map-data.mjs` après
+retrait des quatre communes de la source. Le différentiel se limite aux
+**quatre lignes de `CITIES`** : trait de côte, contours départementaux, Seine,
+71 communes de la métropole et cadre de projection sont identiques au caractère
+près. Cette propriété n'avait jamais été vérifiée.
+
+### Trois conséquences traitées
+
+1. La carte ne touche plus la côte : la règle des étiquettes littorales n'a
+   plus d'objet, elle reste consignée pour un éventuel retour.
+2. Le groupe « Reste de la Seine-Maritime » ne contient plus qu'Yvetot, et sa
+   description ne dit plus « au littoral ».
+3. Les commentaires du code qui citaient ces communes comme exemples de mesure
+   ont été reformulés : la mesure reste vraie, la commune n'existe plus.
+
+### Vérification
+
+- Les 4 URL renvoient **« Page introuvable »**.
+- **0 lien mort** vers ces slugs sur l'ensemble du site.
+- Hub : **19 liens** de communes.
+- Carte générale à 390, 768, 1 024, 1 440 et accueil à 390, 1 440 :
+  **0 chevauchement, 0 étiquette hors cadre**.
+- **19 cartes locales × 2 largeurs** : 0 chevauchement, 0 hors-cadre, un seul
+  `h1`, 0 débordement, maillage complet.
+- Contrôle d'intégrité : **19 pages, tout cohérent** — niveaux core 7,
+  primary 7, extended 5.
+
+Accessibilité **100**, bonnes pratiques **100**, **CLS 0**
+(`/zones-intervention` 95, `…/yvetot` 96, `/` 92). `noindex` intact. Lint,
+typecheck et build au vert.
+
+---
+
 ## Phase 16 — Analytics et conversions ⬜
 
 - Analytics respectueux de la vie privée

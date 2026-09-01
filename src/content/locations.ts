@@ -95,7 +95,12 @@ export const LOCATIONS: readonly Location[] = [
     tier: "core",
     departement: "Seine-Maritime",
     region: "Normandie",
-    voisins: ["mont-saint-aignan", "sotteville-les-rouen", "bois-guillaume", "le-grand-quevilly"],
+    voisins: [
+      "mont-saint-aignan",
+      "sotteville-les-rouen",
+      "bois-guillaume",
+      "le-grand-quevilly",
+    ],
     intro:
       "Arbres & Cimes est basée à Rouen. C’est le point de départ de tous les chantiers, et la commune où les interventions demandent le moins d’organisation préalable.",
     contexte:
@@ -118,7 +123,12 @@ export const LOCATIONS: readonly Location[] = [
     tier: "core",
     departement: "Seine-Maritime",
     region: "Normandie",
-    voisins: ["bois-guillaume", "rouen", "sotteville-les-rouen", "le-grand-quevilly"],
+    voisins: [
+      "bois-guillaume",
+      "rouen",
+      "sotteville-les-rouen",
+      "le-grand-quevilly",
+    ],
     intro:
       "Mont-Saint-Aignan est à trois kilomètres de Rouen, sur le plateau nord. Arbres & Cimes y intervient pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
     contexte:
@@ -141,7 +151,12 @@ export const LOCATIONS: readonly Location[] = [
     tier: "core",
     departement: "Seine-Maritime",
     region: "Normandie",
-    voisins: ["mont-saint-aignan", "rouen", "sotteville-les-rouen", "le-grand-quevilly"],
+    voisins: [
+      "mont-saint-aignan",
+      "rouen",
+      "sotteville-les-rouen",
+      "le-grand-quevilly",
+    ],
     intro:
       "Arbres & Cimes intervient à Bois-Guillaume pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur. La commune est à quatre kilomètres du centre de Rouen.",
     contexte:
@@ -164,7 +179,12 @@ export const LOCATIONS: readonly Location[] = [
     tier: "core",
     departement: "Seine-Maritime",
     region: "Normandie",
-    voisins: ["rouen", "saint-etienne-du-rouvray", "le-grand-quevilly", "mont-saint-aignan"],
+    voisins: [
+      "saint-etienne-du-rouvray",
+      "rouen",
+      "le-grand-quevilly",
+      "mont-saint-aignan",
+    ],
     intro:
       "Sotteville-lès-Rouen jouxte Rouen sur la rive gauche. Arbres & Cimes y assure l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
     contexte:
@@ -187,7 +207,12 @@ export const LOCATIONS: readonly Location[] = [
     tier: "core",
     departement: "Seine-Maritime",
     region: "Normandie",
-    voisins: ["sotteville-les-rouen", "rouen", "saint-etienne-du-rouvray", "mont-saint-aignan"],
+    voisins: [
+      "sotteville-les-rouen",
+      "saint-etienne-du-rouvray",
+      "rouen",
+      "mont-saint-aignan",
+    ],
     intro:
       "Arbres & Cimes intervient au Grand-Quevilly, à cinq kilomètres de Rouen sur la rive gauche, pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
     contexte:
@@ -210,7 +235,12 @@ export const LOCATIONS: readonly Location[] = [
     tier: "core",
     departement: "Seine-Maritime",
     region: "Normandie",
-    voisins: ["sotteville-les-rouen", "le-grand-quevilly", "rouen", "elbeuf"],
+    voisins: [
+      "sotteville-les-rouen",
+      "le-grand-quevilly",
+      "rouen",
+      "mont-saint-aignan",
+    ],
     intro:
       "Saint-Étienne-du-Rouvray est à six kilomètres de Rouen, en lisière de la forêt du Rouvray. Arbres & Cimes y intervient sur l’ensemble de ses prestations.",
     contexte:
@@ -233,7 +263,12 @@ export const LOCATIONS: readonly Location[] = [
     tier: "core",
     departement: "Seine-Maritime",
     region: "Normandie",
-    voisins: ["louviers", "saint-etienne-du-rouvray", "le-grand-quevilly", "sotteville-les-rouen"],
+    voisins: [
+      "louviers",
+      "saint-etienne-du-rouvray",
+      "le-grand-quevilly",
+      "sotteville-les-rouen",
+    ],
     intro:
       "Elbeuf appartient à la Métropole Rouen Normandie, à une vingtaine de kilomètres au sud de Rouen. Arbres & Cimes y intervient dans les mêmes conditions que sur le reste de la métropole.",
     contexte:
@@ -258,7 +293,12 @@ export const LOCATIONS: readonly Location[] = [
     tier: "primary",
     departement: "Eure",
     region: "Normandie",
-    voisins: ["elbeuf", "saint-etienne-du-rouvray", "evreux", "vernon"],
+    voisins: [
+      "elbeuf",
+      "saint-etienne-du-rouvray",
+      "sotteville-les-rouen",
+      "evreux",
+    ],
     intro:
       "Louviers est à environ vingt-cinq kilomètres au sud de Rouen, dans l’Eure. Les interventions y sont possibles selon la nature du chantier.",
     contexte:
@@ -281,7 +321,12 @@ export const LOCATIONS: readonly Location[] = [
     tier: "primary",
     departement: "Seine-Maritime",
     region: "Normandie",
-    voisins: ["fecamp", "dieppe", "mont-saint-aignan", "rouen"],
+    voisins: [
+      "mont-saint-aignan",
+      "bois-guillaume",
+      "le-grand-quevilly",
+      "rouen",
+    ],
     intro:
       "Yvetot se trouve à une trentaine de kilomètres au nord-ouest de Rouen, au cœur du pays de Caux. Les interventions y sont possibles selon la nature du chantier.",
     contexte:
@@ -304,7 +349,7 @@ export const LOCATIONS: readonly Location[] = [
     tier: "primary",
     departement: "Eure",
     region: "Normandie",
-    voisins: ["bernay", "lisieux", "le-havre", "elbeuf"],
+    voisins: ["bernay", "lisieux", "yvetot", "elbeuf"],
     intro:
       "Pont-Audemer est à une quarantaine de kilomètres à l’ouest de Rouen, dans la vallée de la Risle. Les interventions y sont possibles selon la nature du chantier.",
     contexte:
@@ -327,7 +372,7 @@ export const LOCATIONS: readonly Location[] = [
     tier: "primary",
     departement: "Eure",
     region: "Normandie",
-    voisins: ["louviers", "vernon", "elbeuf", "bernay"],
+    voisins: ["louviers", "vernon", "elbeuf", "mantes-la-jolie"],
     intro:
       "Évreux, préfecture de l’Eure, est à environ quarante-sept kilomètres au sud de Rouen. Les interventions y sont possibles selon la nature du chantier.",
     contexte:
@@ -384,29 +429,6 @@ export const LOCATIONS: readonly Location[] = [
       "Élagueur à Gisors, dans le Vexin normand, à 52 km de Rouen. Élagage, abattage et dessouchage, y compris à proximité d’une voie de circulation.",
   },
   {
-    id: "76217",
-    slug: "dieppe",
-    nom: "Dieppe",
-    a: "à Dieppe",
-    de: "de Dieppe",
-    lon: 1.0838,
-    lat: 49.9199,
-    km: 53,
-    direction: "nord",
-    tier: "primary",
-    departement: "Seine-Maritime",
-    region: "Normandie",
-    voisins: ["le-treport", "yvetot", "bois-guillaume", "fecamp"],
-    intro:
-      "Dieppe est à une cinquantaine de kilomètres au nord de Rouen, sur le littoral. Les interventions y sont possibles selon la nature du chantier.",
-    contexte:
-      "La ville s’ouvre sur la Manche entre deux falaises, et l’exposition au vent marin y est constante. Sur le littoral, les arbres poussent souvent inclinés et développent une couronne dissymétrique : cette déformation, normale, ne doit pas être confondue avec un défaut mécanique. Le diagnostic compte donc autant que la coupe.",
-    servicesIntro:
-      "En bord de mer, l’enjeu est fréquemment de rééquilibrer un sujet sans le fragiliser davantage face au vent.",
-    description:
-      "Élagueur à Dieppe, sur le littoral de Seine-Maritime, à 53 km de Rouen. Élagage et abattage d’arbres exposés au vent marin, selon le chantier.",
-  },
-  {
     id: "27056",
     slug: "bernay",
     nom: "Bernay",
@@ -428,29 +450,6 @@ export const LOCATIONS: readonly Location[] = [
       "Terrains de bourg ou parcelles isolées : deux organisations de chantier assez différentes.",
     description:
       "Élagueur à Bernay, dans l’Eure à 53 km de Rouen. Élagage, abattage, dessouchage et débroussaillage selon l’accès et l’ampleur du chantier.",
-  },
-  {
-    id: "76259",
-    slug: "fecamp",
-    nom: "Fécamp",
-    a: "à Fécamp",
-    de: "de Fécamp",
-    lon: 0.4012,
-    lat: 49.7479,
-    km: 60,
-    direction: "nord-ouest",
-    tier: "primary",
-    departement: "Seine-Maritime",
-    region: "Normandie",
-    voisins: ["yvetot", "le-havre", "pont-audemer", "dieppe"],
-    intro:
-      "Fécamp est à une soixantaine de kilomètres au nord-ouest de Rouen, sur la côte d’Albâtre. Les interventions y sont possibles selon la nature du chantier.",
-    contexte:
-      "La ville occupe une vallée qui débouche entre les falaises, ce qui crée un contraste net : abrité en fond de vallée, très exposé dès que l’on remonte sur le plateau. Deux jardins distants d’un kilomètre peuvent donc présenter des arbres dans des états très différents, et ce qui se justifie sur l’un ne se justifie pas forcément sur l’autre.",
-    servicesIntro:
-      "Fond de vallée abrité ou plateau exposé : l’état des sujets varie fortement d’un secteur à l’autre.",
-    description:
-      "Élagueur à Fécamp, sur la côte d’Albâtre, à 60 km de Rouen. Élagage et abattage d’arbres de vallée ou de plateau exposé, selon le chantier.",
   },
 
   /* --------------------------------------------------------- EXTENDED --- */
@@ -490,7 +489,7 @@ export const LOCATIONS: readonly Location[] = [
     tier: "extended",
     departement: "Calvados",
     region: "Normandie",
-    voisins: ["bernay", "pont-audemer", "le-havre", "elbeuf"],
+    voisins: ["bernay", "pont-audemer", "elbeuf", "yvetot"],
     intro:
       "Un chantier à Lisieux ? Selon son ampleur et son organisation, un déplacement d’Arbres & Cimes peut être envisagé depuis Rouen.",
     contexte:
@@ -499,52 +498,6 @@ export const LOCATIONS: readonly Location[] = [
       "En secteur bocager, un chantier porte rarement sur un seul arbre — c’est ce qui rend le déplacement envisageable.",
     description:
       "Élagage ou abattage à Lisieux, en pays d’Auge ? Déplacement depuis Rouen envisageable selon l’ampleur du chantier. Devis gratuit.",
-  },
-  {
-    id: "76351",
-    slug: "le-havre",
-    nom: "Le Havre",
-    a: "au Havre",
-    de: "du Havre",
-    lon: 0.1312,
-    lat: 49.4958,
-    km: 70,
-    direction: "ouest",
-    tier: "extended",
-    departement: "Seine-Maritime",
-    region: "Normandie",
-    voisins: ["pont-audemer", "fecamp", "lisieux", "yvetot"],
-    intro:
-      "Un chantier au Havre ? Bien que la ville soit en Seine-Maritime, elle est à soixante-dix kilomètres de Rouen : un déplacement peut être envisagé selon l’ampleur et l’organisation du chantier.",
-    contexte:
-      "Le Havre est bâtie sur l’estuaire, entre la ville basse et un plateau surplombant les falaises. L’exposition au vent y est forte et permanente, en particulier sur les hauteurs. Le même département ne signifie pas la même proximité : la distance depuis Rouen reste celle qui décide de la faisabilité, pas l’appartenance administrative.",
-    servicesIntro:
-      "Comme partout au-delà de soixante kilomètres, c’est l’ampleur du chantier qui rend le déplacement possible.",
-    description:
-      "Élagage ou abattage au Havre ? À 70 km de Rouen, le déplacement s’envisage selon l’ampleur et l’organisation du chantier. Devis gratuit.",
-  },
-  {
-    id: "76711",
-    slug: "le-treport",
-    nom: "Le Tréport",
-    a: "au Tréport",
-    de: "du Tréport",
-    lon: 1.3759,
-    lat: 50.052,
-    km: 71,
-    direction: "nord",
-    tier: "extended",
-    departement: "Seine-Maritime",
-    region: "Normandie",
-    voisins: ["dieppe", "abbeville", "yvetot", "bois-guillaume"],
-    intro:
-      "Un chantier au Tréport ? Selon son ampleur et son organisation, un déplacement d’Arbres & Cimes peut être envisagé depuis Rouen.",
-    contexte:
-      "Le Tréport occupe l’extrémité nord de la Seine-Maritime, à la limite de la Somme, au débouché de la vallée de la Bresle. La commune est adossée à une falaise haute, et les terrains y sont souvent en forte pente. Cette configuration, combinée aux soixante-dix kilomètres qui la séparent de Rouen, demande de bien cadrer le chantier avant de se déplacer.",
-    servicesIntro:
-      "Terrain en pente et distance : deux paramètres à évaluer ensemble avant d’envisager l’intervention.",
-    description:
-      "Élagage ou abattage au Tréport, à la limite de la Somme ? Déplacement depuis Rouen envisageable selon l’ampleur du chantier. Devis gratuit.",
   },
   {
     id: "60057",
@@ -582,7 +535,7 @@ export const LOCATIONS: readonly Location[] = [
     tier: "extended",
     departement: "Somme",
     region: "Hauts-de-France",
-    voisins: ["le-treport", "amiens", "dieppe", "beauvais"],
+    voisins: ["amiens", "beauvais", "bois-guillaume", "mont-saint-aignan"],
     intro:
       "Un chantier à Abbeville ? À plus de quatre-vingt-dix kilomètres de Rouen, un déplacement ne peut être envisagé que pour un chantier qui le justifie.",
     contexte:
@@ -605,7 +558,7 @@ export const LOCATIONS: readonly Location[] = [
     tier: "extended",
     departement: "Somme",
     region: "Hauts-de-France",
-    voisins: ["abbeville", "beauvais", "le-treport", "gisors"],
+    voisins: ["abbeville", "beauvais", "gisors", "bois-guillaume"],
     intro:
       "Un chantier à Amiens ? Selon son ampleur et son organisation, un déplacement d’Arbres & Cimes peut être envisagé depuis Rouen.",
     contexte:
@@ -669,7 +622,7 @@ export const LOCATION_GROUPS: readonly LocationGroup[] = [
   {
     id: "seine-maritime",
     titre: "Reste de la Seine-Maritime",
-    detail: "Du pays de Caux au littoral.",
+    detail: "Le pays de Caux.",
     locations: LOCATIONS.filter(
       (l) => !inMetropole(l) && l.departement === "Seine-Maritime",
     ),
@@ -685,9 +638,7 @@ export const LOCATION_GROUPS: readonly LocationGroup[] = [
     titre: "Déplacements élargis",
     detail: "Hors Normandie ou au-delà de 60 km — selon le chantier.",
     locations: LOCATIONS.filter(
-      (l) =>
-        l.departement !== "Seine-Maritime" &&
-        l.departement !== "Eure",
+      (l) => l.departement !== "Seine-Maritime" && l.departement !== "Eure",
     ),
   },
 ] as const;

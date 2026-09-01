@@ -2249,3 +2249,90 @@ pages qui se déroulent pareil.
 
 Douze routes refondues, plus les 21 autres pages villes qui partagent leur
 gabarit. Aucune dépendance ajoutée sur l'ensemble des six sous-phases.
+
+---
+
+# Correctif carte — lisibilité des repères
+
+Trois signalements du client : les communes littorales paraissaient en mer, les
+noms se lisaient mal, et des étiquettes se chevauchaient.
+
+## 1. Aucune commune n'est en mer — c'était l'anneau
+
+Test point-dans-polygone de chaque repère contre **tous** les départements
+dessinés :
+
+```
+Repères tombant sur la mer dessinée : 0 / 30
+```
+
+Dieppe est dans le 76 avec 1,20 km de marge au trait de côte, Le Tréport
+1,28 km, Fécamp 3,08 km, Le Havre 2,91 km. **La géographie était juste.**
+
+Le défaut venait de l'anneau du point, qui valait `--surface-bg`. Tant que la
+carte reposait sur l'ivoire de la page, il se confondait avec la terre. Depuis
+la phase 15B.5 elle est posée dans une carte sur fond **sable** : les 23 points
+portaient donc un disque sable sur une terre ivoire — et un disque clair très
+visible dès qu'ils touchaient la mer.
+
+> **L'anneau d'un repère prend la couleur de la CARTE (`--map-land`), jamais
+> celle de la surface qui l'accueille.** Un composant cartographique ne doit
+> pas changer d'apparence selon l'endroit où on le pose.
+
+Anneau ramené de 2 px à 1,5 px : le rayon extérieur du point passe de 1,20 km à
+**1,09 km** en 1440, soit sous la marge de Dieppe.
+
+### Une limite qui subsiste, et qu'aucun réglage ne lève
+
+Le point est dimensionné en pixels, la carte se redimensionne : son empreinte
+au sol **augmente quand la carte rétrécit**.
+
+| Largeur de carte | Rayon extérieur du point |
+| --- | --- |
+| 1 024 px | 1,09 km |
+| 831 px | 1,35 km |
+| 623 px | 1,80 km |
+
+En dessous d'environ 950 px de carte, un point visible ne peut pas rester à
+moins de 1,20 km d'un rivage. L'anneau couleur terre fait qu'il se lit alors
+comme un repère **posé sur la côte** — ce qui est exact — plutôt que comme un
+disque flottant.
+
+## 2. Les noms portent leur propre liseré
+
+Un nom traverse jusqu'à trois fonds : terre ivoire, aplat de la
+Seine-Maritime, mer. Il croise aussi les filets de contour et le tracé de la
+Seine.
+
+Un liseré ivoire posé sous le texte le détache de tout : **contraste 15,84**,
+quel que soit ce qu'il y a dessous, sans éclaircir la couleur du texte.
+
+## 3. Chevauchements — trois causes distinctes
+
+| Où | Cause | Correctif |
+| --- | --- | --- |
+| Carte générale, 768 px | Amiens, repère le plus à l'est, poussait son nom hors du cadre | étiquette vers l'intérieur |
+| Cartes locales | `secondary` était levé pour tous les repères | levé pour la commune de la page et Rouen seulement |
+| Cartes locales | les rappels en étoile de la grappe, dessinés pour 1 024 px, s'empilaient à 301 px | étiquette collée au point, nom des voisins à l'interaction |
+| `/le-grand-quevilly` | `side` gauche/droite **retombe sous le point** en dessous de 480 px | les deux noms nommés se placent sur l'axe vertical |
+
+Le dernier point mérite d'être retenu : `sidePlacement` bascule
+volontairement les côtés latéraux en dessous du point sur mobile, pour qu'ils
+ne sortent pas du cadre. Deux communes voisines placées l'une à gauche et
+l'autre à droite se retrouvent donc **toutes deux sous leur point**.
+
+> **Sur une carte locale, les deux noms affichés se placent en haut et en bas,
+> jamais à gauche et à droite.**
+
+### Vérification
+
+| Portée | Résultat |
+| --- | --- |
+| Carte générale — 390, 768, 1 024, 1 440 | 0 chevauchement, 0 hors-cadre |
+| Accueil — 390, 1 440 | 0 chevauchement |
+| **Les 23 cartes locales — 390 et 1 440** | **0 chevauchement, 0 hors-cadre** |
+
+Le moteur cartographique n'a pas été touché : ni projection, ni coordonnées, ni
+classification, ni distances. `locations.ts`, `map-data.ts` et les données
+géographiques sont inchangés — seuls le placement des étiquettes et l'habillage
+des points ont bougé.

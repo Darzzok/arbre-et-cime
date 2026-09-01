@@ -203,18 +203,22 @@ const CLUSTER: readonly MapMarker[] = [
  * portée annoncée au lieu de la border. Chacune est choisie pour son **azimut**
  * et sa distance, pas pour sa notoriété.
  *
- * **Les communes littorales portent leur étiquette vers l'intérieur des
- * terres.** Posée côté large, une étiquette de port se lit comme une ville en
- * pleine mer — c'est ce qui a été signalé sur Le Havre, Fécamp et Le Tréport,
- * alors même que leurs points sont bien sur la terre (vérifié par test
- * point-dans-polygone). Le défaut était typographique, pas géographique.
+ * **PLUS AUCUNE COMMUNE LITTORALE.** Le Havre, Dieppe, Fécamp et Le Tréport
+ * ont été retirés sur demande du client. La couronne ne touche donc plus la
+ * côte, et la règle qui existait ici — « une commune littorale porte son
+ * étiquette vers l'intérieur des terres » — n'a plus d'objet.
+ *
+ * Elle reste consignée parce qu'elle redeviendrait nécessaire au premier
+ * repère côtier réintroduit : posée côté large, une étiquette de port se lit
+ * comme une ville en pleine mer, alors même que son point est sur la terre
+ * (ce qui avait été vérifié par test point-dans-polygone — le défaut était
+ * typographique, pas géographique).
  */
 const RING: readonly MapMarker[] = [
-  // Nord et nord-est — littoral : étiquettes tournées vers l'intérieur.
-  marker("76217", { side: "bottom" }, { secondary: true }), // Dieppe — 53 km, littoral
-  marker("76711", { side: "bottom" }, { secondary: true }), // Le Tréport — 71 km
   marker("80001", { side: "bottom" }, { secondary: true }), // Abbeville — 91 km
-  marker("80021", { side: "right" }, { secondary: true }), // Amiens — 100 km, sur le cercle
+  /* Étiquette à GAUCHE et non à droite : Amiens est le repère le plus à
+     l est du cadre, et son nom sortait de la carte à 768 px (mesuré). */
+  marker("80021", { side: "left" }, { secondary: true }), // Amiens — 100 km, sur le cercle
 
   // Est et sud-est.
   marker("60057", { side: "right" }), // Beauvais — 72 km
@@ -230,10 +234,7 @@ const RING: readonly MapMarker[] = [
   marker("27056", { side: "bottom" }, { secondary: true }), // Bernay — 53 km
   marker("14366", { side: "bottom" }, { secondary: true }), // Lisieux — 70 km
   marker("27467", { side: "bottom" }, { secondary: true }), // Pont-Audemer — 42 km
-  marker("76351", { side: "right" }), // Le Havre — 70 km. « right » et non « bottom » : au sud du Havre il y a l’estuaire, pas la terre. L’intérieur est à l’est.
 
-  // Nord-ouest — littoral.
-  marker("76259", { side: "bottom" }, { secondary: true }), // Fécamp — 60 km
   marker("76758", { side: "top" }, { secondary: true }), // Yvetot — 30 km
 ];
 

@@ -419,3 +419,48 @@ dans le fichier.
 
 > **Un exemple d'environnement ne doit jamais contenir une valeur qui
 > déclencherait un affichage public.**
+
+---
+
+## 14. Le téléphone est confirmé — `06 28 77 82 40`
+
+**Communiqué par le client après la phase 15B.6.** Il vit dans
+`src/lib/site.ts`, comme l'e-mail, sous deux formes tirées d'une seule source :
+`+33628778240` pour les liens `tel:`, `06 28 77 82 40` pour l'affichage.
+
+### Rien n'a été ajouté pour l'afficher
+
+C'est le point important. Le site a été construit pendant six sous-phases
+autour de l'absence de ce numéro : chaque emplacement portait déjà son bouton
+« Appeler », conditionné à `contact.phoneConfirmed`. **Renseigner la valeur a
+suffi.**
+
+| Emplacement | Liens `tel:` | Vérifié |
+| --- | --- | --- |
+| En-tête | toutes les pages | oui |
+| Menu mobile | toutes les pages | oui |
+| Barre d'action mobile | toutes les pages | oui |
+| Hero de page | accueil, 4 services, zones, 23 villes | oui |
+| Carte de conversion finale | toutes les pages de contenu | oui |
+| Carte téléphone de `/contact` | apparue d'elle-même | oui |
+| Coordonnées du pied de page | sous l'e-mail | oui |
+| **Bouton CTA dans le pied** | **aucun** | conforme à la demande client |
+
+Mesuré : **4 à 5 liens `tel:` par page**, 2 sur `/devis` (en-tête et barre
+mobile — la page ne porte volontairement aucun autre appel à l'action).
+Vérification automatique sur 72 combinaisons : **aucun autre numéro que
+`+33628778240` n'apparaît nulle part**.
+
+### Ce que la page `/contact` fait toute seule
+
+La carte téléphone était écrite mais jamais rendue. Elle apparaît, et le titre
+de la section bascule de « Par e-mail » à « **Deux façons de nous joindre** » —
+la grille passe de une à deux colonnes sans intervention.
+
+### Hiérarchie finale des CTA
+
+| Niveau | Libellé |
+| --- | --- |
+| Primaire | Demander un devis |
+| Secondaire | **Appeler** — désormais actif |
+| Tertiaire | Envoyer un e-mail (`/contact`) |

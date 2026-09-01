@@ -17,10 +17,6 @@
 ,
 {"nom":"Elbeuf","code":"76231","centre":{"type":"Point","coordinates":[0.9974,49.2773]},"codeDepartement":"76","population":15474}
 ,
-{"nom":"Le Havre","code":"76351","centre":{"type":"Point","coordinates":[0.1312,49.4958]},"codeDepartement":"76","population":166687}
-,
-{"nom":"Dieppe","code":"76217","centre":{"type":"Point","coordinates":[1.0838,49.9199]},"codeDepartement":"76","population":28496}
-,
 {"nom":"Yvetot","code":"76758","centre":{"type":"Point","coordinates":[0.7685,49.6183]},"codeDepartement":"76","population":11438}
 ,
 {"nom":"Évreux","code":"27229","centre":{"type":"Point","coordinates":[1.1406,49.018]},"codeDepartement":"27","population":49360}
@@ -31,8 +27,6 @@
 ,
 {"nom":"Amiens","code":"80021","centre":{"type":"Point","coordinates":[2.2847,49.8987]},"codeDepartement":"80","population":136449}
 ,
-{"nom":"Fécamp","code":"76259","centre":{"type":"Point","coordinates":[0.4012,49.7479]},"codeDepartement":"76","population":17313}
-,
 {"nom":"Bolbec","code":"76114","centre":{"type":"Point","coordinates":[0.483,49.5755]},"codeDepartement":"76","population":11590}
 ,
 {"nom":"Pont-Audemer","code":"27467","centre":{"type":"Point","coordinates":[0.5259,49.3476]},"codeDepartement":"27","population":10023}
@@ -40,8 +34,6 @@
 {"nom":"Vernon","code":"27681","centre":{"type":"Point","coordinates":[1.4827,49.0921]},"codeDepartement":"27","population":25290}
 ,
 {"nom":"Gournay-en-Bray","code":"76312","centre":{"type":"Point","coordinates":[1.7168,49.4763]},"codeDepartement":"76","population":5723}
-,
-{"nom":"Le Tréport","code":"76711","centre":{"type":"Point","coordinates":[1.3759,50.052]},"codeDepartement":"76","population":4378}
 ,
 {"nom":"Lillebonne","code":"76384","centre":{"type":"Point","coordinates":[0.5393,49.505]},"codeDepartement":"76","population":8541}
 ,

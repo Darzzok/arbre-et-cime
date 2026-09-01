@@ -119,8 +119,13 @@ const PUBLIC_PHONE_DISPLAY =
  * Un canal non confirme n'est jamais affiche : ni bouton, ni lien, ni mention.
  *
  * C'est ce drapeau — et lui seul — qui decide de l'apparition du bouton
- * « Appeler » dans l'en-tete, le menu mobile, la barre d'action et le pied de
- * page. Renseigner `NEXT_PUBLIC_PHONE` suffit a le faire apparaitre partout.
+ * « Appeler ». Depuis la phase 15B.6, le numero est confirme : le drapeau vaut
+ * donc vrai, et le bouton est rendu dans tous les emplacements prevus —
+ * en-tete, menu mobile, barre d'action mobile, hero de page, carte de
+ * conversion finale et carte telephone de /contact.
+ *
+ * Le pied de page fait exception : il ne porte AUCUN appel a l'action, sur
+ * demande explicite du client, repetee deux fois.
  */
 export const contact = {
   email: PUBLIC_EMAIL,

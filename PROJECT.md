@@ -160,7 +160,11 @@ référence.
 ## 7. Points ouverts à confirmer avec le client
 
 1. Nom de domaine définitif (`NEXT_PUBLIC_SITE_URL`).
-2. Numéro de téléphone et e-mail de contact publics.
+2. ~~Numéro de téléphone et e-mail de contact publics.~~ **CONFIRMÉS.**
+   E-mail en phase 15B.2, téléphone en phase 15B.6 : `06 28 77 82 40`
+   (`+33628778240` pour les liens `tel:`). Les deux vivent dans
+   `src/lib/site.ts`, source unique. Le bouton « Appeler » est donc rendu
+   partout où il était prévu.
 3. Adresse professionnelle : affichée publiquement ou zone de service seule
    (impacte le balisage `LocalBusiness`, cf. `SEO_STRATEGY.md`).
 4. Forme juridique, SIREN, assurance décennale / RC pro, mentions légales.

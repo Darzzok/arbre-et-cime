@@ -83,9 +83,12 @@ const cards: Record<string, ServiceCard> = {
     height: "h-[21rem] sm:h-[24rem] lg:h-[32rem]",
   },
   dessouchage: {
-    image: "/images/services/dessouchage-souche-fraiche-sciure.jpg",
-    alt: "Souche fraîchement coupée, entourée de sciure",
-    position: "object-center",
+    image: "/images/services/dessouchage-rogneuse-en-action.jpg",
+    alt: "Rogneuse de souche en action, tête de rognage et copeaux de bois frais au pied d’une clôture",
+    /* La machine occupe la moitié droite du cadre, le tronc au premier plan
+       la gauche. Sur une carte plus haute que large, un centrage montrerait
+       surtout le flou d avant-plan. */
+    position: "object-[64%_center]",
     capsule: "Remise en état",
     description: "Libérer la zone après la coupe.",
     span: "lg:col-span-5",

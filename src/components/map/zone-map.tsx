@@ -181,9 +181,14 @@ export function ZoneMap({
               <stop offset="1" stopColor="white" stopOpacity="0" />
             </radialGradient>
             <mask id={`${id}-seine-mask`}>
-              <rect x="-112" y="-112" width="224" height="224" fill={`url(#${id}-fade)`} />
+              <rect
+                x="-112"
+                y="-112"
+                width="224"
+                height="224"
+                fill={`url(#${id}-fade)`}
+              />
             </mask>
-
           </defs>
 
           {/* --------------------------------------------------- Mer ---
@@ -213,21 +218,23 @@ export function ZoneMap({
               l'opacité qui crée le trait de côte : la terre couvre la mer,
               et la découpe se lit d'elle-même. */}
           <g data-map-land="">
-            {DEPARTEMENTS.filter((d) => d.code !== MAIN_DEPARTEMENT).map((d) => (
-              <path
-                key={d.code}
-                d={d.d}
-                /* Terre en ivoire PLEIN sur une mer en pierre : c'est le
+            {DEPARTEMENTS.filter((d) => d.code !== MAIN_DEPARTEMENT).map(
+              (d) => (
+                <path
+                  key={d.code}
+                  d={d.d}
+                  /* Terre en ivoire PLEIN sur une mer en pierre : c'est le
                    couple qui donne le trait de côte et le contraste
                    figure/fond. La plaque étant délimitée par ses coins
                    arrondis, la terre ne se confond plus avec le fond de page
                    comme lorsqu'elle flottait sans cadre. */
-                fill="var(--map-land)"
-                stroke="var(--map-line-soft)"
-                strokeWidth="0.45"
-                strokeLinejoin="round"
-              />
-            ))}
+                  fill="var(--map-land)"
+                  stroke="var(--map-line-soft)"
+                  strokeWidth="0.45"
+                  strokeLinejoin="round"
+                />
+              ),
+            )}
           </g>
 
           {/* --------------------------------------- 2. Zone principale ---
@@ -256,7 +263,9 @@ export function ZoneMap({
             strokeLinejoin="round"
             strokeLinecap="round"
             style={
-              { "--map-outline-length": REGION_PATH_LENGTH } as React.CSSProperties
+              {
+                "--map-outline-length": REGION_PATH_LENGTH,
+              } as React.CSSProperties
             }
           />
 
@@ -445,8 +454,8 @@ export function ZoneMap({
  * Étiquette collée au point, pour les repères isolés.
  *
  * Les côtés « gauche » et « droite » basculent EN DESSOUS du point sous
- * 480 px. Mesuré : à 320 px, Le Havre à 19 % de la largeur et Beauvais à 82 %
- * poussaient tous deux leur étiquette hors du cadre. En dessous du point, elle
+ * 480 px. Mesuré à 320 px sur deux repères de bord de cadre — l un à 19 % de
+ * la largeur, l autre à 82 % : tous deux poussaient leur étiquette dehors. En dessous du point, elle
  * reste dans le cadre quelle que soit la largeur.
  */
 const sidePlacement: Record<NonNullable<MapMarker["side"]>, string> = {
@@ -576,12 +585,33 @@ function CityMarker({
           aria-hidden="true"
           className={cn(
             "relative block rounded-full",
+            /*
+              L ANNEAU PREND LA COULEUR DE LA TERRE, PAS CELLE DU CONTENEUR.
+
+              Il valait `--surface-bg`, ce qui marchait tant que la carte
+              reposait directement sur l ivoire de la page. Depuis la phase
+              15B.5 elle est posée dans une carte sur fond SABLE : les
+              vingt-trois points portaient donc un disque sable sur une terre
+              ivoire, et un disque clair bien visible dès qu ils touchaient la
+              mer. C est ce qui faisait lire les communes littorales comme
+              flottant au large (Dieppe, Fécamp et Le Tréport, depuis retirées
+              du site — la correction vaut pour tout repère proche d une côte).
+
+              `--map-land` est défini par la carte elle-même : l anneau se fond
+              désormais dans la terre quelle que soit la surface qui accueille
+              le composant.
+
+              Anneau ramené de 2 px à 1,5 px sur les repères courants : à
+              1 440 px, le rayon extérieur du point passe de 1,20 km à 1,09 km,
+              soit juste en deçà de la distance au rivage de la commune la plus
+              exposée de l epoque, Dieppe (1,20 km).
+            */
             mark.isCenter
-              ? "size-2.5 bg-safety ring-[3px] ring-(--surface-bg)"
+              ? "size-2.5 bg-safety ring-[3px] ring-(--map-land)"
               : isHighlighted
                 ? // Commune de la page : même accent que Rouen, en plus large.
-                  "size-3 bg-safety ring-[3px] ring-(--surface-bg)"
-                : "size-[0.4375rem] bg-(--color-forest) ring-2 ring-(--surface-bg)",
+                  "size-3 bg-safety ring-[3px] ring-(--map-land)"
+                : "size-[0.4375rem] bg-(--color-forest) ring-[1.5px] ring-(--map-land)",
             "motion-safe:transition-transform",
             "motion-safe:duration-(--duration-micro) motion-safe:ease-cime",
             "group-hover:scale-150 group-focus-visible:scale-150",
@@ -603,6 +633,16 @@ function CityMarker({
           }
           className={cn(
             "absolute whitespace-nowrap font-sans text-caption",
+            /*
+              HALO DE LISIBILITÉ.
+
+              Un nom traverse jusqu à trois fonds différents — terre ivoire,
+              aplat de la Seine-Maritime, mer. Le charbon tient sur les trois,
+              mais il se confond avec les filets de contour et le tracé de la
+              Seine, qui passent dessous. Un liseré de la couleur de la terre
+              détache le texte sans l éclaircir ni toucher à son contraste.
+            */
+            "[text-shadow:0_0_2px_var(--map-land),0_0_2px_var(--map-land),0_0_4px_var(--map-land)]",
             !leader && mark.side ? sidePlacement[mark.side] : "",
             mark.isCenter || isHighlighted
               ? "font-semibold text-(--surface-heading)"

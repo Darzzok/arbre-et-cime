@@ -104,9 +104,9 @@ export const NEED_OPTIONS: readonly NeedOption[] = [
     id: "dessouchage",
     label: "Dessouchage",
     description: "Supprimer ou rogner une souche pour libérer le terrain.",
-    image: "/images/services/dessouchage-souche-fraiche-sciure.jpg",
-    alt: "Souche fraîchement coupée, entourée de sciure",
-    position: "object-center",
+    image: "/images/services/dessouchage-rogneuse-en-action.jpg",
+    alt: "Rogneuse de souche en action, tête de rognage et copeaux de bois frais au pied d’une clôture",
+    position: "object-[64%_center]",
   },
   {
     id: "entretien-exterieur",

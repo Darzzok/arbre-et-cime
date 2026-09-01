@@ -32,7 +32,7 @@ au-delà du HTML qui la contient.
 | --- | --- | --- | --- | --- |
 | Contour de la région Normandie | [france-geojson](https://github.com/gregoiredavid/france-geojson) — `regions/normandie/region-normandie.geojson` | Grégoire David, d'après le **découpage administratif de l'IGN** (ADMIN-EXPRESS) | **Licence ODbL** | 31 août 2026 |
 | Contours des 5 départements normands | [france-geojson](https://github.com/gregoiredavid/france-geojson) — `regions/normandie/departements-normandie.geojson` | idem | **Licence ODbL** | 31 août 2026 |
-| Coordonnées des 30 communes | [`geo.api.gouv.fr`](https://geo.api.gouv.fr/communes) | **Étalab / DINUM** (API officielle de l'État français), d'après le Code officiel géographique INSEE et l'IGN | **Licence Ouverte 2.0** | 31 août 2026 |
+| Coordonnées des 26 communes | [`geo.api.gouv.fr`](https://geo.api.gouv.fr/communes) | **Étalab / DINUM** (API officielle de l'État français), d'après le Code officiel géographique INSEE et l'IGN | **Licence Ouverte 2.0** | 31 août 2026 |
 | Tracé de la Seine | [Natural Earth](https://www.naturalearthdata.com/) — `ne_10m_rivers_lake_centerlines` | Natural Earth | **Domaine public (CC0)** | 31 août 2026 |
 | Limites des 71 communes de la Métropole Rouen Normandie | [`geo.api.gouv.fr`](https://geo.api.gouv.fr/epcis/200023414/communes) — EPCI 200023414 | **Étalab / DINUM**, d'après l'IGN | **Licence Ouverte 2.0** | 31 août 2026 |
 | **Départements français, pleine précision** (19 retenus dans le cadre) | [france-geojson](https://github.com/gregoiredavid/france-geojson) — `departements.geojson` | Grégoire David, d'après l'IGN | **Licence ODbL** | 31 août 2026 |
@@ -62,7 +62,7 @@ licence s'applique.
 | --- | --- | --- |
 | `data/geo/region-normandie.geojson` | Source brute, contour régional | 87 Ko |
 | `data/geo/departements-normandie.geojson` | Source brute, 5 départements | 183 Ko |
-| `data/geo/communes.json` | Source brute, 30 communes avec centroïde | 4,0 Ko |
+| `data/geo/communes.json` | Source brute, 26 communes avec centroïde | 3,4 Ko |
 | `data/geo/seine.geojson` | Source brute, tracé de la Seine | 7,4 Ko |
 | `data/geo/metropole-rouen-normandie.geojson` | Source brute, 71 communes de la métropole | 362 Ko |
 | `data/geo/departements-france.geojson` | Source brute, 96 départements **pleine précision** | 3,3 Mo |
@@ -142,7 +142,7 @@ fort de cette carte ; elle mérite ses kilo-octets.
 
 Le passage à la source pleine précision, combiné à la tolérance de 0,3 km sur
 la Seine-Maritime, a corrigé le défaut. **Vérifié par test point-dans-polygone
-sur les 30 communes chargées : aucune n'est hors terre.** Le reproche visuel
+sur les communes chargées : aucune n'est hors terre.** Le reproche visuel
 qui subsistait après cette correction portait en fait sur le placement des
 étiquettes, pas sur les points — voir § 6.
 
@@ -153,7 +153,7 @@ visible au-delà de 280 px de large.
 
 ## 5. Communes chargées
 
-Les 30 communes proviennent toutes de `geo.api.gouv.fr`, par code INSEE. Leur
+Les communes proviennent toutes de `geo.api.gouv.fr`, par code INSEE. Leur
 distance à Rouen est **calculée par la projection**, jamais saisie.
 
 | Code | Commune | Distance | Affichée |
@@ -260,3 +260,46 @@ deux doivent être vérifiés séparément.
       reprise dans plus d'un an — les fusions de communes sont fréquentes.
 - [ ] Facultatif : réduire `departements-france.geojson` aux 19 départements du
       cadre si le poids du dépôt devient gênant. Sans effet sur le site livré.
+
+---
+
+## Retrait des quatre communes littorales
+
+**Demande du client.** Le Havre, Dieppe, Fécamp et Le Tréport sont retirés du
+site : de la carte, de la liste des communes, et de leurs pages.
+
+C'est le **premier changement de donnée géographique** depuis la constitution du
+registre. Il est consigné ici parce que la règle du projet l'exige : toute
+modification des données de la carte doit être justifiée et documentée.
+
+| | Avant | Après |
+| --- | --- | --- |
+| Communes dans `data/geo/communes.json` | 30 | **26** |
+| Repères sur la carte générale | 23 | **19** |
+| Pages locales | 23 | **19** |
+| Routes statiques du site | 43 | **39** |
+
+### Ce qui n'a pas bougé
+
+`src/lib/map-data.ts` a été **régénéré** par `scripts/build-map-data.mjs`, et le
+différentiel se limite aux quatre lignes de `CITIES`. Le trait de côte, les
+contours départementaux, la Seine, les 71 communes de la métropole et le cadre
+de projection sont **identiques au caractère près**. Le générateur est donc
+bien déterministe, ce qui n'avait jamais été vérifié jusqu'ici.
+
+Les quatre communes restent présentes dans les fichiers GeoJSON sources — ce
+sont des découpages administratifs complets, pas des listes de communes
+retenues. Seul `communes.json`, qui est la liste de travail, a changé.
+
+### Conséquences à connaître
+
+1. **La carte ne touche plus la côte.** La règle « une commune littorale porte
+   son étiquette vers l'intérieur des terres » n'a plus d'objet ; elle reste
+   consignée dans `map-content.ts` pour le jour où un repère côtier
+   reviendrait.
+2. **Le groupe « Reste de la Seine-Maritime » ne contient plus qu'Yvetot**, et
+   sa description ne dit plus « au littoral ».
+3. **Les voisinages ont été recalculés** par distance orthodromique réelle sur
+   les 19 communes restantes. Dix pages sur dix-neuf ont changé de voisins.
+   Effet de bord assumé : le nord-est du cadre s'étant vidé, les voisins les
+   plus proches d'Abbeville et d'Amiens sont désormais à 87 et 96 km.

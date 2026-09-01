@@ -25,7 +25,7 @@ la photothèque du client. Elles respectent les règles verrouillées de
 
 ## 2. Licence
 
-Les 22 images proviennent de **Pexels**, sous **licence Pexels** :
+Les images proviennent de **Pexels**, à une exception près (voir § 13), sous **licence Pexels** :
 <https://www.pexels.com/license/> — utilisation gratuite, y compris commerciale,
 modification autorisée, attribution non obligatoire (mais consignée ici).
 
@@ -61,7 +61,7 @@ alternatives disponibles.
 | `abattage-tronconnage-grume.jpg` | 2400×1600 | **Inutilisée.** Hero de `/realisations` en phase 9, **retirée au correctif 9B** sur demande client. | Aurora Aguilar | [pexels.com/photo/…-6153123](https://www.pexels.com/photo/a-person-cutting-a-tree-6153123/) | **Ne pas remettre en production.** La fiche d'origine affirmait « aucun logo lisible » : c'était faux, la marque STIHL est parfaitement lisible sur le carter. S'y ajoute un avant-bras tatoué très reconnaissable. Le client a tranché au correctif 9B — l'image est écartée, pas seulement recadrée. |
 | `abattage-equipement-protection.jpg` | 1400×2100 | `/abattage` — casque, protections auditives, tronçonneuse. | light wizzi | [pexels.com/photo/…-10332551](https://www.pexels.com/photo/a-man-in-green-jacket-wearing-orange-helmet-10332551/) | EPI complet et réaliste. Visage de profil, peu identifiable. Aucun logo lisible. |
 | `abattage-arbre-tombe-intervention-urgence.jpg` | 2400×1600 | `/abattage` — arbre tombé débité ; illustre l'urgence après coup de vent. | Mike Bird | [pexels.com/photo/…-5351109](https://www.pexels.com/photo/uprooted-tree-cut-in-pieces-5351109/) | Aucune personne, aucun logo. |
-| `dessouchage-souche-fraiche-sciure.jpg` | 2400×1600 | `/dessouchage` — souche fraîchement coupée entourée de sciure. | Plato Terentev | [pexels.com/photo/…-9806894](https://www.pexels.com/photo/a-tree-stump-on-dirt-ground-9806894/) | Aucune personne, aucun logo. |
+| `dessouchage-souche-fraiche-sciure.jpg` | 2400×1600 | **Inemployée** depuis le remplacement des cartes dessouchage (voir § 13). Conservée sur disque. | Plato Terentev | [pexels.com/photo/…-9806894](https://www.pexels.com/photo/a-tree-stump-on-dirt-ground-9806894/) | Aucune personne, aucun logo. |
 | `dessouchage-souche-et-billons.jpg` | 1400×2100 | `/dessouchage` — souche et billons sur terrain enherbé. | Maxim Gorodnev | [pexels.com/photo/…-31404271](https://www.pexels.com/photo/freshly-cut-tree-trunk-in-lush-green-field-31404271/) | Aucune personne, aucun logo. |
 | `taille-de-haie-taille-haie-thermique.jpg` | 1400×2100 | `/entretien-exterieur` — taille d'une haie de conifères au taille-haie. | Aleksander Dumała | [pexels.com/photo/…-24595772](https://www.pexels.com/photo/a-man-working-in-a-garden-24595772/) | Personne de dos. Aucun logo lisible. |
 | `taille-de-haie-cisailles-manuelles.jpg` | 2400×1601 | `/entretien-exterieur` — finition à la cisaille, plan rapproché. | Magda Ehlers | [pexels.com/photo/…-38936349](https://www.pexels.com/photo/gardener-trimming-hedge-with-shears-in-daylight-38936349/) | Mains seulement. Aucun logo. |
@@ -319,3 +319,60 @@ la page d'accueil.
 Une seule image prioritaire subsiste sur tout le site : **celle du hero de la
 page d'accueil**. C'est désormais la seule photographie dont la qualité et le
 cadrage pèsent directement sur le LCP.
+
+---
+
+## 13. Rogneuse de souche en action — première image d'Unsplash
+
+**Demande du client :** remplacer les visuels des cartes dessouchage par une
+photographie de rogneuse en action, la souche statique ne montrant pas le
+métier.
+
+### La proposition initiale a été écartée
+
+Le client a transmis une image **iStock filigranée** (auteur EyeMark, réf.
+1173673792). Elle est inutilisable : filigrane visible, et banque payante — les
+deux motifs d'exclusion inscrits au § 2 de ce registre. Un équivalent libre a
+été cherché à la place.
+
+### La photographie retenue
+
+| Fichier | Dimensions | Usage | Auteur | Page source | Licence |
+| --- | --- | --- | --- | --- | --- |
+| `dessouchage-rogneuse-en-action.jpg` | 2400×1612 (733 Ko) | **Carte dessouchage de l'accueil + carte de l'étape 1 du configurateur** | Zack Masters ([@masters25](https://unsplash.com/@masters25)) | [unsplash.com/photos/…-fhLeC-CUOUg](https://unsplash.com/photos/un-travailleur-utilise-une-dessoucheuse-darbres-fhLeC-CUOUg) | **Licence Unsplash** (gratuite, pas Unsplash+) |
+
+C'est la **première image du site qui ne vient pas de Pexels**. Pexels ne
+propose aucune rogneuse de souche : sur « stump grinder » et « stump grinding »,
+il ne rend que des souches statiques — et des moulins à café.
+
+### Le recadrage n'est pas une préférence, c'est une condition d'emploi
+
+L'original montre l'opérateur et **deux marquages de marque parfaitement
+lisibles** : une plaque « BANDIT — MODEL SG-40 » avec sa mascotte sur le flanc,
+et l'adresse « www.banditchippers.com » sur le carter. C'est exactement ce qui a
+fait écarter trois candidates au correctif 9B.
+
+Le fichier versionné est donc **déjà recadré** sur la tête de rognage et les
+copeaux :
+
+```
+rect=0,1900,2650,1780   (sur un original de 5555 × 3703)
+```
+
+Ce cadrage exclut les deux marquages, l'opérateur et son visage. Ne subsiste
+qu'un autocollant de sécurité « DANGER / ADVERTENCIA » générique, sans marque.
+
+> **Ne jamais recharger l'original sans ce recadrage.** L'image complète est
+> inutilisable telle quelle.
+
+### Cadrage à l'affichage
+
+`object-[64%_center]` : la machine occupe la moitié droite, le tronc au premier
+plan la gauche. Un centrage montrerait surtout le flou d'avant-plan sur une
+carte plus haute que large.
+
+### Réserve
+
+L'avant-plan gauche est très flou et la scène est nord-américaine (clôture en
+bois, essences). Elle reste plausible pour un jardin normand, mais c'est une
+image à remplacer en priorité par une photographie du client.
