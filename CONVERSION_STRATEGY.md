@@ -310,3 +310,58 @@ impossible.
 **Rappel** — le CTA « Appeler » n'est rendu nulle part : le numéro n'est pas
 confirmé (`contact.phoneConfirmed`). Il apparaîtra dans les douze emplacements
 d'un coup le jour où la variable sera renseignée.
+
+---
+
+## 11. Zones et pages villes — phase 15B.5
+
+Toutes les pages du site portent désormais **deux** appels à l'action dans leur
+corps : un dans le hero, un dans la carte finale.
+
+| Page | Titre de conversion |
+| --- | --- |
+| `/zones-intervention` | Votre chantier est dans la zone ? |
+| Commune `core` ou `primary` | Besoin d'un élagueur à X ? |
+| Commune `extended` | **Un chantier à X ?** |
+
+La distinction n'est pas cosmétique. « Besoin d'un élagueur à Amiens ? »
+laisserait entendre que le service y est établi ; « un chantier à Amiens ? »
+ouvre la conversation sans rien promettre. C'est la même prudence que le
+gabarit applique déjà à ses formulations depuis la phase 14.
+
+### Repères de mesure pour la phase 16
+
+`zones-hero`, `zones-final`, `ville-<slug>-hero`, `ville-<slug>-final`.
+
+Avec les phases précédentes, le site expose maintenant des repères sur
+**tous** ses parcours de conversion : accueil, quatre services, à propos,
+réalisations, zones et 23 pages locales.
+
+**Rappel** — le CTA « Appeler » n'est rendu nulle part : le numéro n'est pas
+confirmé (`contact.phoneConfirmed`). Le renseigner le fera apparaître dans plus
+de soixante emplacements d'un seul coup.
+
+---
+
+## 12. Le pied de page ne porte plus d'appel au devis
+
+**Demande client, après la phase 15B.5.** La zone de conversion du pied —
+capsule, titre, phrase et bouton — est retirée. C'est la deuxième fois : une
+première en phase 15B, une seconde ici. Le brief de la 15B.2 l'avait fait
+revenir sous une forme différente, alors que la demande portait sur la
+fonction, pas sur la forme.
+
+> **Ne pas le réintroduire sans demande explicite.**
+
+### Les chemins vers le devis qui subsistent
+
+| Emplacement | Nature | Portée |
+| --- | --- | --- |
+| En-tête | bouton primaire | **toutes** les pages, visible en permanence |
+| Barre d'action mobile | bouton primaire | **toutes** les pages, persistante |
+| Hero de page | bouton primaire | accueil, 4 services, zones, 23 villes |
+| Carte de conversion finale | bouton primaire | **toutes** les pages de contenu |
+| ~~Pied de page~~ | ~~bouton~~ | **retiré** |
+
+Le repère de mesure `data-cta-source="footer"` n'est donc plus émis. La
+phase 16 ne doit pas l'attendre.

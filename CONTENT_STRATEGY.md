@@ -802,3 +802,57 @@ dur. Il passe par `site.shortName`, ce qui l'empêche de revenir.
 Le `h1` de la page, lui, est **inchangé** : « Réalisations & interventions ».
 Une première version de cette refonte l'avait réécrit ; c'était une
 modification d'intention SEO non demandée, elle a été annulée.
+
+---
+
+# Zones et pages villes — phase 15B.5
+
+## 1. La preuve que l'unicité SEO des 23 pages est intacte
+
+Ces pages n'ont d'intérêt que si elles disent chacune quelque chose de propre.
+Un contrôle compare, pour **chaque commune**, les quatre champs qui la
+distinguent — `intro`, `contexte`, `servicesIntro`, `description` — au HTML
+réellement servi :
+
+```
+Champs uniques par commune vérifiés : 92 (sur 23 communes)
+Absents du HTML servi               : 0
+```
+
+`locations.ts` n'a **pas été modifié**. Aucun texte local n'a été réécrit,
+raccourci ni fusionné.
+
+## 2. Ce qui a changé de forme, pas de fond
+
+| Contenu | Avant | Après |
+| --- | --- | --- |
+| Ligne de distance | légende sous le chapô | **carte de repère** dans le hero |
+| `engagement()` | encadré `bg-surface-inset` | **carte forêt** sous le contexte |
+| 4 prestations | liste à filets, 2 colonnes | **4 cartes compactes** cliquables |
+| Voisins | chips en ligne | **liens fléchés**, « Autour de X » |
+| Bloc confiance | 5 lignes à filet | **capsules** dans la section de conversion |
+
+## 3. Le rayon de 100 km reste contredit quatre fois
+
+C'est la formulation la plus risquée du site : un cercle se lit comme une
+promesse de couverture. Elle est démentie au chapô, dans la capsule du hero
+(« jusqu'à 100 km **selon chantier** » — jamais séparée de sa réserve), dans la
+carte « Déplacements élargis » (« il n'est jamais automatique ») et sur la
+carte elle-même (« portée maximale indicative »).
+
+> **Aucune de ces quatre formulations ne doit être adoucie**, y compris pour
+> gagner une ligne.
+
+## 4. Une capsule de conversion écrite avec précaution
+
+La carte finale de `/zones-intervention` porte « **Zone confirmée avec votre
+demande** », et non « zone couverte » : la confirmation vient de l'échange,
+jamais du cercle tracé sur la carte.
+
+## 5. Trois libellés publics, jamais les identifiants
+
+`core`, `primary` et `extended` n'apparaissent nulle part dans l'interface —
+vérifié à 0 occurrence sur le HTML servi. Le visiteur lit « Zone principale
+d'intervention », « Interventions possibles selon le chantier » ou
+« Déplacement à étudier ». Ces trois phrases disent le niveau d'engagement en
+clair, et jamais plus que ce qui est vrai.

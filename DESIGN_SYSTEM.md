@@ -1987,3 +1987,153 @@ Accessibilité **100** et bonnes pratiques **100** conservées, **CLS 0**.
 
 Sur mobile, l'écart résiduel tombe de +12/16 % à **+8/12 %**, et
 `/realisations` passe **sous** sa valeur d'origine (6 077 → 5 880 px).
+
+---
+
+# Zones, carte et pages villes — phase 15B.5
+
+Les deux dernières pages restées dans l'état d'avant la refonte visuelle.
+
+## 1. Le constat, mesuré
+
+| Page | 390 | 1440 | Surfaces |
+| --- | --- | --- | --- |
+| `/zones-intervention` | 5 729 px | 5 929 px | **6 sections, toutes ivoire** |
+| `/zones-intervention/[ville]` | ~3 300 px | ~4 000 px | **7 sections, toutes ivoire** |
+
+Le hub des communes atteignait **2 234 px** en 390. Et le gabarit local ne
+distinguait pas une commune du cœur de zone d'une commune à 100 km : seuls les
+textes changeaient.
+
+## 2. Le moteur cartographique n'a pas été touché
+
+Projection, coordonnées, 23 communes, classification, distances, tracé SVG,
+interactions, animations, calcul des voisins, `locations.ts` : **inchangés**.
+Aucune commune n'a été déplacée à la main. `zone-map.tsx` n'a pas une ligne de
+différence, et `MAP_DATA_SOURCES.md` n'a pas été modifié — il ne devait l'être
+que si une donnée géographique changeait.
+
+Ce qui change est autour : surface, panneau, proportions, présentation des
+niveaux, et le hub des communes.
+
+## 3. Rythme de `/zones-intervention`
+
+| # | Section | Surface |
+| --- | --- | --- |
+| 1 | Hero | **forêt profond** + motif `contour` |
+| 2 | Carte signature | **sable**, carte dans un panneau ivoire |
+| 3 | Trois niveaux | ivoire |
+| 4 | Hub des 23 communes | **sable** |
+| 5 | Critères de déplacement | **forêt profond** + motif `rings` |
+| 6 | Conversion | ivoire, carte forêt profond |
+
+## 4. La carte : c'est le PANNEAU qui prend la largeur, pas le dessin
+
+Le rapport de la carte vient du cadre géographique généré — elle est **carrée**.
+L'étirer à 1 320 px la rendrait aussi haute qu'un écran et demi.
+
+La carte est donc posée dans un panneau ivoire qui occupe **toute** la largeur
+du conteneur (1 320 px en 1440), tandis que le dessin reste borné à 64 rem —
+**1 024 px, contre 960 avant**. Le panneau donne la générosité demandée, le
+dessin garde ses proportions.
+
+> **Un élément au rapport imposé ne s'élargit pas : c'est son contenant qui
+> occupe la largeur.**
+
+## 5. Vocabulaire interne / vocabulaire public
+
+`core`, `primary` et `extended` sont des identifiants de données. Vérifié sur
+le HTML servi : **0 occurrence** sur `/zones-intervention` et sur les pages
+villes testées.
+
+| Interne | Public |
+| --- | --- |
+| `core` | Zone principale d'intervention · Cœur de zone |
+| `primary` | Interventions possibles selon le chantier · Zone principale |
+| `extended` | Déplacement à étudier · Déplacements élargis |
+
+Les regroupements du hub suivent des **faits géographiques** — métropole,
+département — jamais un découpage commercial : un visiteur qui connaît la
+région doit retrouver sa commune là où il l'attend.
+
+## 6. Le hub : une grille typographique, pas 23 cartes
+
+Une colonne à 390 px, deux dès 480, trois à partir de 1024. Chaque commune est
+une ligne de 48 px : nom à gauche, distance et flèche à droite.
+
+Vérifié : **aucun nom tronqué** à aucune largeur, y compris
+Saint-Étienne-du-Rouvray et Sotteville-lès-Rouen. Deux colonnes à 390 px ont
+été écartées — à 171 px de large, ces noms se replient sur deux lignes et la
+grille perd ce qu'elle gagne.
+
+## 7. Pages villes : un gabarit, trois ouvertures
+
+Seule la **surface du hero** varie. Ce n'est pas trois designs.
+
+| Niveau | Hero | Lecture |
+| --- | --- | --- |
+| `core` | forêt | l'aplat le plus affirmé — c'est la zone d'attache |
+| `primary` | sable | intermédiaire, sans l'autorité du forêt |
+| `extended` | ivoire | le plus neutre — la page la plus prudente du site |
+
+**Une commune à 100 km n'a pas à s'annoncer avec la même assurance que Rouen.**
+
+La section qui suit le hero calcule sa propre surface pour ne jamais partager
+celle du hero : sur une commune `extended`, les prestations passent sur sable.
+Sans cette règle, les pages `extended` étaient les seules à enchaîner deux
+surfaces identiques — défaut mesuré puis corrigé.
+
+## 8. Résultats
+
+| Page | 390 | 1440 | Perf | A11y | BP | CLS |
+| --- | --- | --- | --- | --- | --- | --- |
+| `/zones-intervention` | 5 729 → 6 730 | 5 929 → **6 299** | 95 | **100** | **100** | **0** |
+| `…/rouen` (core) | 3 330 → 3 947 | 4 001 → 4 525 | 95 | **100** | **100** | **0** |
+| `…/amiens` (extended) | 3 284 → 3 877 | 3 960 → 4 506 | 96 | **100** | **100** | **0** |
+
+24 combinaisons vérifiées (4 pages × 6 largeurs) : **0 débordement, 0 cible
+sous 44 px, un seul `h1`, 0 surface adjacente identique, carte jamais coupée,
+aucun nom de commune tronqué.**
+
+Interactions de la carte : **23 repères de 44 × 44 px**, tous dotés d'un nom
+accessible, survol, focus clavier, tap, sélection et lien vers la page locale —
+tous vérifiés après refonte.
+
+---
+
+# Correctif — le pied de page ne porte plus d'appel au devis
+
+**Demande client, après la phase 15B.5.** La zone de conversion du pied de page
+est retirée : capsule « Devis gratuit », titre, phrase d'accroche et bouton.
+
+## Ce qui reste
+
+Une seule zone — l'identité et les coordonnées à gauche, trois colonnes de
+liens à droite, le légal en bas. Le motif `rings` et la surface forêt profond
+sont conservés.
+
+| | Avant | Après |
+| --- | --- | --- |
+| Hauteur en 390 px | ~1 000 px | **860 px** |
+| Hauteur en 1440 px | ~700 px | **532 px** |
+| Liens vers `/devis` | 1 | **0** |
+| Capsules, boutons, titres | 3 | **0** |
+
+Vérifié sur 16 combinaisons (8 pages × 2 largeurs) : 0 lien devis, 0 capsule,
+0 bouton, 0 titre, 0 cible sous 44 px, 0 débordement.
+
+## La règle, et pourquoi elle est écrite ici
+
+> **Le pied de page ne porte aucun appel au devis, sous aucune forme.** Ne pas
+> le réintroduire sans demande explicite.
+
+C'est la **deuxième** fois que ce bloc est retiré : une première en phase 15B,
+une seconde après la 15B.5. Le brief de la 15B.2 l'avait fait revenir sous une
+forme différente ; la demande initiale portait sur la fonction, pas sur la
+forme.
+
+L'appel à l'action n'est pas perdu pour autant. Il vit dans **l'en-tête**,
+visible en permanence, dans la **barre d'action mobile**, persistante, et dans
+la **carte de conversion que porte chaque page**. Il était présent quatre fois
+sur un même écran de fin de page ; il l'est trois fois, ce qui suffit
+largement.

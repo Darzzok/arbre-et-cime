@@ -1,32 +1,29 @@
 import Link from "next/link";
 
-import { NavCta } from "@/components/layout/nav-cta";
 import { Wordmark } from "@/components/layout/wordmark";
-import {
-  Body,
-  Capsule,
-  Container,
-  SectionPattern,
-  Small,
-  Title,
-} from "@/components/ui";
+import { Body, Container, SectionPattern, Small } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { footerGroups, getRoute } from "@/lib/routes";
 import { area, contact, mailtoHref, site, telHref } from "@/lib/site";
 
 /**
- * Pied de page — refait en phase 15B.2.
+ * Pied de page.
  *
- * DEUX ZONES, ET POURQUOI
- * -----------------------
- * 1. **Une zone de conversion** en tête, sur forêt profond : c'est la dernière
- *    occasion de convertir quelqu'un qui a fait défiler toute une page sans
- *    cliquer. Le CTA devis y avait été retiré en phase 15B sur demande ; il
- *    revient ici sous une forme différente — un bloc identifié, pas un lien
- *    perdu dans une colonne.
- * 2. **Un pied compact** : l'identité et les coordonnées à gauche, trois
- *    colonnes de liens à droite, le légal en bas. Volontairement dense — un
- *    pied de page n'est pas une page.
+ * UNE SEULE ZONE — le pied compact : l'identité et les coordonnées à gauche,
+ * trois colonnes de liens à droite, le légal en bas. Volontairement dense —
+ * un pied de page n'est pas une page.
+ *
+ * PAS DE ZONE DE CONVERSION, ET C'EST UNE DEMANDE RÉPÉTÉE
+ * ------------------------------------------------------
+ * Le pied a porté un bloc devis — capsule, titre, phrase et bouton — en phase
+ * 15B.2. Le client l'avait déjà fait retirer une première fois en phase 15B,
+ * et l'a fait retirer à nouveau après la phase 15B.5.
+ *
+ * **Ne pas le réintroduire sans demande explicite**, sous quelque forme que ce
+ * soit. L'appel à l'action vit dans l'en-tête (visible en permanence), dans la
+ * barre d'action mobile, et dans la carte de conversion que porte chaque page.
+ * Il est présent partout ; le pied de page n'a pas à le répéter une quatrième
+ * fois.
  *
  * COMPOSANT SERVEUR. Aucun état, aucun JavaScript.
  *
@@ -47,32 +44,8 @@ export function SiteFooter() {
       {/* Motif existant, opacité très basse : une texture, pas un dessin. */}
       <SectionPattern pattern="rings" opacity={0.05} />
 
-      {/* ------------------------------------------ Zone de conversion --- */}
-      <Container className="relative py-(--space-compact)">
-        <div className="mx-auto max-w-reading">
-          <Capsule variant="accent">Devis gratuit</Capsule>
-
-          <Title as="p" className="mt-5 text-title">
-            Un arbre à entretenir, sécuriser ou abattre ?
-          </Title>
-
-          <Body className="mx-auto mt-4 max-w-[46ch] text-(--surface-fg-muted)">
-            Décrivez le chantier en quelques minutes. Sans engagement.
-          </Body>
-
-          <div className="mt-8 flex justify-center">
-            <NavCta
-              layout="inline"
-              size="lg"
-              source="footer"
-              className="flex-col sm:flex-row"
-            />
-          </div>
-        </div>
-      </Container>
-
       {/* ------------------------------------------------ Pied compact --- */}
-      <Container className="relative border-t border-(--surface-rule) py-(--space-compact)">
+      <Container className="relative py-(--space-compact)">
         <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
           {/* -------- Identité et coordonnées --------
 
@@ -85,8 +58,10 @@ export function SiteFooter() {
 
               Le bloc d’identité fait 288 px : l’adresse y tient d’un tenant à
               toutes les largeurs, et les coordonnées se lisent avec le nom de
-              l’entreprise plutôt qu’en bout de rangée. Le lien « Demander un
-              devis » a été retiré : il doublait le CTA situé juste au-dessus.
+              l’entreprise plutôt qu’en bout de rangée.
+
+              Aucun lien « Demander un devis » ici non plus : le pied de page ne
+              porte plus aucun appel au devis, sous aucune forme.
               --------------------------------------------------------------- */}
           <div className="lg:max-w-72">
             <Wordmark size="sm" />

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
@@ -9,56 +8,61 @@ import {
   ArrowLink,
   Body,
   ButtonLink,
+  Capsule,
+  CapsuleGroup,
+  Card,
+  CardLink,
   Container,
   Display,
   Eyebrow,
   Lead,
   Reveal,
   Section,
-  Subtitle,
+  SectionPattern,
   Title,
+  type Surface,
 } from "@/components/ui";
 import {
   LOCATIONS,
   getLocation,
   neighboursOf,
   type Location,
+  type LocationTier,
 } from "@/content/locations";
 import { cn } from "@/lib/cn";
 import { localMarkers } from "@/lib/local-markers";
 import { getRoute, serviceRoutes } from "@/lib/routes";
 import { buildLocationMetadata, locationPath } from "@/lib/seo";
-import { area, qualifications, site } from "@/lib/site";
+import { area, contact, qualifications, site, telHref } from "@/lib/site";
 import { locationBreadcrumbSchema } from "@/lib/structured-data";
 
 /**
- * Page locale — une par commune de la carte (phase 14).
+ * Page locale — une par commune de la carte (phase 14), refaite en 15B.5.
  *
  * UNE SEULE LANDING PAR VILLE
  * ---------------------------
  * Pas de `/elagage-rouen`, `/abattage-rouen` et consorts : ces pages
- * n'existeraient que pour les moteurs, se cannibaliseraient entre elles et
- * diviseraient l'autorité du site sur des contenus quasi identiques. La
- * répartition est nette et tient en une ligne :
+ * n'existeraient que pour les moteurs et se cannibaliseraient entre elles.
  *
- * - **page service** → intention métier (« comment se passe un abattage ») ;
- * - **page ville**   → intention géographique (« un élagueur près de chez moi »).
+ * CE QUI ÉTAIT À REFAIRE
+ * ----------------------
+ * Mesuré avant refonte : **sept sections, toutes ivoire** sur les 23 pages,
+ * soit six successions de surfaces identiques. Le gabarit ne distinguait pas
+ * non plus une commune du cœur de zone d'une commune à 100 km : seuls les
+ * textes changeaient.
  *
- * Chaque page ville renvoie vers les quatre pages services ; aucune ne les
- * duplique.
- *
- * ENTIÈREMENT STATIQUE
- * --------------------
- * `generateStaticParams` produit les vingt-trois routes au build. Aucun
- * runtime Node n'est requis, ce qui garde le site exportable tel quel sur
- * l'hébergement retenu (phase 13).
- *
- * CE QUI N'EST JAMAIS AFFIRMÉ ICI
+ * CE QUI EST STRICTEMENT CONSERVÉ
  * -------------------------------
- * Aucune adresse locale, aucun établissement secondaire, aucun chantier
- * réalisé, aucun délai. Une page ville décrit une **zone de service** depuis
- * Rouen — jamais une implantation. Pour les communes éloignées, la formulation
- * reste conditionnelle du titre au dernier paragraphe.
+ * `generateStaticParams`, les slugs, les métadonnées, le `h1`, les textes
+ * propres à chaque commune (`intro`, `contexte`, `servicesIntro`), la
+ * classification, la distance calculée, la carte locale, les voisins calculés
+ * et le maillage. **Aucune réécriture SEO.**
+ *
+ * VOCABULAIRE INTERNE / VOCABULAIRE PUBLIC
+ * ----------------------------------------
+ * `core`, `primary` et `extended` n'apparaissent nulle part dans l'interface.
+ * Ce que le visiteur lit, ce sont les libellés de `TIER_LABEL`, qui disent le
+ * niveau d'engagement en clair — et jamais plus que ce qui est vrai.
  */
 
 type PageProps = { params: Promise<{ ville: string }> };
@@ -94,15 +98,39 @@ export async function generateMetadata({
 /**
  * La formulation dépend du niveau, et elle n'est jamais adoucie.
  *
- * Pour une commune `extended`, la phrase est celle imposée au brief, au mot
- * près : promettre une intervention à cent kilomètres serait un mensonge
- * commercial, et le visiteur qui se déplacerait pour rien s'en souviendrait.
+ * Pour une commune `extended`, la phrase est celle imposée au brief de la
+ * phase 14, au mot près : promettre une intervention à cent kilomètres serait
+ * un mensonge commercial, et le visiteur qui se déplacerait pour rien s'en
+ * souviendrait.
  */
 const TIER_LABEL = {
   core: "Zone principale d’intervention",
   primary: "Interventions possibles selon le chantier",
   extended: "Déplacement à étudier",
 } as const;
+
+/**
+ * VARIATION VISUELLE PAR NIVEAU — introduite en phase 15B.5.
+ *
+ * Un seul gabarit, trois ouvertures. Ce n'est pas trois designs : seule la
+ * **surface du hero** change, et avec elle la variante de capsule qu'elle
+ * impose. Tout le reste de la page est identique d'une commune à l'autre.
+ *
+ * L'intensité suit l'engagement réel :
+ *
+ * | Niveau | Hero | Lecture |
+ * | --- | --- | --- |
+ * | `core` | forêt | l'aplat le plus affirmé — c'est la zone d'attache |
+ * | `primary` | sable | intermédiaire, chaleureux, sans l'autorité du forêt |
+ * | `extended` | ivoire | le plus neutre — la page la plus prudente du site |
+ *
+ * Une commune à 100 km n'a pas à s'annoncer avec la même assurance que Rouen.
+ */
+const HERO_SURFACE: Record<LocationTier, Surface> = {
+  core: "dark",
+  primary: "sand",
+  extended: "light",
+};
 
 /**
  * Distance annoncée : toujours « à vol d’oiseau », jamais « en voiture ».
@@ -143,6 +171,17 @@ export default async function VillePage({ params }: PageProps) {
   const zones = getRoute("zones-intervention");
   const devis = getRoute("devis");
   const voisins = neighboursOf(location);
+  const tel = telHref();
+
+  const heroSurface = HERO_SURFACE[location.tier];
+  const heroCapsule =
+    heroSurface === "dark" || heroSurface === "deep-forest" ? "dark" : "light";
+
+  /* La section qui SUIT le hero ne peut pas partager sa surface. Sur une
+     commune `extended`, le hero est ivoire : les prestations passent alors sur
+     sable. Mesuré avant correction — les pages `extended` étaient les seules à
+     enchaîner deux surfaces identiques. */
+  const apresHero: Surface = heroSurface === "light" ? "sand" : "light";
 
   return (
     <main id={MAIN_CONTENT_ID} tabIndex={-1}>
@@ -153,36 +192,95 @@ export default async function VillePage({ params }: PageProps) {
         })}
       />
 
-      {/* ------------------------------------------------------- Hero --- */}
-      <Section surface="light" spacing="tight">
-        <Container width="prose">
-          <Eyebrow>{TIER_LABEL[location.tier]}</Eyebrow>
+      {/* ------------------------------------------------------- Hero ---
+          Pas de photographie : vingt-trois pages ne peuvent pas avoir
+          vingt-trois heros photo sans réemployer trois fois la même image.
+          La surface, le motif et la capsule suffisent à situer la page. */}
+      <Section surface={heroSurface} aria-labelledby="ville-titre">
+        <SectionPattern pattern="contour" opacity={0.05} />
 
-          <Display as="h1" className="mt-4 text-title">
-            Élagueur {location.a}
-          </Display>
+        <Container className="relative">
+          <Reveal className="mx-auto max-w-reading">
+            <Capsule variant={heroCapsule}>{TIER_LABEL[location.tier]}</Capsule>
 
-          <Lead className="mt-5 text-(--surface-fg-muted)">
-            {location.intro}
-          </Lead>
+            <Display
+              id="ville-titre"
+              as="h1"
+              className="mt-5 text-title lg:text-[3rem] lg:leading-[1.06]"
+            >
+              Élagueur {location.a}
+            </Display>
 
-          <p className="mt-4 font-sans text-caption text-(--surface-fg-muted)">
-            {distanceLine(location)} {location.departement}, {location.region}.
-          </p>
+            <Lead className="mt-5 text-(--surface-fg-muted)">
+              {location.intro}
+            </Lead>
+          </Reveal>
 
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <ButtonLink href={devis.path} variant="primary" size="lg">
-              Demander un devis
-            </ButtonLink>
-          </div>
+          {/* Bloc géographique — la distance calculée, présentée comme un
+              repère et non comme une ligne de légende perdue sous le chapô. */}
+          <Reveal className="mt-9">
+            <Card
+              as="div"
+              tone={heroSurface === "dark" ? "forest" : "plain"}
+              padding="md"
+              className="mx-auto max-w-reading"
+            >
+              <p className="font-sans text-caption leading-relaxed text-(--surface-fg-muted) text-pretty">
+                {distanceLine(location)} {location.departement},{" "}
+                {location.region}.
+              </p>
+            </Card>
+          </Reveal>
+
+          <Reveal className="mt-8">
+            <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+              {/* La largeur est portée par une ENVELOPPE : `cn()` ne fusionne
+                  pas les classes concurrentes. */}
+              <div className="w-full sm:w-fit">
+                <ButtonLink
+                  href={devis.path}
+                  variant="primary"
+                  size="lg"
+                  block
+                  data-cta="devis"
+                  data-cta-source={`ville-${location.slug}-hero`}
+                >
+                  Demander un devis
+                </ButtonLink>
+              </div>
+
+              {tel ? (
+                <div className="w-full sm:w-fit">
+                  <ButtonLink
+                    href={tel}
+                    variant="outline"
+                    size="lg"
+                    block
+                    data-cta="appel"
+                    data-cta-source={`ville-${location.slug}-hero`}
+                  >
+                    Appeler
+                  </ButtonLink>
+                </div>
+              ) : null}
+            </div>
+          </Reveal>
         </Container>
       </Section>
 
-      {/* --------------------------------------------------- Prestations --- */}
-      <Section surface="light" spacing="tight" aria-labelledby="interventions">
+      {/* --------------------------------------------------- Prestations ---
+          Cartes DÉLIBÉRÉMENT plus petites que celles de l'accueil et des pages
+          services : ici elles servent le maillage et la compréhension, pas la
+          démonstration. Deux colonnes dès 390 px. */}
+      <Section surface={apresHero} aria-labelledby="interventions">
         <Container>
           <Reveal className="mx-auto max-w-reading">
-            <Title id="interventions" as="h2" className="text-subtitle">
+            <Eyebrow>Prestations</Eyebrow>
+            <Title
+              id="interventions"
+              as="h2"
+              className="mt-4 lg:text-[2.25rem] lg:leading-[1.1]"
+            >
               Nos interventions {location.a}
             </Title>
             <Body className="mt-4 text-(--surface-fg-muted)">
@@ -190,158 +288,228 @@ export default async function VillePage({ params }: PageProps) {
             </Body>
           </Reveal>
 
-          <Reveal>
-            <ul className="mx-auto mt-10 grid max-w-4xl gap-x-8 gap-y-6 text-left sm:grid-cols-2">
-              {serviceRoutes.map((route) => (
-                <li
-                  key={route.id}
-                  className="border-t border-(--surface-rule) pt-4"
+          <ul className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-(--card-gap) lg:mt-12 lg:grid-cols-4">
+            {serviceRoutes.map((route) => (
+              <Reveal as="li" key={route.id} className="h-full">
+                <CardLink
+                  href={route.path}
+                  tone={apresHero === "sand" ? "plain" : "sand"}
+                  padding="md"
+                  className="flex h-full flex-col justify-center"
                 >
-                  <h3 className="font-display text-subtitle leading-tight text-(--surface-heading)">
-                    <Link
-                      href={route.path}
-                      className="no-underline hover:underline"
-                    >
-                      {route.navLabel}
-                    </Link>
-                  </h3>
-                  <p className="mt-2 font-sans text-caption leading-relaxed text-(--surface-fg-muted)">
-                    {route.navTagline}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
+                  <span className="font-display text-subtitle leading-tight text-(--surface-heading)">
+                    {route.navLabel}
+                  </span>
+                  {route.navTagline ? (
+                    <span className="mt-2 font-sans text-caption leading-relaxed text-(--surface-fg-muted)">
+                      {route.navTagline}
+                    </span>
+                  ) : null}
+                </CardLink>
+              </Reveal>
+            ))}
+          </ul>
         </Container>
       </Section>
 
-      {/* -------------------------------------------------- Bloc local --- */}
-      <Section surface="light" spacing="tight" aria-labelledby="contexte-local">
-        <Container width="prose">
-          <Reveal>
-            <Title id="contexte-local" as="h2" className="text-subtitle">
+      {/* -------------------------------------------------- Bloc local ---
+          C'est LE bloc qui distingue les 23 pages entre elles. Son texte n'a
+          pas été touché : il vient de `locations.ts`, une commune à la fois. */}
+      <Section surface="deep-forest" aria-labelledby="contexte-local">
+        <SectionPattern pattern="rings" opacity={0.04} />
+
+        <Container className="relative">
+          <Reveal className="mx-auto max-w-reading">
+            <Eyebrow>Sur le terrain</Eyebrow>
+            <Title
+              id="contexte-local"
+              as="h2"
+              className="mt-4 lg:text-[2.25rem] lg:leading-[1.1]"
+            >
               {location.tier === "extended"
                 ? `Ce qui conditionne un déplacement ${location.a}`
                 : `Le contexte ${location.a}`}
             </Title>
 
-            <Body className="mt-4 text-(--surface-fg-muted)">
+            <Body className="mt-5 text-(--surface-fg-muted)">
               {location.contexte}
             </Body>
+          </Reveal>
 
-            <p
-              className={cn(
-                "mt-6 rounded-card border border-(--surface-rule) bg-(--surface-inset)",
-                "p-4 text-left font-sans text-caption text-(--surface-fg)",
-              )}
+          {/* L'engagement, en clair et sans adoucissement. */}
+          <Reveal className="mt-9">
+            <Card
+              as="div"
+              tone="forest"
+              padding="lg"
+              className="mx-auto max-w-reading"
             >
-              {engagement(location)}
-            </p>
+              <span
+                aria-hidden="true"
+                className="mx-auto block h-0.5 w-4 bg-safety"
+              />
+              <p className="mt-4 font-sans text-body leading-relaxed text-(--surface-fg) text-pretty">
+                {engagement(location)}
+              </p>
+            </Card>
           </Reveal>
         </Container>
       </Section>
 
       {/* ------------------------------------------------ Carte locale --- */}
-      <Section surface="light" spacing="tight" aria-labelledby="carte-locale">
+      <Section surface="light" aria-labelledby="carte-locale">
         <Container>
           <Reveal className="mx-auto max-w-reading">
-            <Title id="carte-locale" as="h2" className="text-subtitle">
+            <Eyebrow>Situation</Eyebrow>
+            <Title
+              id="carte-locale"
+              as="h2"
+              className="mt-4 lg:text-[2.25rem] lg:leading-[1.1]"
+            >
               {location.nom} et {site.shortName}
             </Title>
           </Reveal>
 
-          <Reveal className="mx-auto mt-8 max-w-[42rem]">
-            <ZoneMap
-              variant="local"
-              highlight={location.id}
-              markers={localMarkers(location)}
-              title={`Carte situant ${location.nom} par rapport à Rouen`}
-            />
+          <Reveal className="mt-10 lg:mt-12">
+            <Card as="div" tone="sand" padding="none">
+              <div className="p-4 sm:p-6 lg:p-8">
+                <ZoneMap
+                  variant="local"
+                  highlight={location.id}
+                  markers={localMarkers(location)}
+                  className="mx-auto max-w-[44rem]"
+                  title={`Carte situant ${location.nom} par rapport à Rouen`}
+                />
+              </div>
+            </Card>
           </Reveal>
         </Container>
       </Section>
 
-      {/* ------------------------------------------------- Voisins --- */}
-      <Section surface="light" spacing="tight" aria-labelledby="voisins">
-        <Container width="prose">
-          <Reveal>
-            <Title id="voisins" as="h2" className="text-subtitle">
-              Secteurs voisins
+      {/* ---------------------------------------------------- Voisins --- */}
+      <Section surface="sand" aria-labelledby="voisins">
+        <Container>
+          <Reveal className="mx-auto max-w-reading">
+            <Eyebrow>Maillage local</Eyebrow>
+            <Title
+              id="voisins"
+              as="h2"
+              className="mt-4 lg:text-[2.25rem] lg:leading-[1.1]"
+            >
+              Autour {location.de}
             </Title>
-
-            <ul className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-3">
-              {voisins.map((voisin) => (
-                <li key={voisin.slug}>
-                  <Link
-                    href={locationPath(voisin.slug)}
-                    className="font-sans text-body text-(--surface-fg)"
-                  >
-                    {voisin.nom}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8">
-              <ArrowLink href={zones.path}>
-                Voir toute la zone d’intervention
-              </ArrowLink>
-            </div>
           </Reveal>
-        </Container>
-      </Section>
 
-      {/* ------------------------------------------------- Confiance --- */}
-      <Section surface="light" spacing="tight" aria-labelledby="confiance">
-        <Container width="prose">
-          <Reveal>
-            <Title id="confiance" as="h2" className="text-subtitle">
-              Un professionnel qualifié
-            </Title>
-
-            <ul className="mt-6 grid gap-x-8 gap-y-3 text-left sm:grid-cols-2">
-              <li className="border-t border-(--surface-rule) pt-3 font-sans text-caption text-(--surface-fg)">
-                Environ {site.experienceYears} ans d’expérience du métier
-              </li>
-              {qualifications.map((titre) => (
-                <li
-                  key={titre}
-                  className="border-t border-(--surface-rule) pt-3 font-sans text-caption text-(--surface-fg)"
+          {/* Trois à cinq voisins, calculés — jamais choisis à la main. */}
+          <ul className="mx-auto mt-9 grid max-w-4xl gap-x-8 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3">
+            {voisins.map((voisin) => (
+              <li
+                key={voisin.slug}
+                className="border-t border-(--surface-rule)"
+              >
+                <ArrowLink
+                  href={locationPath(voisin.slug)}
+                  className="flex min-h-12 w-full items-center justify-between gap-3 py-3"
                 >
-                  {titre}
-                </li>
-              ))}
-              <li className="border-t border-(--surface-rule) pt-3 font-sans text-caption text-(--surface-fg)">
-                Travail sécurisé, chantier laissé propre
+                  {voisin.nom}
+                </ArrowLink>
               </li>
-              <li className="border-t border-(--surface-rule) pt-3 font-sans text-caption text-(--surface-fg)">
-                Devis gratuit et sans engagement
-              </li>
-            </ul>
+            ))}
+          </ul>
+
+          <Reveal className="mt-10">
+            <ArrowLink href={zones.path}>
+              Voir toute la zone d’intervention
+            </ArrowLink>
           </Reveal>
         </Container>
       </Section>
 
-      {/* ----------------------------------------------------- CTA --- */}
+      {/* ------------------------------------------------------- CTA --- */}
       <Section surface="light" aria-labelledby="cta-ville">
-        <Container width="prose">
+        <Container>
+          {/* Les repères de confiance, en capsules : quatre lignes de liste à
+              filet coûtaient une section entière pour quatre faits courts. */}
           <Reveal>
-            <Subtitle id="cta-ville" as="h2">
-              {location.tier === "extended"
-                ? `Un chantier ${location.a} ? Parlons-en.`
-                : `Besoin d’un élagueur ${location.a} ?`}
-            </Subtitle>
+            <CapsuleGroup>
+              <Capsule variant="light" dot>
+                {site.experienceYears}+ ans de métier
+              </Capsule>
+              {qualifications.map((titre) => (
+                <Capsule key={titre} variant="light" dot>
+                  {titre}
+                </Capsule>
+              ))}
+              <Capsule variant="light" dot>
+                Chantier laissé propre
+              </Capsule>
+            </CapsuleGroup>
+          </Reveal>
 
-            <Body className="mt-4 text-(--surface-fg-muted)">
-              Décrivez le chantier en quelques minutes, ajoutez des photos si
-              vous en avez : c’est ce qui permet de chiffrer le plus vite.
-            </Body>
+          <Reveal className="mt-10 lg:mt-12">
+            <Card
+              as="div"
+              tone="deep"
+              padding="none"
+              className="mx-auto max-w-5xl"
+            >
+              <SectionPattern pattern="contour" opacity={0.05} />
 
-            <div className="mt-8 flex justify-center">
-              <ButtonLink href={devis.path} variant="primary" size="lg">
-                Demander un devis
-              </ButtonLink>
-            </div>
+              <div className="relative px-6 py-11 sm:px-10 sm:py-14 lg:px-16 lg:py-20">
+                <Capsule variant="accent">Devis gratuit</Capsule>
+
+                {/* La formulation reste prudente pour les communes éloignées :
+                    « un chantier », pas « besoin d'un élagueur ». */}
+                <Title
+                  id="cta-ville"
+                  as="h2"
+                  className={cn(
+                    "mx-auto mt-6 max-w-[20ch]",
+                    "lg:text-[2.75rem] lg:leading-[1.06]",
+                  )}
+                >
+                  {location.tier === "extended"
+                    ? `Un chantier ${location.a} ?`
+                    : `Besoin d’un élagueur ${location.a} ?`}
+                </Title>
+
+                <Body className="mx-auto mt-5 max-w-[48ch] text-(--surface-fg-muted)">
+                  Décrivez le chantier en quelques minutes, ajoutez des photos
+                  si vous en avez : c’est ce qui permet de chiffrer le plus
+                  vite.
+                </Body>
+
+                <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+                  <div className="w-full sm:w-fit">
+                    <ButtonLink
+                      href={contact.quotePath}
+                      variant="primary"
+                      size="lg"
+                      block
+                      data-cta="devis"
+                      data-cta-source={`ville-${location.slug}-final`}
+                    >
+                      Demander un devis
+                    </ButtonLink>
+                  </div>
+
+                  {tel ? (
+                    <div className="w-full sm:w-fit">
+                      <ButtonLink
+                        href={tel}
+                        variant="light"
+                        size="lg"
+                        block
+                        data-cta="appel"
+                        data-cta-source={`ville-${location.slug}-final`}
+                      >
+                        Appeler
+                      </ButtonLink>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            </Card>
           </Reveal>
         </Container>
       </Section>

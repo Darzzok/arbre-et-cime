@@ -1617,6 +1617,111 @@ disque et restent au registre** (`MEDIA_SOURCES.md` § 12), pas supprimées.
 
 ---
 
+### Phase 15B.5 — Zones, carte et 23 pages villes ✅
+
+Les deux dernières pages restées dans l'état d'avant la refonte visuelle :
+`/zones-intervention` et le gabarit des 23 pages locales.
+
+### Le constat
+
+`/zones-intervention` : **six sections, toutes ivoire**, avec un hub de
+communes de **2 234 px** en 390. Le gabarit local : **sept sections, toutes
+ivoire**, identique pour Rouen comme pour une commune à 100 km.
+
+### Le moteur cartographique n'a pas bougé d'une ligne
+
+`zone-map.tsx` est **inchangé**. Projection, coordonnées, 23 communes,
+classification, distances, tracé SVG, interactions, animations et calcul des
+voisins sont intacts, `locations.ts` n'a pas été modifié, et aucune commune n'a
+été déplacée. `MAP_DATA_SOURCES.md` n'est donc pas touché : il ne devait l'être
+que si une donnée géographique changeait.
+
+### Ce que la carte a gagné
+
+Elle est posée dans un panneau ivoire qui occupe **toute** la largeur du
+conteneur, tandis que le dessin passe de 960 à **1 024 px**. Son rapport vient
+du cadre géographique généré — elle est carrée, et l'étirer à 1 320 px la
+rendrait aussi haute qu'un écran et demi. **C'est le panneau qui prend la
+largeur, pas le dessin.**
+
+### Un gabarit local, trois ouvertures
+
+Seule la surface du hero varie — forêt pour le cœur de zone, sable pour la
+zone principale, ivoire pour les déplacements élargis. Une commune à 100 km n'a
+pas à s'annoncer avec la même assurance que Rouen.
+
+Un défaut a été trouvé puis corrigé en cours de route : les pages `extended`
+étaient les seules à enchaîner deux surfaces claires. La section qui suit le
+hero calcule désormais sa propre surface.
+
+### Vocabulaire interne, vocabulaire public
+
+`core`, `primary` et `extended` : **0 occurrence** dans le HTML servi, vérifié
+sur quatre pages. Le visiteur lit « Zone principale d'intervention »,
+« Interventions possibles selon le chantier » ou « Déplacement à étudier ».
+
+### Aucune perte d'unicité SEO
+
+Contrôle automatique des quatre champs propres à chaque commune, comparés au
+HTML servi :
+
+```
+Champs uniques par commune vérifiés : 92 (sur 23 communes)
+Absents du HTML servi               : 0
+```
+
+### Invariant 23 vérifié
+
+23 communes déclarées → **23 pages conformes** (h1, title, description,
+`noindex`, carte) → **23 liens distincts** sur le hub → **23 repères** de
+44 × 44 px sur la carte, tous dotés d'un nom accessible.
+
+### Mesures
+
+| Page | 390 | 1440 | Perf | A11y | BP | CLS |
+| --- | --- | --- | --- | --- | --- | --- |
+| `/zones-intervention` | 5 729 → 6 730 | 5 929 → **6 299** | 95 | **100** | **100** | **0** |
+| `…/rouen` | 3 330 → 3 947 | 4 001 → 4 525 | 95 | **100** | **100** | **0** |
+| `…/amiens` | 3 284 → 3 877 | 3 960 → 4 506 | 96 | **100** | **100** | **0** |
+
+24 combinaisons (4 pages × 6 largeurs) : **0 débordement, 0 cible sous 44 px,
+un seul `h1`, 0 surface adjacente identique, carte jamais coupée, aucun nom de
+commune tronqué.** Aucune requête géographique au runtime, aucune bibliothèque
+cartographique ajoutée.
+
+**Sortie atteinte :** lint, typecheck et build au vert, 43 routes statiques
+dont les 23 pages villes, `SITE_INDEXABLE` toujours `false`, slugs,
+`generateStaticParams`, métadonnées, canoniques, sitemap et classification
+**non touchés**, **aucune dépendance ajoutée**.
+
+**Avec cette phase, les 15 pages du site sont refondues.**
+
+---
+
+### Correctif — pied de page sans appel au devis ✅
+
+**Demande client.** La zone de conversion du pied de page est retirée :
+capsule « Devis gratuit », titre, phrase et bouton. Le pied conserve
+l'identité, les coordonnées, les trois colonnes de liens et le légal.
+
+C'est la **deuxième** fois que ce bloc est retiré — une première en phase 15B,
+une seconde ici. Le brief de la 15B.2 l'avait fait revenir sous une forme
+différente ; la demande portait sur la fonction, pas sur la forme. La règle est
+désormais écrite dans le composant lui-même et dans `DESIGN_SYSTEM.md` :
+**ne pas le réintroduire sans demande explicite**.
+
+| | Avant | Après |
+| --- | --- | --- |
+| Hauteur du pied en 390 px | ~1 000 px | **860 px** |
+| Hauteur du pied en 1440 px | ~700 px | **532 px** |
+| Liens vers `/devis` dans le pied | 1 | **0** |
+| Capsules, boutons, titres | 3 | **0** |
+
+Vérifié sur 16 combinaisons (8 pages × 2 largeurs). Accessibilité **100**,
+bonnes pratiques **100**, **CLS 0** conservés. Lint, typecheck et build au vert.
+
+---
+
 ## Phase 16 — Analytics et conversions ⬜
 
 - Analytics respectueux de la vie privée
