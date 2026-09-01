@@ -8,6 +8,9 @@ import {
   ArrowLink,
   Body,
   Button,
+  Capsule,
+  CapsuleGroup,
+  Card,
   ButtonLink,
   Container,
   Display,
@@ -18,6 +21,7 @@ import {
   Rule,
   Section,
   SectionIndex,
+  SectionPattern,
   Small,
   Subtitle,
   TextLink,
@@ -52,7 +56,7 @@ function Block({
   return (
     <section aria-labelledby={id} className="scroll-mt-24">
       <div className="flex items-baseline gap-4">
-        <SectionIndex value={index} total={12} />
+        <SectionIndex value={index} total={13} />
         <Rule width="full" className="translate-y-[-0.35em]" />
       </div>
       <Title as="h2" id={id} className="mt-4">
@@ -84,9 +88,13 @@ function Frame({
 }
 
 function Label({ children }: { children: ReactNode }) {
-  return (
-    <Eyebrow className="mb-3 opacity-80">{children}</Eyebrow>
-  );
+  /*
+    PAS d'`opacity-80` ici. La mousse est deja un jeton mis en sourdine :
+    l'attenuer encore la fait tomber a 3,53 sur ivoire, sous le seuil AA
+    (releve par l'audit de la phase 15B). C'est exactement la regle inscrite
+    a DESIGN_SYSTEM.md — ne pas empiler une opacite sur un jeton attenue.
+  */
+  return <Eyebrow className="mb-3">{children}</Eyebrow>;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -94,34 +102,40 @@ function Label({ children }: { children: ReactNode }) {
 /* -------------------------------------------------------------------------- */
 
 const palette = [
-  { name: "Vert foret profond", hex: "#14251E", token: "forest", swatch: "bg-forest" },
-  { name: "Ivoire naturel", hex: "#F3F0E8", token: "ivory", swatch: "bg-ivory" },
-  { name: "Charbon", hex: "#171918", token: "charcoal", swatch: "bg-charcoal" },
-  { name: "Vert mousse", hex: "#516B54", token: "moss", swatch: "bg-moss" },
+  { name: "Vert foret", hex: "#10271E", token: "forest", swatch: "bg-forest" },
+  { name: "Foret profond", hex: "#081A14", token: "deep-forest", swatch: "bg-deep-forest" },
+  { name: "Ivoire chaud", hex: "#F5F3ED", token: "ivory", swatch: "bg-ivory" },
+  { name: "Sable doux", hex: "#E7E2D8", token: "sand", swatch: "bg-sand" },
+  { name: "Charbon", hex: "#161A18", token: "charcoal", swatch: "bg-charcoal" },
+  { name: "Vert mousse", hex: "#4F6B58", token: "moss", swatch: "bg-moss" },
   { name: "Pierre", hex: "#CBC8BD", token: "stone", swatch: "bg-stone" },
-  { name: "Jaune securite", hex: "#D8A62A", token: "safety", swatch: "bg-safety" },
+  { name: "Accent", hex: "#E4B23C", token: "safety", swatch: "bg-safety" },
 ];
 
 const contrasts = [
-  { pair: "charbon sur ivoire", ratio: "15,51", verdict: "AAA — texte courant" },
-  { pair: "foret sur ivoire", ratio: "14,04", verdict: "AAA — titres" },
-  { pair: "ivoire sur foret", ratio: "14,04", verdict: "AAA — texte inverse" },
-  { pair: "pierre sur foret", ratio: "9,55", verdict: "AAA — secondaire sombre" },
-  { pair: "charbon sur jaune", ratio: "7,91", verdict: "AAA — libelle des CTA" },
-  { pair: "jaune sur foret", ratio: "7,16", verdict: "AAA — focus sur sombre" },
-  { pair: "mousse sur ivoire", ratio: "5,15", verdict: "AA — secondaire clair" },
-  { pair: "mousse sur foret", ratio: "2,73", verdict: "Echec — decor seul" },
-  { pair: "jaune sur ivoire", ratio: "1,96", verdict: "Echec — jamais de texte" },
+  { pair: "ivoire sur foret profond", ratio: "16,20", verdict: "AAA — texte inverse" },
+  { pair: "charbon sur ivoire", ratio: "15,84", verdict: "AAA — texte courant" },
+  { pair: "foret sur ivoire", ratio: "14,22", verdict: "AAA — titres" },
+  { pair: "ivoire sur foret", ratio: "14,22", verdict: "AAA — texte inverse" },
+  { pair: "sable sur foret", ratio: "12,22", verdict: "AAA" },
+  { pair: "foret sur sable", ratio: "12,22", verdict: "AAA — titres sur sable" },
+  { pair: "pierre sur foret", ratio: "9,42", verdict: "AAA — secondaire sombre" },
+  { pair: "charbon sur accent", ratio: "8,98", verdict: "AAA" },
+  { pair: "foret sur accent", ratio: "8,06", verdict: "AAA — libelle du CTA primaire" },
+  { pair: "mousse sur ivoire", ratio: "5,29", verdict: "AA — secondaire clair" },
+  { pair: "mousse sur sable", ratio: "4,55", verdict: "AA — juste au-dessus du seuil" },
+  { pair: "mousse sur foret", ratio: "2,69", verdict: "Echec — decor seul" },
+  { pair: "accent sur ivoire", ratio: "1,76", verdict: "Echec — jamais de texte" },
 ];
 
 const typeScale = [
-  { token: "text-display", usage: "Titre d'ecran", size: "40 → 76 px", font: "Fraunces" },
-  { token: "text-title", usage: "Titre de section", size: "30 → 46 px", font: "Fraunces" },
-  { token: "text-subtitle", usage: "Sous-titre", size: "22 → 26 px", font: "Fraunces" },
-  { token: "text-lead", usage: "Chapo", size: "17 → 19 px", font: "Manrope" },
-  { token: "text-body", usage: "Texte courant", size: "16 → 17 px", font: "Manrope" },
-  { token: "text-caption", usage: "Legende", size: "13 → 14 px", font: "Manrope" },
-  { token: "text-eyebrow", usage: "Surtitre", size: "12 px fixe", font: "Manrope" },
+  { token: "text-display", usage: "Titre d'ecran", size: "40 → 72 px", font: "Sora" },
+  { token: "text-title", usage: "Titre de section", size: "34 → 56 px", font: "Sora" },
+  { token: "text-subtitle", usage: "Sous-titre", size: "22 → 27 px", font: "Sora" },
+  { token: "text-lead", usage: "Chapo", size: "17 → 19 px", font: "Inter" },
+  { token: "text-body", usage: "Texte courant", size: "16 → 18 px", font: "Inter" },
+  { token: "text-caption", usage: "Legende", size: "13 → 14 px", font: "Inter" },
+  { token: "text-eyebrow", usage: "Surtitre", size: "12 px fixe", font: "Inter" },
 ];
 
 const chrome = [
@@ -287,7 +301,7 @@ export default function StyleGuidePage() {
             <Block index={2} title="Typographies">
               <div className="grid gap-8 md:grid-cols-2">
                 <Frame>
-                  <Label>Fraunces — titres</Label>
+                  <Label>Sora — titres</Label>
                   <p className="font-display text-[2.5rem] leading-none">
                     Élagage&nbsp;Ag
                   </p>
@@ -296,7 +310,7 @@ export default function StyleGuidePage() {
                   </Small>
                 </Frame>
                 <Frame>
-                  <Label>Manrope — UI et texte</Label>
+                  <Label>Inter — UI et texte</Label>
                   <p className="font-sans text-[2.5rem] leading-none font-semibold">
                     Élagage&nbsp;Ag
                   </p>
@@ -749,7 +763,7 @@ export default function StyleGuidePage() {
               <Body className="max-w-reading">
                 Le logotype est <strong>typographique et temporaire</strong> :
                 aucun symbole d’arbre n’est inventé tant qu’un logo réel n’est
-                pas fourni. Fraunces pour le nom, Manrope en surtitre pour
+                pas fourni. Sora pour le nom, Inter en surtitre pour
                 l’activité.
               </Body>
 
@@ -826,6 +840,255 @@ export default function StyleGuidePage() {
                 de faux repères de navigation et un rendu trompeur. Ils se
                 valident sur les pages réelles, à ~390 px.
               </Small>
+            </Block>
+            {/* 13 — Direction visuelle phase 15B ------------------------ */}
+            <Block index={13} title="Direction visuelle — phase 15B">
+              <Body className="max-w-reading">
+                Nouvelles fondations : <strong>Sora</strong> pour les titres,{" "}
+                <strong>Inter</strong> pour le texte et l’interface, quatre
+                surfaces, des capsules, une primitive de carte et deux fonds de
+                section. Les pages ne sont pas encore refaites — c’est ce bloc
+                qui fait référence.
+              </Body>
+
+              {/* ---------------------------------------- Surfaces --- */}
+              <Label>Quatre surfaces</Label>
+              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {(
+                  [
+                    ["light", "Ivoire chaud", "Surface par défaut"],
+                    ["sand", "Sable doux", "Second fond clair"],
+                    ["dark", "Forêt", "Surface sombre courante"],
+                    ["deep-forest", "Forêt profond", "Ancrage — à garder rare"],
+                  ] as const
+                ).map(([surface, nom, role]) => (
+                  <li
+                    key={surface}
+                    data-surface={surface}
+                    className="rounded-card border border-(--surface-rule) bg-(--surface-bg) p-5 text-(--surface-fg)"
+                  >
+                    <p className="font-display text-subtitle text-(--surface-heading)">
+                      {nom}
+                    </p>
+                    <p className="mt-1.5 font-sans text-caption text-(--surface-fg-muted)">
+                      {role}
+                    </p>
+                    <code className="mt-3 block font-sans text-caption">
+                      data-surface=&quot;{surface}&quot;
+                    </code>
+                  </li>
+                ))}
+              </ul>
+
+              {/* ---------------------------------------- Capsules --- */}
+              <div className="mt-12">
+                <Label>Capsules</Label>
+                <Frame>
+                  <CapsuleGroup>
+                    <Capsule>Devis gratuit</Capsule>
+                    <Capsule dot>Professionnel diplômé</Capsule>
+                    <Capsule variant="accent">Jusqu’à 100 km</Capsule>
+                  </CapsuleGroup>
+                </Frame>
+
+                <Frame surface="dark" className="mt-3">
+                  <CapsuleGroup>
+                    <Capsule variant="dark">Rouen &amp; Métropole</Capsule>
+                    <Capsule variant="dark" dot>
+                      Sécurité
+                    </Capsule>
+                    <Capsule variant="accent">Devis gratuit</Capsule>
+                  </CapsuleGroup>
+                </Frame>
+
+                <Small className="mt-3 block max-w-reading">
+                  32 px de haut, rayon pilule. <code>aria-hidden</code> par
+                  défaut : une capsule qui redit le titre voisin ne doit pas
+                  être annoncée deux fois. Passer{" "}
+                  <code>decorative={"{false}"}</code> quand elle porte une
+                  information unique.
+                </Small>
+              </div>
+
+              {/* ------------------------------------------ Boutons --- */}
+              <div className="mt-12">
+                <Label>Boutons</Label>
+                <Frame>
+                  <div className="flex flex-wrap justify-center gap-3">
+                    <Button variant="primary">Demander un devis</Button>
+                    <Button variant="secondary">Voir le service</Button>
+                    <Button variant="ghost">En savoir plus</Button>
+                    <Button variant="primary" loading>
+                      Envoi
+                    </Button>
+                    <Button variant="primary" disabled>
+                      Indisponible
+                    </Button>
+                  </div>
+                </Frame>
+
+                <Frame surface="dark" className="mt-3">
+                  <div className="flex flex-wrap justify-center gap-3">
+                    <Button variant="primary">Demander un devis</Button>
+                    <Button variant="light">Appeler</Button>
+                    <Button variant="ghost">En savoir plus</Button>
+                  </div>
+                </Frame>
+
+                <Small className="mt-3 block max-w-reading">
+                  Hauteur 48 px (<code>md</code>) et 52 px (<code>lg</code>),
+                  rayon 12 px. <strong>Un seul bouton primaire par écran
+                  visible</strong> — la règle de parcimonie du jaune survit à la
+                  refonte.
+                </Small>
+              </div>
+
+              {/* -------------------------------------------- Cartes --- */}
+              <div className="mt-12">
+                <Label>Cartes</Label>
+                <ul className="grid gap-(--card-gap) sm:grid-cols-2 lg:grid-cols-3">
+                  <li>
+                    <Card tone="sand">
+                      <p className="font-display text-display text-(--surface-heading)">
+                        10
+                      </p>
+                      <p className="mt-1 font-sans text-caption text-(--surface-fg-muted)">
+                        ans d’expérience — carte KPI
+                      </p>
+                    </Card>
+                  </li>
+
+                  <li>
+                    <Card tone="plain" interactive>
+                      <Capsule>Service</Capsule>
+                      <p className="mt-3 font-display text-subtitle text-(--surface-heading)">
+                        Élagage
+                      </p>
+                      <p className="mt-2 font-sans text-caption text-(--surface-fg-muted)">
+                        Carte discrète, réagit au survol et au focus.
+                      </p>
+                    </Card>
+                  </li>
+
+                  <li>
+                    <Card tone="forest">
+                      <p className="font-display text-subtitle text-(--surface-heading)">
+                        Carte sombre
+                      </p>
+                      <p className="mt-2 font-sans text-caption text-(--surface-fg-muted)">
+                        Bascule ses jetons : le contenu n’a pas à savoir sur
+                        quel fond il est posé.
+                      </p>
+                    </Card>
+                  </li>
+
+                  <li className="sm:col-span-2">
+                    <Card tone="deep" padding="lg" className="text-center">
+                      <p className="font-display text-title text-(--surface-heading)">
+                        Carte CTA
+                      </p>
+                      <p className="mx-auto mt-3 max-w-[42ch] font-sans text-body text-(--surface-fg-muted)">
+                        Ton <code>deep</code> — réservé aux moments d’ancrage.
+                      </p>
+                      <div className="mt-6 flex justify-center">
+                        <Button variant="primary">Demander un devis</Button>
+                      </div>
+                    </Card>
+                  </li>
+
+                  <li>
+                    <Card tone="accent">
+                      <p className="font-display text-subtitle text-(--surface-heading)">
+                        Accent
+                      </p>
+                      <p className="mt-2 font-sans text-caption">
+                        Un seul par écran. Texte forêt, 8,06.
+                      </p>
+                    </Card>
+                  </li>
+                </ul>
+
+                <Small className="mt-4 block max-w-reading">
+                  Rayon 18 px, bordure fine, <strong>aucune ombre</strong>.
+                  L’interaction se lit à la bordure et à une translation de
+                  2 px. <code>CardLink</code> rend un lien réel — donc aucun
+                  autre lien à l’intérieur.
+                </Small>
+              </div>
+
+              {/* ------------------------------------------- Fonds --- */}
+              <div className="mt-12">
+                <Label>Fonds de section</Label>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div
+                    data-surface="deep-forest"
+                    className="relative isolate overflow-hidden rounded-card bg-(--surface-bg) p-8 text-(--surface-fg)"
+                  >
+                    <SectionPattern pattern="rings" opacity={0.1} />
+                    <p className="relative font-display text-subtitle text-(--surface-heading)">
+                      Cernes de bois
+                    </p>
+                    <p className="relative mt-2 font-sans text-caption text-(--surface-fg-muted)">
+                      <code>rings</code> — arcs décentrés, surfaces d’ancrage.
+                    </p>
+                  </div>
+
+                  <div
+                    data-surface="dark"
+                    className="relative isolate overflow-hidden rounded-card bg-(--surface-bg) p-8 text-(--surface-fg)"
+                  >
+                    <SectionPattern pattern="contour" opacity={0.12} />
+                    <p className="relative font-display text-subtitle text-(--surface-heading)">
+                      Courbes de niveau
+                    </p>
+                    <p className="relative mt-2 font-sans text-caption text-(--surface-fg-muted)">
+                      <code>contour</code> — bandeaux, cartes larges.
+                    </p>
+                  </div>
+                </div>
+
+                <Small className="mt-3 block max-w-reading">
+                  Deux motifs, pas un par page. SVG inline,{" "}
+                  <code>aria-hidden</code>, <code>currentColor</code>, aucune
+                  requête. Opacité par défaut 0,06 : au-delà de 0,1 le motif
+                  cesse d’être une texture.
+                </Small>
+              </div>
+
+              {/* -------------------------------------- Proportions --- */}
+              <div className="mt-12">
+                <Label>Rythmes verticaux</Label>
+                <ul className="grid gap-3 sm:grid-cols-3">
+                  {(
+                    [
+                      ["compact", "48 / 64 / 80", "Bandeau, rappel"],
+                      ["standard", "72 / 96 / 128", "La majorité"],
+                      ["signature", "96 / 136 / 176", "Moments qui respirent"],
+                    ] as const
+                  ).map(([nom, valeurs, role]) => (
+                    <li key={nom}>
+                      <Card tone="sand" padding="sm">
+                        <code className="font-sans text-caption font-semibold">
+                          {nom}
+                        </code>
+                        <p className="mt-2 font-sans text-caption tabular-nums text-(--surface-fg-muted)">
+                          {valeurs} px
+                        </p>
+                        <p className="mt-1 font-sans text-caption text-(--surface-fg-muted)">
+                          {role}
+                        </p>
+                      </Card>
+                    </li>
+                  ))}
+                </ul>
+
+                <Small className="mt-3 block max-w-reading">
+                  Mobile / 768 / 1024. Colonne de lecture ramenée à{" "}
+                  <code>40rem</code> (55-70 caractères à 16-18 px) ; largeur de
+                  contenu portée à <code>82.5rem</code> pour occuper réellement
+                  un écran de 1440.
+                </Small>
+              </div>
             </Block>
           </div>
         </Container>

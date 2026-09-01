@@ -9,8 +9,8 @@ type EyebrowProps = {
 } & Omit<HTMLAttributes<HTMLElement>, "className" | "children">;
 
 /**
- * Surtitre : Manrope 12 px, majuscules, interlettrage 0,24em.
- * Seul endroit du site ou les majuscules sont autorisees — jamais en Fraunces.
+ * Surtitre : Inter 12 px, majuscules, interlettrage 0,12em.
+ * Seul endroit du site ou les majuscules sont autorisees.
  * Porte du texte reel (il est lu par les lecteurs d'ecran), contrairement a
  * `SectionIndex` qui est purement ornemental.
  */

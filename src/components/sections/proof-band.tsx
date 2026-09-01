@@ -8,7 +8,7 @@ import { area, site } from "@/lib/site";
  * Bande **compacte**, posée sous le hero sur la même surface forêt : une ligne
  * de repères qui se lit d'un coup d'œil, pas un bloc à part entière.
  *
- * Valeurs en **Manrope**, pas en Fraunces : un serif de grande taille
+ * Valeurs en **Inter**, pas en Sora : un titrage de grande taille
  * occuperait toute la hauteur et ferait « section », alors qu'on veut une
  * réglure. Aucune carte, aucun pictogramme, aucune ombre.
  *

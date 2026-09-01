@@ -1350,3 +1350,198 @@ aucune ne doit être reprise ailleurs dans l'interface.
 `favicon.ico` (256), `icon.png` (192), `apple-icon.png` (180) dans
 `src/app/` — détectées automatiquement par Next, aucune déclaration
 manuelle. L'icône typographique provisoire créée en phase 15 a été retirée.
+
+---
+
+# Direction visuelle — phase 15B
+
+La direction d'origine était **éditoriale** : serif expressive, grands
+filets, longues compositions de texte, une seule hauteur de section. Elle a
+été jugée trop magazine pour un site de service dont l'objectif unique est
+la demande de devis.
+
+Cette phase ne refait **aucune page**. Elle refait les fondations sur
+lesquelles les pages seront reprises. Référence vivante : `/style-guide`,
+bloc 13.
+
+## 1. Typographie — Sora + Inter
+
+| Rôle | Fonte | Graisses |
+| --- | --- | --- |
+| Titres (`--font-display`) | **Sora** | 600, 700 |
+| Texte et interface (`--font-sans`) | **Inter** | 400, 500, 600 |
+
+Fraunces et Manrope ne sont plus chargées ni référencées nulle part.
+
+**Graisses explicites, pas de fonte variable.** Le projet n'utilise que cinq
+graisses ; charger deux fontes variables embarquerait tout l'axe, dont
+l'essentiel ne serait jamais rendu.
+
+### Échelle
+
+| Jeton | Emploi | Mobile → 1440 |
+| --- | --- | --- |
+| `text-display` | H1 | 40 → 72 px, interlettrage −0,03em |
+| `text-title` | H2 | 34 → 56 px, −0,025em |
+| `text-subtitle` | H3 | 22 → 27 px |
+| `text-lead` | chapô | 17 → 19 px |
+| `text-body` | texte courant | 16 → 18 px |
+| `text-ui` | boutons, libellés | 14 → 16 px |
+| `text-caption` | légendes, capsules | 13 → 14 px |
+| `text-eyebrow` | surtitre | 12 px, interlettrage **0,12em** |
+
+L'interlettrage du surtitre passe de 0,24em à 0,12em : les 0,24em
+appartenaient au registre magazine que cette direction abandonne.
+
+## 2. Palette
+
+| Jeton | Valeur | Rôle |
+| --- | --- | --- |
+| `forest` | `#10271E` | dominante sombre |
+| `deep-forest` | `#081A14` | **nouveau** — surfaces d'ancrage |
+| `ivory` | `#F5F3ED` | fond clair par défaut |
+| `sand` | `#E7E2D8` | **nouveau** — second fond clair, cartes |
+| `charcoal` | `#161A18` | texte principal sur clair |
+| `moss` | `#4F6B58` | texte secondaire **sur clair uniquement** |
+| `stone` | `#CBC8BD` | texte secondaire sur sombre |
+| `safety` | `#E4B23C` | accent — actions |
+
+**Les noms de jetons n'ont pas changé, seules les valeurs.** Aucune page n'a
+eu à être retouchée.
+
+### Contrastes mesurés
+
+| Combinaison | Ratio | Verdict |
+| --- | --- | --- |
+| ivoire sur forêt profond | 16,20 | AAA |
+| charbon sur ivoire | 15,84 | AAA |
+| forêt sur ivoire | 14,22 | AAA |
+| forêt sur sable | 12,22 | AAA |
+| pierre sur forêt | 9,42 | AAA |
+| forêt sur accent | 8,06 | AAA — libellé du CTA primaire |
+| mousse sur ivoire | 5,29 | AA |
+| mousse sur sable | 4,55 | AA — **juste au-dessus du seuil** |
+| mousse sur forêt | 2,69 | **échec** — décor seul |
+| accent sur ivoire | 1,76 | **échec** — jamais de texte |
+
+> Mousse sur sable tient à 4,55. **Ne rien empiler dessus** : une opacité
+> ajoutée la fait passer sous le seuil. C'est le défaut relevé sur le
+> `Label` du style-guide pendant cette phase même (3,53 avec `opacity-80`).
+
+## 3. Quatre surfaces
+
+| Surface | Fond | Emploi |
+| --- | --- | --- |
+| `data-surface="light"` | ivoire chaud | défaut |
+| `data-surface="sand"` | sable | second fond clair |
+| `data-surface="dark"` | forêt | surface sombre courante |
+| `data-surface="deep-forest"` | forêt profond | **ancrage — à garder rare** |
+
+L'alternance clair → sombre → clair → sombre se fait sans une ligne de CSS
+dupliquée. `deep-forest` ne doit pas devenir la surface sombre par défaut :
+c'est sa rareté qui lui donne son poids.
+
+## 4. Proportions
+
+| Rythme | Mobile / 768 / 1024 | Emploi |
+| --- | --- | --- |
+| `compact` | 48 / 64 / 80 | bandeau, rappel |
+| `standard` | 72 / 96 / 128 | la majorité |
+| `signature` | 96 / 136 / 176 | moments qui respirent |
+
+Les valeurs de la phase 2 (`tight`, `default`, `loose`) restent acceptées et
+pointent sur les nouveaux jetons : les pages livrées les emploient, et cette
+phase ne devait toucher aucune page.
+
+- `--container-reading` : 42rem → **40rem** (55-70 caractères à 16-18 px)
+- `--container-content` : 77.5rem → **82.5rem** — en 1440 px, le contenu
+  doit occuper la largeur disponible
+- `--card-gap` : 16 / 20 / 24 px
+
+## 5. Rayons
+
+| Jeton | Valeur | Emploi |
+| --- | --- | --- |
+| `radius-edge` | 2 px | filets, angles francs |
+| `radius-soft` | 8 px | encadrés discrets |
+| `radius-control` | **12 px** | boutons, champs |
+| `radius-card` | **18 px** | cartes, figures |
+| `radius-pill` | 9999 px | capsules |
+
+## 6. Cartes — une primitive, pas sept composants
+
+`Card` et `CardLink`. Le brief listait sept usages (KPI, service, visuel,
+confiance, info, sombre, CTA, contact) : ils ne diffèrent que par la
+**surface**, le **rembourrage** et le fait d'être **cliquables ou non**.
+Sept composants auraient produit sept fois la même logique de bordure et
+d'état, avec sept occasions de diverger.
+
+Tons : `plain`, `sand`, `forest`, `deep`, `accent`. Les tons sombres et
+l'accent **basculent les jetons de surface** — le contenu n'a pas à savoir
+sur quel fond il est posé.
+
+Rayon 18 px, bordure fine, **aucune ombre**. L'interaction se lit à la
+bordure et à une translation de 2 px.
+
+> `CardLink` rend un **lien réel**, jamais un `div` cliquable. Conséquence :
+> aucun autre lien ni bouton à l'intérieur — un lien dans un lien est du HTML
+> invalide, et l'audit de la phase 15 le détecte.
+
+## 7. Capsules
+
+`Capsule` + `CapsuleGroup`. 32 px de haut, rayon pilule, trois variantes :
+`light` (sable/forêt), `dark` (ivoire 10 %/ivoire), `accent` (jaune/forêt).
+
+**`aria-hidden` par défaut.** Une capsule qui redit ce que le titre voisin
+dit déjà ne doit pas être annoncée deux fois. Passer `decorative={false}`
+quand elle porte une information unique.
+
+`CapsuleGroup` existe pour une seule raison : le site est centré
+(`main { text-align: center }`) et une rangée `flex` ne suit pas
+`text-align`. L'oubli du `justify-center` a déjà décalé une rangée en
+phase 4.
+
+## 8. Boutons
+
+| Variante | Fond | Texte | Contraste |
+| --- | --- | --- | --- |
+| `primary` | accent | forêt | 8,06 |
+| `secondary` | forêt | ivoire | 14,22 |
+| `light` | ivoire | forêt | 14,22 |
+| `ghost` | transparent | courant | — |
+
+Hauteurs 48 px (`md`) et 52 px (`lg`), rayon 12 px, cible tactile toujours
+≥ 44 px. `solid` et `outline` restent acceptés tant que les pages ne sont
+pas refaites.
+
+État `loading` : deux points qui pulsent, **pas un disque qui tourne**. Un
+spinner tourne indéfiniment et ne dit rien du temps restant. Le libellé reste
+en place — le remplacer ferait sauter la largeur du bouton.
+
+**La règle de parcimonie survit à la refonte : un seul bouton primaire par
+écran visible.**
+
+## 9. Fonds de section
+
+`SectionPattern`, deux motifs et pas un de plus :
+
+- **`rings`** — cernes de bois, arcs concentriques **décentrés**. Le
+  décentrement empêche la lecture « cible ».
+- **`contour`** — courbes de niveau, amplitudes décalées pour éviter la trame.
+
+SVG inline, `currentColor`, `aria-hidden`, `pointer-events-none`, aucune
+requête, aucun JavaScript. Opacité par défaut **0,06** : au-delà de 0,1 le
+motif cesse d'être une texture et devient un dessin.
+
+> Deux motifs, pas un par page. Un troisième n'aurait servi qu'à éviter la
+> répétition, c'est-à-dire à faire du décor.
+
+## 10. Ce qui n'a pas changé
+
+Les trois niveaux d'animation (micro 180 ms, reveal 520 ms, signature
+900 ms), la neutralisation sous `prefers-reduced-motion`, les cibles
+tactiles à 44 px, la règle du focus visible, et l'interdiction du jaune en
+texte sur fond clair.
+
+**Accessibilité vérifiée après refonte : 100 sur `/`, `/devis` et
+`/style-guide`.**

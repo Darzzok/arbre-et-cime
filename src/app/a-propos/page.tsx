@@ -192,7 +192,7 @@ export default function AProposPage() {
                 </Body>
 
                 {/* Trois repères, pas une frise : filet au-dessus, chiffre en
-                    Fraunces, libellé discret. Ils s'empilent sous 640 px. */}
+                    Sora, libellé discret. Ils s'empilent sous 640 px. */}
                 <ul className="mt-9 grid gap-5 sm:grid-cols-3 sm:gap-6">
                   {milestones.map((milestone) => (
                     <li

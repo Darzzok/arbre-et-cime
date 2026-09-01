@@ -11,21 +11,32 @@
    --------------------------------------------------------------------------- */
 
 @theme {
-  /* --- Couleurs — VERROUILLE ---------------------------------------------- */
+  /* --- Couleurs — direction visuelle phase 15B ---------------------------
+     Les six couleurs d'origine evoluent en valeur, pas en role : les noms de
+     jetons sont inchanges, donc aucune page n'a a etre retouchee. Deux tons
+     s'ajoutent — `deep-forest` et `sand` — pour permettre l'alternance de
+     quatre surfaces demandee par la nouvelle direction.
+
+     Contrastes verifies (DESIGN_SYSTEM.md § 1) : charbon/ivoire 15,84 ;
+     foret/ivoire 14,22 ; mousse/ivoire 5,29 ; mousse/sable 4,55 ;
+     ivoire/foret 14,22 ; ivoire/foret-profond 16,20 ; foret/accent 8,06. */
   --color-*: initial;
   --color-transparent: transparent;
   --color-current: currentColor;
 
-  --color-forest: #14251e; /* vert foret profond — fonds sombres, dominante */
-  --color-ivory: #f3f0e8; /* ivoire naturel — fonds clairs, texte sur foret */
-  --color-charcoal: #171918; /* charbon — texte principal sur ivoire */
-  --color-moss: #516b54; /* vert mousse — accents calmes, bordures, etats */
-  --color-stone: #cbc8bd; /* pierre — texte secondaire, filets, separateurs */
-  --color-safety: #d8a62a; /* jaune securite — CTA / focus, avec parcimonie */
+  --color-forest: #10271e; /* vert foret — dominante sombre */
+  --color-deep-forest: #081a14; /* foret profond — sections d'ancrage */
+  --color-ivory: #f5f3ed; /* ivoire chaud — fond clair par defaut */
+  --color-sand: #e7e2d8; /* sable doux — second fond clair, cartes */
+  --color-charcoal: #161a18; /* charbon — texte principal sur clair */
+  --color-moss: #4f6b58; /* mousse — texte secondaire sur clair UNIQUEMENT */
+  --color-stone: #cbc8bd; /* pierre — texte secondaire sur sombre */
+  --color-safety: #e4b23c; /* accent — actions, jamais en texte sur clair */
 
   /* --- Typographies (variables injectees par next/font) -------------------- */
-  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system,
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
 
   /* --- Echelle typographique fluide --------------------------------------- */
@@ -34,40 +45,53 @@
      est donc identique a celui de 390 px, sans debordement. */
   --text-*: initial;
 
-  --text-display: clamp(2.5rem, 1.664rem + 3.429vw, 4.75rem); /* 40 → 76 */
-  --text-display--line-height: 1.04;
-  --text-display--letter-spacing: -0.02em;
+  /* H1 — dense et affirme. Interlettrage plus serre qu'en phase 2 : Sora
+     supporte le resserrement la ou une serif ne l'aurait pas supporte. */
+  --text-display: clamp(2.5rem, 1.762rem + 3.029vw, 4.5rem); /* 40 → 72 */
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.03em;
 
-  --text-title: clamp(1.875rem, 1.504rem + 1.524vw, 2.875rem); /* 30 → 46 */
-  --text-title--line-height: 1.1;
-  --text-title--letter-spacing: -0.015em;
+  /* H2 — 34 sur mobile, 56 au-dela. La direction demande des titres de
+     section nettement plus presents qu'en version editoriale. */
+  --text-title: clamp(2.125rem, 1.613rem + 2.1vw, 3.5rem); /* 34 → 56 */
+  --text-title--line-height: 1.06;
+  --text-title--letter-spacing: -0.025em;
 
-  --text-subtitle: clamp(1.375rem, 1.282rem + 0.381vw, 1.625rem); /* 22 → 26 */
+  --text-subtitle: clamp(1.375rem, 1.259rem + 0.476vw, 1.6875rem); /* 22 → 27 */
   --text-subtitle--line-height: 1.2;
-  --text-subtitle--letter-spacing: -0.01em;
+  --text-subtitle--letter-spacing: -0.015em;
 
   --text-lead: clamp(1.0625rem, 1.016rem + 0.19vw, 1.1875rem); /* 17 → 19 */
   --text-lead--line-height: 1.55;
 
-  --text-body: clamp(1rem, 0.977rem + 0.095vw, 1.0625rem); /* 16 → 17 */
+  --text-body: clamp(1rem, 0.954rem + 0.19vw, 1.125rem); /* 16 → 18 */
   --text-body--line-height: 1.65;
+
+  /* Interface : boutons, libelles, navigation. */
+  --text-ui: clamp(0.875rem, 0.829rem + 0.19vw, 1rem); /* 14 → 16 */
+  --text-ui--line-height: 1.4;
 
   --text-caption: clamp(0.8125rem, 0.789rem + 0.095vw, 0.875rem); /* 13 → 14 */
   --text-caption--line-height: 1.5;
 
+  /* Surtitre : interlettrage nettement reduit. Les 0,24em de la phase 2
+     appartenaient au registre magazine que cette direction abandonne. */
   --text-eyebrow: 0.75rem; /* 12 — fixe, jamais fluide */
   --text-eyebrow--line-height: 1.2;
-  --text-eyebrow--letter-spacing: 0.24em;
+  --text-eyebrow--letter-spacing: 0.12em;
 
-  /* --- Rayons — 0 a 8 px, angles francs ----------------------------------- */
+  /* --- Rayons ------------------------------------------------------------
+     La charte d'origine tenait entre 0 et 8 px. La nouvelle direction
+     assume des formes plus douces : 12 px pour les controles, 18 px pour les
+     cartes, une pilule pour les capsules. `edge` et `soft` restent pour les
+     filets et les elements qui doivent conserver un angle franc. */
   --radius-*: initial;
   --radius-none: 0px;
   --radius-edge: 2px;
   --radius-soft: 8px;
-  /* Cartes photographiques uniquement — decision client, phase 6B.
-     Ne pas etendre a d'autres composants : le reste du site reste a angles
-     francs (voir DESIGN_SYSTEM.md § 4). */
-  --radius-card: 16px;
+  --radius-control: 12px; /* boutons, champs, pastilles carrees */
+  --radius-card: 18px; /* cartes, plaques, figures */
+  --radius-pill: 9999px; /* capsules */
 
   /* --- Points de rupture -------------------------------------------------- */
   /* Alignes sur les largeurs de recette : 320 / 390 / 768 / 1024 / 1440. */
@@ -77,9 +101,12 @@
   --breakpoint-lg: 64rem; /* 1024 */
   --breakpoint-xl: 90rem; /* 1440 */
 
-  /* --- Largeurs maximales de contenu -------------------------------------- */
-  --container-reading: 42rem; /* 672 — colonne de lecture, 60-75 caracteres */
-  --container-content: 77.5rem; /* 1240 — largeur de contenu de reference */
+  /* --- Largeurs maximales de contenu --------------------------------------
+     `reading` reste la colonne de lecture (55-70 caracteres a 16-18 px).
+     `content` s'elargit de 1240 a 1320 : en 1440 px, la direction demande que
+     le contenu occupe reellement la largeur disponible. */
+  --container-reading: 40rem; /* 640 — 55-70 caracteres */
+  --container-content: 82.5rem; /* 1320 — largeur de contenu de reference */
   --container-wide: 90rem; /* 1440 — bandeaux quasi pleine largeur */
 
   /* --- Mouvement — trois niveaux, sobre et technique ---------------------- */
@@ -99,6 +126,18 @@
     --section-space: 4.5rem; /* 72 — mobile */
     --reveal-shift: 0.375rem; /* 6 — amplitude reduite sur mobile */
 
+    /* --- Trois rythmes verticaux — phase 15B ----------------------------
+       Une seule hauteur de section partout produisait une page reguliere au
+       point d'etre monotone. Trois niveaux permettent de hierarchiser :
+       `compact` pour un bandeau ou un rappel, `standard` pour la majorite,
+       `signature` pour les moments qui doivent respirer. */
+    --space-compact: 3rem; /* 48 */
+    --space-standard: 4.5rem; /* 72 */
+    --space-signature: 6rem; /* 96 */
+
+    /* Ecart entre cartes d'une meme grille. */
+    --card-gap: 1rem; /* 16 */
+
     /* --- Mouvement : trois niveaux — voir DESIGN_SYSTEM.md § 6 -------------
        Declares ici et non dans `@theme` : Tailwind elague les variables de
        `@theme` qu'aucun utilitaire ne consomme, et `--duration-signature`
@@ -115,6 +154,10 @@
       --gutter: 2rem; /* 32 — tablette */
       --section-space: 6rem; /* 96 */
       --reveal-shift: 0.75rem; /* 12 */
+      --space-compact: 4rem; /* 64 */
+      --space-standard: 6rem; /* 96 */
+      --space-signature: 8.5rem; /* 136 */
+      --card-gap: 1.25rem; /* 20 */
     }
   }
 
@@ -122,6 +165,10 @@
     :root {
       --gutter: 3rem; /* 48 — desktop */
       --section-space: 8rem; /* 128 */
+      --space-compact: 5rem; /* 80 */
+      --space-standard: 8rem; /* 128 */
+      --space-signature: 11rem; /* 176 */
+      --card-gap: 1.5rem; /* 24 */
     }
   }
 
@@ -145,6 +192,46 @@
     --btn-outline-border: color-mix(
       in oklab,
       var(--color-forest) 45%,
+      transparent
+    );
+  }
+
+  /* Sable — second fond clair. Sert a poser une section ou une carte SANS
+     changer de registre : le texte y garde les memes roles qu'en ivoire.
+     Mousse sur sable tient a 4,55, juste au-dessus du seuil AA. */
+  [data-surface="sand"] {
+    --surface-bg: var(--color-sand);
+    --surface-fg: var(--color-charcoal); /* 13,61 sur sable */
+    --surface-fg-muted: var(--color-moss); /* 4,55 sur sable — AA */
+    --surface-heading: var(--color-forest); /* 12,22 sur sable */
+    --surface-rule: color-mix(in oklab, var(--color-moss) 34%, transparent);
+    --surface-inset: color-mix(in oklab, var(--color-forest) 6%, transparent);
+    --focus-ring: var(--color-forest);
+    --btn-solid-bg: var(--color-forest);
+    --btn-solid-fg: var(--color-ivory);
+    --btn-outline-border: color-mix(
+      in oklab,
+      var(--color-forest) 45%,
+      transparent
+    );
+  }
+
+  /* Foret profond — surface d'ancrage. Reservee aux moments forts : elle ne
+     doit pas devenir la surface sombre par defaut, sinon l'alternance
+     clair/sombre perd son relief. */
+  [data-surface="deep-forest"] {
+    --surface-bg: var(--color-deep-forest);
+    --surface-fg: var(--color-ivory); /* 16,20 sur foret profond */
+    --surface-fg-muted: var(--color-stone); /* 10,73 */
+    --surface-heading: var(--color-ivory);
+    --surface-rule: color-mix(in oklab, var(--color-stone) 26%, transparent);
+    --surface-inset: color-mix(in oklab, var(--color-ivory) 6%, transparent);
+    --focus-ring: var(--color-safety); /* 9,19 */
+    --btn-solid-bg: var(--color-ivory);
+    --btn-solid-fg: var(--color-deep-forest);
+    --btn-outline-border: color-mix(
+      in oklab,
+      var(--color-ivory) 45%,
       transparent
     );
   }
@@ -741,6 +828,41 @@
   }
 
   to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Bouton en attente — deux points qui pulsent.
+
+   Pas de disque qui tourne : un spinner tourne indefiniment et ne dit rien du
+   temps restant. Deux points qui respirent disent « ca travaille » sans
+   promettre de duree, et restent dans le vocabulaire du projet (opacite et
+   echelle, jamais de rotation).
+
+   Sous `prefers-reduced-motion`, les points restent visibles et immobiles :
+   l'information « en cours » ne depend pas de l'animation.
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-button-spinner] > span {
+    animation: cime-pulse 900ms var(--ease-cime) infinite;
+  }
+
+  [data-button-spinner] > span:last-child {
+    animation-delay: 160ms;
+  }
+}
+
+@keyframes cime-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    scale: 0.8;
+  }
+
+  50% {
     opacity: 1;
     scale: 1;
   }

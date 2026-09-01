@@ -1221,6 +1221,75 @@ descriptions tous conformes, `SITE_INDEXABLE` toujours `false`.
 
 ---
 
+### Phase 15B.1 — Nouveau langage visuel ✅
+
+La direction éditoriale (serif expressive, grands filets, hauteur de section
+unique) a été jugée trop magazine pour un site de service. Cette sous-phase
+refait **les fondations**, pas les pages.
+
+**Aucune page n'a été retouchée** — c'était la contrainte. Elles héritent
+pourtant du nouveau langage, parce que les changements portent sur les
+jetons et les primitives, jamais sur les vues.
+
+### Ce qui change
+
+- **Sora + Inter** remplacent Fraunces + Manrope. Graisses explicites (600/700
+  et 400/500/600) plutôt que deux fontes variables : le projet n'en utilise
+  que cinq.
+- **Palette** : huit jetons au lieu de six — `deep-forest` et `sand`
+  s'ajoutent. **Les noms ne changent pas, seules les valeurs**, ce qui évite
+  toute retouche de page.
+- **Quatre surfaces** au lieu de deux : l'alternance clair/sombre se fait
+  sans CSS dupliqué.
+- **Trois rythmes verticaux** (`compact`, `standard`, `signature`). Les noms
+  de la phase 2 restent acceptés et pointent sur les nouveaux jetons.
+- **Nouvelles primitives** : `Card` / `CardLink`, `Capsule` / `CapsuleGroup`,
+  `SectionPattern`. Toutes **composants serveur**, aucune n'a besoin de JS.
+- **Boutons refaits** : quatre variantes, rayon 12 px, état `loading`.
+- **Figure** : rayon `card`, calques `scrim` et `gradient`.
+
+### Une primitive plutôt que sept composants
+
+Le brief listait sept usages de carte. Ils ne diffèrent que par la surface,
+le rembourrage et le fait d'être cliquables : sept composants auraient
+produit sept fois la même logique d'état, avec sept occasions de diverger.
+Une primitive, cinq tons, la composition laissée à l'appelant — ce qui évite
+aussi la grille de cartes identiques que `CLAUDE.md` § 6 interdit.
+
+### Un défaut trouvé pendant la phase, et corrigé
+
+Le `Label` du style-guide portait `opacity-80` sur un jeton **déjà mis en
+sourdine** : contraste **3,53**, sous le seuil AA. C'est exactement la règle
+écrite en phase 15 (« ne pas empiler une opacité sur un jeton atténué »),
+enfreinte dans le fichier qui sert de référence. Corrigé — le style-guide
+repasse à **100**.
+
+### Mesures
+
+| | Avant (phase 15) | Après |
+| --- | --- | --- |
+| Accessibilité `/` | 100 | **100** |
+| Accessibilité `/devis` | 100 | **100** |
+| Accessibilité `/style-guide` | — | **100** |
+| Performance | 94-99 | 96-97 |
+| CLS | 0 | **0** |
+| Polices préchargées | 60 Ko | **76 Ko** |
+
+Les 16 Ko de polices supplémentaires sont le coût assumé du changement
+typographique : cinq graisses réellement employées, aucune superflue.
+
+*Signalé sans être poursuivi :* Lighthouse relève `image-aspect-ratio` sur
+l'emblème de l'en-tête — artefact d'arrondi de l'optimiseur (ratio servi
+1,143 contre 1,148 déclaré, soit 0,4 %). Le corriger imposerait de servir une
+image deux fois plus lourde pour un écart invisible. Il vient de
+l'intégration du logo (15B), pas de cette phase.
+
+**Sortie atteinte :** lint, typecheck et build au vert, 40 routes,
+`SITE_INDEXABLE` toujours `false`, aucun `localhost` dans le HTML, **aucune
+dépendance ajoutée**.
+
+---
+
 ## Phase 16 — Analytics et conversions ⬜
 
 - Analytics respectueux de la vie privée
