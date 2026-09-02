@@ -611,7 +611,7 @@ vraiment, et il renvoie vers la prestation correspondante.
 ## 5 sexies. Pages locales — rédaction (phase 14)
 
 Vingt-trois pages, une par commune de la carte. C'est le format le plus
-exposé au risque de contenu creux : vingt-trois textes qui ne diffèrent que
+exposé au risque de contenu creux : dix-neuf textes qui ne diffèrent que
 par un nom propre ne servent personne et se voient immédiatement.
 
 ### La règle de site
@@ -660,8 +660,8 @@ phrase éditoriale. Mesuré sur le HTML produit : **70 à 89 % de phrases
 propres** par page, la paire la plus proche ne partageant que **30 %** de
 ses phrases — le reste étant la structure mutualisée (bloc confiance, CTA).
 
-C'est ce chiffre qui fait la différence entre vingt-trois pages locales et
-vingt-trois pages satellites. Il se re-mesure, il ne se suppose pas.
+C'est ce chiffre qui fait la différence entre dix-neuf pages locales et
+dix-neuf pages satellites. Il se re-mesure, il ne se suppose pas.
 
 ---
 
@@ -807,7 +807,12 @@ modification d'intention SEO non demandée, elle a été annulée.
 
 # Zones et pages villes — phase 15B.5
 
-## 1. La preuve que l'unicité SEO des 23 pages est intacte
+## 1. La preuve que l'unicité SEO des pages locales est intacte
+
+> **⚠ RELEVÉ HISTORIQUE — 23 communes.** Ce contrôle date de la phase 15B.5.
+> Le périmètre a été ramené à **19 communes** juste après, sur demande du
+> client. Le chiffre ci-dessous décrit l'état d'alors et n'est pas modifié.
+> **L'invariant en vigueur est 19.**
 
 Ces pages n'ont d'intérêt que si elles disent chacune quelque chose de propre.
 Un contrôle compare, pour **chaque commune**, les quatre champs qui la

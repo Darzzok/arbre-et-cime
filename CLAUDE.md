@@ -25,6 +25,8 @@ Documents de référence, à lire selon le sujet traité :
 | `MEDIA_SOURCES.md` | Registre des médias : source, auteur, licence, usage |
 | `MAP_DATA_SOURCES.md` | Registre des données cartographiques : source, licence, projection |
 | `ROADMAP.md` | Découpage en 18 phases et critères de sortie |
+| `LEGAL_CHECKLIST.md` | Données légales encore manquantes avant mise en production |
+| `QA_REPORT.md` | Recette de préproduction : ce qui est vérifié, ce qui manque |
 
 ---
 

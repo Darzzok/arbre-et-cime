@@ -372,13 +372,43 @@ délai, aucun règlement municipal, aucune statistique. Le contenu local se
 limite à de la **géographie vérifiable** — relief, vallée, plateau, littoral,
 département — et à ce qu'elle implique concrètement pour organiser un chantier.
 
+### L'invariant du périmètre local — **19**
+
+Le périmètre local est volontairement limité à **19 communes**. Ce n'est pas un
+reliquat : c'est une décision produit, prise après la phase 15B.5, qui a retiré
+Dieppe, Le Tréport, Fécamp et Le Havre avec leurs pages.
+
+Cinq comptes qui doivent rester égaux :
+
+| | |
+| --- | --- |
+| Communes dans `src/content/locations.ts` | **19** |
+| Slugs uniques | **19** |
+| Pages générées par `generateStaticParams` | **19** |
+| Liens du hub `/zones-intervention` | **19** |
+| Repères de la carte | **19** |
+
+`scripts/qa-villes.mjs` vérifie l'égalité et échoue si l'un des cinq diverge.
+
+> **Ne pas restaurer les communes retirées** — ni dans `locations.ts`, ni dans
+> le hub, ni sur la carte, ni dans `generateStaticParams`, ni dans le sitemap,
+> ni dans cette documentation.
+
 ### Données structurées
 
 **Aucun `LocalBusiness` par commune.** Arbres & Cimes est une entreprise
-unique basée à Rouen ; déclarer vingt-trois établissements affirmerait
-vingt-trois implantations qui n'existent pas. Une page ville décrit une **zone
-de service**, pas une agence. Seul un `BreadcrumbList` est émis, et
-uniquement quand le site est indexable.
+unique ; déclarer un établissement par commune affirmerait **dix-neuf**
+implantations qui n'existent pas. Une page ville décrit une **zone de
+service**, pas une agence. Seul un `BreadcrumbList` est émis, et uniquement
+quand le site est indexable.
+
+> **Le siège n'est pas à Rouen.** Il est au Grand-Quevilly, confirmé en phase
+> 16B. Rouen reste le **cœur du secteur d'intervention**, le centre de la
+> projection cartographique et la **cible SEO principale** — mais aucune page
+> n'affirme plus d'implantation rouennaise. Les formulations « basée à Rouen »
+> et « commune d'attache » ont été corrigées en phase 17. Les expressions de
+> service — « élagueur à Rouen », « intervention à Rouen », « secteur de
+> Rouen » — restent, elles décrivent un service rendu, pas une adresse.
 
 ---
 

@@ -83,10 +83,24 @@ export default function NotFound() {
             </li>
           </ul>
 
-          <div className="mt-12 flex justify-center">
+          {/*
+            LE RETOUR À L'ACCUEIL MANQUAIT — relevé en recette phase 17.
+
+            La liste couvrait les prestations, la zone et les réalisations,
+            mais pas la page d'accueil. Le logotype de l'en-tête y mène, et
+            c'est insuffisant : quelqu'un qui atterrit sur une 404 depuis un
+            résultat de recherche cherche un point de reprise DANS la page, pas
+            dans la barre de navigation.
+
+            Placé en second, après le devis : sur un site dont l'objectif est la
+            demande de devis, le bouton primaire reste le devis.
+          */}
+          <div className="mt-12 flex flex-col items-center gap-5">
             <ButtonLink href={devis.path} variant="primary" size="lg">
               Demander un devis
             </ButtonLink>
+
+            <ArrowLink href="/">Retour à l’accueil</ArrowLink>
           </div>
         </Container>
       </Section>

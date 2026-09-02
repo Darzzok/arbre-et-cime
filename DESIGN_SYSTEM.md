@@ -1328,7 +1328,7 @@ Mesures complètes : `PERFORMANCE_AUDIT.md`.
 
 ---
 
-## 9 ter. Logotype réel — livré en phase 15B
+## 9 ter. Logotype réel — livré en phase 15B, REDESSINÉ en phase 16B
 
 Le logo du client remplace le logotype typographique provisoire. Fichiers
 dans `public/brand/`, icônes dans `src/app/`.
@@ -1341,40 +1341,98 @@ code et documentation compris. La source unique est `src/lib/site.ts`.
 
 ### Deux traitements, et pourquoi
 
-Le logo fourni est un **bloc vertical** : feuille, puis le nom sur deux
-lignes, puis « Arboriste Grimpeur ». Le fichier de navigation lui-même fait
-354 × 420 px.
+Le logo est un **bloc vertical** : feuille, puis le nom sur deux lignes, puis
+« Arboriste Grimpeur ». Le maître détouré mesure 905 × 912 px — quasiment
+carré.
 
 | Variante | Où | Composition |
 | --- | --- | --- |
-| `lockup` (défaut) | en-tête, menu mobile, pied de page | symbole réel + nom dans la typographie du site |
-| `full` | *aucun emplacement à ce jour* | le logo complet, tel que fourni |
+| `lockup` (défaut) | en-tête, menu mobile | **le logo réagencé en ligne** |
+| `full` | pied de page | le logo complet, empilé, tel que fourni |
 
-**Pourquoi pas le logo complet dans l'en-tête :** dans une barre de 72 px,
-le bloc tiendrait sur ~50 px de large et son texte tomberait sous 8 px.
+### Plus aucun texte recomposé — demande client, phase 16B
 
-**Pourquoi pas le logo complet dans le pied de page**, alors que la place y
-est : le logo est dessiné **pour fond clair**. Son contour et son texte sont
-en charbon ; posés sur le forêt du pied de page, « Arbres et Cimes Élagage »
-devient quasi illisible. Vérifié à l'écran, ce n'est pas une précaution
-théorique.
+L'en-tête affichait le symbole du client accompagné d'un nom composé dans la
+typographie du site : « Arbres & Cimes / ÉLAGAGE · ROUEN ». Le client a demandé
+que ce soit **son logo, avec son texte**, et l'a confirmé après que la
+contrainte de hauteur lui a été signalée.
 
-> **À demander au client : une version claire ou inversée du logo.** Elle
-> débloquerait `variant="full"` sur les surfaces sombres. La variante
-> existe déjà dans le composant et n'attend que le fichier.
+**Le bloc vertical ne pouvait pas entrer dans la barre, et le calcul est
+simple.** Le maître détouré fait 905 × 912 ; son pavé de texte occupe 31 % de
+la hauteur pour **trois** lignes. Dans une barre de 81 px, un logo de 56 px de
+haut donne 17 px de texte au total, soit **moins de 6 px par ligne**. Atteindre
+10 px demanderait un logo de 97 px de haut — plus haut que la barre.
+
+**Le logo est donc réagencé, pas redessiné.** Le générateur découpe les deux
+composants du maître — le symbole et le pavé de texte — et les repose **côte à
+côte**. Aucun pixel n'est redessiné, aucune typographie n'est substituée : c'est
+le dessin du client, dans un autre agencement. Résultat : 1917 × 512, rapport
+**3,74:1**, qui entre dans une barre de navigation.
+
+Rendu mesuré : **165 × 44 px** à 390 comme à 1440 px, 93 px de dégagement avant
+« Menu » sur mobile, 66 px avant la navigation sur desktop. Aucun débordement.
+
+> **Le nom accessible vient de l'`alt`.** Il n'y a plus de texte visible :
+> WCAG 2.5.3 ne s'applique plus. L'`alt` porte `site.name`, source unique.
+
+> **`loading="eager"`, et non `priority`.** `priority` ajoute un
+> `<link rel=preload>` qui entre en concurrence avec la photographie du hero,
+> elle-même en `fetchPriority="high"`. Mesuré sur l'accueil : LCP de 2,9 s à
+> **4,3 s** et performance de 91 à **85**, pour un fichier de 9 Ko. Corrigé.
+
+**Le pied de page, lui, a été débloqué en phase 16B.** L'ancien logo avait son
+texte en charbon : posé sur le forêt profond, il devenait illisible, et
+`variant="full"` n'était employé nulle part. Le nouveau logo a un texte
+**ivoire cerné de bleu nuit**. Mesuré sur le maître : couleur moyenne du texte
+`#faf8ed` sur `#081a14`, **contraste 16,88**. La réserve tombe, la variante
+sert enfin.
+
+> **Réserve qui subsiste.** C'est le TEXTE qui passe, pas tout le dessin : le
+> contour bleu nuit de l'arc se fond dans le fond sombre, et seule la feuille
+> verte porte alors le symbole. Une version inversée reste souhaitable.
+
+### Le symbole détouré reste produit
+
+Il ne sert plus le logotype depuis que celui-ci porte le logo entier, mais il
+reste la source des icônes et le repli si l'on devait revenir à une marque
+seule.
+
+| Fichier | Forme | Pourquoi |
+| --- | --- | --- |
+| `public/brand/logo-lockup.png` | **en ligne**, 1917 × 512 | en-tête et menu mobile |
+| `public/brand/logo-complet.png` | empilé, 905 × 912 | pied de page |
+| `public/brand/logo-symbole.png` | détouré, 699 × 512 | réserve |
+| `src/app/icon.png` | carré, 512 × 512 | les systèmes imposent une icône carrée |
+
+**La découpe du pavé de texte ne part pas de la ligne de coupe du symbole.**
+Les pointes basses de la feuille descendent sous cette ligne, au-dessus de
+« Arbres et » : les embarquer faisait flotter deux taches sombres là où l'œil
+attend des accents. Or « Arbres et » n'a aucun accent — rien n'y dépasse
+légitimement la hauteur de capitale. La découpe part donc de y = 650, juste
+au-dessus de la ligne de capitale relevée à y = 656.
 
 ### Les couleurs du logo ne rejoignent pas la charte
 
-Le logo emploie un vert vif, un gris clair et un orange qui ne figurent pas
-dans les six couleurs `VERROUILLÉES`. **C'est normal et cela reste ainsi** :
-un logo conserve ses couleurs propres. Aucune n'a été ajoutée aux jetons, et
-aucune ne doit être reprise ailleurs dans l'interface.
+Le logo emploie un vert vif, un ivoire, un bleu nuit et un orange qui ne
+figurent pas dans les six couleurs `VERROUILLÉES`. **C'est normal et cela
+reste ainsi** : un logo conserve ses couleurs propres. Aucune n'a été ajoutée
+aux jetons, et aucune ne doit être reprise ailleurs dans l'interface.
+
+L'orange de « Arboriste Grimpeur » n'apparaît donc que dans le logo complet du
+pied de page. Si le client veut l'étendre à l'interface, c'est une décision de
+charte — pas une conséquence du changement de logo.
 
 ### Icônes
 
-`favicon.ico` (256), `icon.png` (192), `apple-icon.png` (180) dans
-`src/app/` — détectées automatiquement par Next, aucune déclaration
-manuelle. L'icône typographique provisoire créée en phase 15 a été retirée.
+`icon.png` (512, transparent) et `apple-icon.png` (180, fond `#14251E`) dans
+`src/app/` — détectées automatiquement par Next, aucune déclaration manuelle.
+Pas de `favicon.ico` : Next dérive les tailles dont il a besoin de `icon.png`,
+et le `.ico` du lot livré était en réalité un PNG.
+
+**Les icônes portent le SYMBOLE SEUL, jamais le logo complet.** Celles du lot
+livré montraient le logo entier avec son texte tronqué à « Arbres et » : à
+16 px, une tache. Un symbole se reconnaît à cette taille, un nom de deux lignes
+non.
 
 ---
 
@@ -1992,6 +2050,13 @@ Sur mobile, l'écart résiduel tombe de +12/16 % à **+8/12 %**, et
 
 # Zones, carte et pages villes — phase 15B.5
 
+> **⚠ RELEVÉ HISTORIQUE — 23 communes.** Ce rapport date de la phase 15B.5,
+> quand le périmètre en comptait vingt-trois. Il a été ramené à **19 communes**
+> juste après, sur demande du client : Dieppe, Le Tréport, Fécamp et Le Havre
+> ont été retirés avec leurs pages. Les chiffres ci-dessous décrivent l'état
+> d'alors et ne sont pas modifiés — un relevé qu'on réécrit n'est plus un
+> relevé. **L'invariant en vigueur est 19.**
+
 Les deux dernières pages restées dans l'état d'avant la refonte visuelle.
 
 ## 1. Le constat, mesuré
@@ -2095,7 +2160,7 @@ surfaces identiques — défaut mesuré puis corrigé.
 sous 44 px, un seul `h1`, 0 surface adjacente identique, carte jamais coupée,
 aucun nom de commune tronqué.**
 
-Interactions de la carte : **23 repères de 44 × 44 px**, tous dotés d'un nom
+Interactions de la carte : **19 repères de 44 × 44 px**, tous dotés d'un nom
 accessible, survol, focus clavier, tap, sélection et lien vers la page locale —
 tous vérifiés après refonte.
 
@@ -2254,6 +2319,11 @@ gabarit. Aucune dépendance ajoutée sur l'ensemble des six sous-phases.
 
 # Correctif carte — lisibilité des repères
 
+> **⚠ Relevé antérieur au retrait des quatre communes littorales.** Le
+> périmètre comptait alors 23 communes ; il en compte **19** depuis. Les
+> chiffres ci-dessous ne sont pas réécrits.
+
+
 Trois signalements du client : les communes littorales paraissaient en mer, les
 noms se lisaient mal, et des étiquettes se chevauchaient.
 
@@ -2336,3 +2406,84 @@ Le moteur cartographique n'a pas été touché : ni projection, ni coordonnées,
 classification, ni distances. `locations.ts`, `map-data.ts` et les données
 géographiques sont inchangés — seuls le placement des étiquettes et l'habillage
 des points ont bougé.
+
+---
+
+# Phase 16B — Le gabarit des pages légales
+
+`/mentions-legales` et `/politique-confidentialite` sont les seules pages du
+site dont la fonction est d'être **lues et vérifiées**, pas de convertir. Elles
+ont donc leur propre gabarit, volontairement pauvre.
+
+## 1. Ce que le gabarit retire
+
+Pas de photographie, pas de carte, pas de bouton, pas d'appel à l'action, pas
+de grille de cartes. Une page légale qui pousse vers un devis se décrédibilise
+elle-même. La seule concession au design du site est le hero, qui rattache
+visuellement ces deux pages au reste.
+
+## 2. Squelette commun
+
+| Bloc | Surface | Rythme |
+| --- | --- | --- |
+| Hero — capsule « Informations légales », `h1`, chapô | `deep-forest` | `compact` |
+| Bloc d'entrée — fiche éditeur / « En résumé » | `light` | `standard` |
+| Articles — suite de `h2` séparés au filet | `sand` | `standard` |
+| Pied — date d'édition, renvoi croisé | `light` | `compact` |
+
+Le hero est **compact**, pas `standard` : un hero pleine hauteur devant un
+texte administratif serait une emphase déplacée. Le `h1` est également plus
+petit que partout ailleurs (`text-title`, 2,75 rem au-delà de 1 024 px).
+
+La surface du pied est un **paramètre**, précisément pour qu'il ne partage
+jamais la couleur de la section qui le précède.
+
+## 3. Un article = une `<section aria-labelledby>`
+
+Une page légale est une suite de rubriques dans lesquelles on entre par leur
+titre. Chaque article porte donc un `h2` avec un `id`, et sa section s'y
+réfère : un lecteur d'écran peut sauter de l'une à l'autre, et chaque rubrique
+est adressable par ancre.
+
+La séparation se lit **au filet**, jamais au rectangle — charte verrouillée.
+
+## 4. Le centrage n'est pas contourné, il est absorbé
+
+Le texte courant centré se lit moins bien que ferré à gauche ; la réserve
+technique du § 4 le dit déjà, et ces deux pages sont le pire cas du site.
+
+La parade n'est pas de désobéir à une décision `VERROUILLÉE`. C'est d'écrire
+court : **aucun bloc de ces deux pages ne dépasse quatre lignes**. Les
+énumérations, elles, emploient l'idiome déjà en place sur `/404` et sur le
+récapitulatif du devis — bloc centré par `mx-auto`, éléments ferrés à gauche,
+puce en jaune sécurité.
+
+## 5. La fiche d'identité ne montre pas ses trous
+
+`LegalData` reçoit des entrées `{ label, value }`. **Une valeur `null` n'est
+pas rendue.** Pas de « — », pas de « à compléter » ligne à ligne : une fiche
+trouée se lit comme une fiche bâclée.
+
+Ce qui manque est annoncé **une seule fois**, en clair, par un bloc
+« En cours de finalisation » posé sous la fiche. C'est plus honnête et plus
+lisible qu'un tiret répété six fois.
+
+Le téléphone suit `contact.phoneConfirmed`, exactement comme les soixante
+autres emplacements du site.
+
+## 6. La date d'édition est une constante
+
+`LEGAL_UPDATED` vit dans `src/components/legal/legal.tsx` et se modifie à la
+main. Jamais `new Date()` : une date calculée au rendu changerait à chaque
+build et prétendrait une mise à jour qui n'a pas eu lieu.
+
+## 7. Mesures
+
+| Page | perf | a11y | BP | CLS |
+| --- | --- | --- | --- | --- |
+| `/mentions-legales` | 95 | **100** | **100** | 0 |
+| `/politique-confidentialite` | 94 | **100** | **100** | 0 |
+
+Aucun débordement à 320, 390, 430, 768 ni 1 440 px. Colonne de lecture mesurée
+à 640 px sur desktop, fiche éditeur sur deux colonnes dès 768 px. Focus visible
+à 2 px sur le lien croisé, cible 241 × 44 px.

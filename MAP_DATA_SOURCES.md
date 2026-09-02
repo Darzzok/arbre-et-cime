@@ -51,8 +51,12 @@ licence s'applique.
 
 **Licence Ouverte 2.0** — attribution du producteur, aucune autre contrainte.
 
-> À faire avant la mise en production (phase 18) : reporter ces attributions
-> dans les **mentions légales** du site. Ce n'est pas fait à ce jour.
+> ~~À faire avant la mise en production (phase 18) : reporter ces attributions
+> dans les **mentions légales** du site. Ce n'est pas fait à ce jour.~~
+> **FAIT en phase 16B.** Les deux attributions figurent dans la rubrique
+> « Propriété intellectuelle » de `/mentions-legales`
+> (`src/app/mentions-legales/page.tsx`). Toute nouvelle source cartographique
+> ajoutée ici doit y être reportée : l'ODbL impose l'attribution.
 
 ---
 

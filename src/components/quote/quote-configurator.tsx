@@ -150,9 +150,18 @@ export function QuoteConfigurator() {
         */}
         {droppedPhotos > 0 ? (
           <div className="mb-8 flex flex-col gap-3 rounded-card border border-(--surface-rule) bg-(--surface-inset) p-4 sm:flex-row sm:items-center sm:justify-between">
+            {/*
+              L'ACCORD SUIVAIT LE PLURIEL EN TOUTE CIRCONSTANCE — relevé en
+              recette phase 17. Avec une seule photo, la phrase se lisait
+              « mais les 1 photo sont à ajouter de nouveau ». Le déterminant et
+              le verbe s'accordent maintenant avec le nombre, comme le « s ».
+            */}
             <p className="font-sans text-caption text-(--surface-fg)">
-              Vos réponses ont été retrouvées, mais les {droppedPhotos} photo
-              {droppedPhotos > 1 ? "s" : ""} sont à ajouter de nouveau.
+              Vos réponses ont été retrouvées, mais{" "}
+              {droppedPhotos > 1
+                ? `les ${droppedPhotos} photos sont`
+                : "la photo est"}{" "}
+              à ajouter de nouveau.
             </p>
 
             <button

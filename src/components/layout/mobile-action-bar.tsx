@@ -91,9 +91,19 @@ export function MobileActionBar() {
       >
         <nav
           aria-label="Actions rapides"
+          /*
+           * PAS DE GOUTTIÈRE SOUS 480 px — correctif phase 16B.
+           *
+           * La barre est déjà collée aux bords de l'écran ; la gouttière ne
+           * faisait qu'amputer les deux cibles de 40 px au total. Mesuré à
+           * 390 px : il restait 175 px par moitié, et « Demander un devis »
+           * passait à la ligne — le libellé se centrait alors sur deux lignes
+           * pendant que la flèche restait calée à droite, d'où l'impression de
+           * texte décentré signalée par le client.
+           */
           className={cn(
             "mx-auto flex max-w-content items-stretch",
-            "divide-x divide-(--surface-rule) px-(--gutter)",
+            "divide-x divide-(--surface-rule) sm:px-(--gutter)",
           )}
         >
           {hasPhone ? (
@@ -102,8 +112,8 @@ export function MobileActionBar() {
               tabIndex={visible ? undefined : -1}
               className={cn(
                 "flex min-h-15 flex-1 items-center justify-center gap-2.5",
-                "font-sans text-ui font-semibold text-(--surface-fg)",
-                "no-underline",
+                "font-sans text-ui font-semibold whitespace-nowrap",
+                "text-(--surface-fg) no-underline",
               )}
             >
               <PhoneGlyph />
@@ -120,10 +130,17 @@ export function MobileActionBar() {
           <Link
             href={cta.path}
             tabIndex={visible ? undefined : -1}
+            /*
+             * `flex-[1.4]` et non `flex-1` : les deux moitiés n'ont pas le
+             * même besoin. « Appeler » tient en 81 px, « Demander un devis »
+             * en réclame 171 avec sa flèche. Les partager à égalité faisait
+             * passer le second à la ligne tout en laissant l'autre à moitié
+             * vide. La répartition suit donc le contenu.
+             */
             className={cn(
-              "group flex min-h-15 flex-1 items-center justify-center gap-2.5",
-              "font-sans text-body font-semibold text-(--color-safety)",
-              "no-underline",
+              "group flex min-h-15 flex-[1.4] items-center justify-center",
+              "gap-2.5 font-sans text-body font-semibold whitespace-nowrap",
+              "text-(--color-safety) no-underline",
             )}
           >
             Demander un devis

@@ -171,25 +171,66 @@ déclinaisons AVIF et WebP aux tailles déclarées dans `next.config.ts`
 
 ---
 
-## Logotype — fourni par le client (phase 15B)
+## Logotype — fourni par le client (phase 16B)
 
-| Fichier | Usage | Dimensions |
-| --- | --- | --- |
-| `public/brand/logo-symbol.png` | symbole seul, en-tête et pied de page | 1280 × 1115 |
-| `public/brand/logo-footer.webp` | logo complet, en réserve | 540 × 640 |
-| `public/brand/logo-nav.webp` | logo complet, en réserve | 354 × 420 |
-| `public/brand/logo-square-1024.png` | aperçus, réseaux sociaux | 1024 × 1024 |
-| `src/app/favicon.ico` | favicon | 256 |
-| `src/app/icon.png` | icône Android / PWA | 192 |
-| `src/app/apple-icon.png` | icône iOS | 180 |
+Le client a livré un logo **redessiné** en phase 16B, qui remplace celui de la
+phase 15B. Même construction — l'arc, la feuille, puis le nom — mais un dessin
+plus net et une quatrième ligne, « Arboriste Grimpeur », en orange.
 
-**Source :** pack `Pack_Logo_Arbres_et_Cimes_Elagage.zip`, fourni par le
-client. Propriété du client — aucune licence tierce, aucune attribution
-requise, aucune image générée.
+### Ce qui est versionné
 
-**Manquant :** une **version claire ou inversée** pour les surfaces sombres.
-Le logo actuel est dessiné pour fond clair et son texte devient illisible
-sur le forêt (voir `DESIGN_SYSTEM.md` § 9 ter).
+| Fichier | Usage | Dimensions | Poids |
+| --- | --- | --- | --- |
+| `brand-source/logo-maitre-1024.png` | **maître**, source de tout le reste | 1024 × 1024 | 726 Ko |
+| `public/brand/logo-lockup.png` | **logo réagencé en ligne** — en-tête et menu mobile | 1917 × 512 | 246 Ko |
+| `public/brand/logo-complet.png` | logo complet, empilé — pied de page | 905 × 912 | 205 Ko |
+| `public/brand/logo-symbole.png` | symbole seul — réserve | 699 × 512 | 109 Ko |
+| `src/app/favicon.ico` | onglet — 6 tailles, symbole seul | 16 → 256 | 89 Ko |
+| `src/app/icon.png` | favicon et icône PWA | 512 × 512 | 54 Ko |
+| `src/app/apple-icon.png` | icône iOS, fond `#14251E` | 180 × 180 | 8 Ko |
+
+**Propriété du client.** Aucune licence tierce, aucune attribution requise.
+
+**Empreinte du maître** (SHA-256, 32 premiers caractères) :
+`ac6547bcd1b8a905c41b685301279ff5`. Le lot livré contenait quatre générations
+de logos différentes ; cette empreinte dit lequel a servi.
+
+### Les fichiers servis ne viennent PAS du lot livré
+
+Le lot de 25 fichiers était inexploitable tel quel, et c'est vérifiable :
+
+1. **Les noms ne correspondaient pas aux contenus.** Chaque fichier portait le
+   contenu du fichier qui le précède dans l'ordre alphabétique. **13 des 25**
+   avaient une extension fausse : un `.ico` qui était un PNG, des `.webp` qui
+   étaient des PNG, des `.png` qui étaient des WebP. Servir un PNG sous
+   `Content-Type: image/webp` casse le navigateur autant que l'optimiseur de
+   Next.
+2. **Toutes les déclinaisons « symbole » étaient de mauvais recadrages** : on y
+   lisait « Arbres et » suivi du haut de la ligne suivante, tronqué. Constaté
+   sur les fichiers 512 × 512, 1208 × 913 et 192 × 192.
+3. **Les favicons portaient ce texte tronqué**, sur fond blanc opaque. À 16 px,
+   une tache.
+
+Un seul fichier était propre : le maître 1024 × 1024 transparent. Tout le reste
+en est **dérivé** par `scripts/build-brand-assets.mjs` — au moment de
+l'écriture, jamais au build ni à l'exécution.
+
+> **Règle.** Ne jamais réintroduire un fichier du lot d'origine sans vérifier
+> son en-tête. Pour régénérer :
+> `node scripts/build-brand-assets.mjs brand-source/logo-maitre-1024.png`
+
+### Deux réserves
+
+**La lisibilité sur fond sombre.** Le logo est dessiné pour fond clair. Son
+texte est ivoire cerné de bleu nuit : il tient sur le forêt profond du pied de
+page, vérifié à l'écran. Mais **le contour bleu nuit de l'arc**, lui, se fond
+dans le fond sombre — seule la feuille verte porte alors le symbole. Une
+version inversée reste souhaitable.
+
+**L'orange n'appartient pas à la charte.** « Arboriste Grimpeur » est en orange
+vif, absent des six couleurs `VERROUILLÉES` de `DESIGN_SYSTEM.md` § 1. Il
+n'apparaît que dans le logo complet du pied de page, jamais dans l'interface —
+aucun jeton n'a été ajouté. À trancher avec le client s'il veut l'étendre.
 
 ---
 

@@ -25,6 +25,22 @@ import { area, contact, mailtoHref, site, telHref } from "@/lib/site";
  * Il est présent partout ; le pied de page n'a pas à le répéter une quatrième
  * fois.
  *
+ * TOUT EST CENTRÉ — CORRECTIF PHASE 16B
+ * -------------------------------------
+ * Les listes portaient `lg:items-start` : au-delà de 1 024 px, les liens se
+ * ferraient à gauche pendant que leur intitulé de colonne restait centré, la
+ * règle globale du site s'appliquant au texte. Mesuré à 1 440 px : les trois
+ * intitulés commençaient 28 px à droite de leurs liens, et le bloc d'identité
+ * mélangeait un logotype centré, un texte centré et des coordonnées ferrées à
+ * gauche. C'est le décalage signalé par le client.
+ *
+ * `DESIGN_SYSTEM.md` § 4 est pourtant explicite : « tout le contenu de page et
+ * **le pied de page** sont centrés », décision client `VERROUILLÉE`. Le
+ * `lg:items-start` était l'anomalie, pas le centrage. Il est retiré.
+ *
+ * L'`items-start` de la RANGÉE, lui, reste : il aligne les colonnes par le
+ * haut, c'est un réglage vertical qui ne touche pas au texte.
+ *
  * COMPOSANT SERVEUR. Aucun état, aucun JavaScript.
  *
  * LE TÉLÉPHONE N'EST PAS INVENTÉ
@@ -64,7 +80,15 @@ export function SiteFooter() {
               porte plus aucun appel au devis, sous aucune forme.
               --------------------------------------------------------------- */}
           <div className="lg:max-w-72">
-            <Wordmark size="sm" />
+            {/*
+              LE LOGO COMPLET VIT ICI, ET NULLE PART AILLEURS.
+
+              Le pied de page est la seule zone du site qui dispose de la
+              hauteur nécessaire aux quatre lignes du logotype. L'en-tête, lui,
+              n'a que 81 px : le bloc complet y tomberait à 48 px de large et
+              son texte sous 7 px. C'est le partage posé par `wordmark.tsx`.
+            */}
+            <Wordmark variant="full" />
             <Body className="mt-5 text-(--surface-fg-muted)">
               {site.trade} à {area.city} et dans la {area.metro}.
             </Body>
@@ -76,7 +100,7 @@ export function SiteFooter() {
             {/* Rien ne s’affiche tant que la donnée n’est pas confirmée : le
                 téléphone n’est pas inventé (cf. `contact.phoneConfirmed`). */}
             {mailto || tel ? (
-              <ul className="mt-4 flex flex-col items-center gap-0.5 lg:items-start">
+              <ul className="mt-4 flex flex-col items-center gap-0.5">
                 {mailto ? (
                   <li>
                     <FooterLink href={mailto} external>
@@ -101,7 +125,7 @@ export function SiteFooter() {
             {footerGroups.map((group) => (
               <nav key={group.title} aria-label={group.title}>
                 <FooterHeading>{group.title}</FooterHeading>
-                <ul className="mt-3 flex flex-col items-center gap-0.5 lg:items-start">
+                <ul className="mt-3 flex flex-col items-center gap-0.5">
                   {group.ids.map((id) => {
                     const route = getRoute(id);
                     return (

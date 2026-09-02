@@ -102,13 +102,13 @@ export const LOCATIONS: readonly Location[] = [
       "le-grand-quevilly",
     ],
     intro:
-      "Arbres & Cimes est basée à Rouen. C’est le point de départ de tous les chantiers, et la commune où les interventions demandent le moins d’organisation préalable.",
+      "Rouen se situe au cœur du secteur d’intervention d’Arbres & Cimes. C’est la commune où les chantiers demandent le moins d’organisation préalable, et le point de repère de toute la zone.",
     contexte:
       "Rouen s’étage entre les quais de Seine et les coteaux qui la ceinturent au nord comme au sud. Cette topographie change beaucoup de choses pour un élagueur : un jardin de coteau se travaille rarement depuis un véhicule garé au pied de l’arbre, et l’évacuation des bois se prépare avant de monter. Le centre ancien ajoute ses propres contraintes — rues étroites, stationnement compté, mitoyenneté immédiate.",
     servicesIntro:
       "Les quatre prestations sont assurées à Rouen, du jardin de centre-ville au grand sujet de coteau.",
     description:
-      "Élagueur-grimpeur basé à Rouen : élagage, abattage, dessouchage et entretien extérieur, du jardin de centre-ville aux arbres de coteau. Devis gratuit.",
+      "Élagueur-grimpeur à Rouen : élagage, abattage, dessouchage et entretien extérieur, du jardin de centre-ville aux arbres de coteau. Devis gratuit.",
   },
   {
     id: "76451",

@@ -186,9 +186,17 @@ export default function AProposPage() {
                 À propos d’{site.shortName}
               </Display>
 
+              {/*
+                « INSTALLÉE À ROUEN » AFFIRMAIT UNE ADRESSE — corrigé phase 17.
+
+                Le siège est au Grand-Quevilly (`legal.siege`), pas à Rouen.
+                Le chapô dit maintenant ce qui est vrai et suffisant : une
+                activité qui INTERVIENT sur ce secteur. Rouen reste nommée, et
+                reste la cible SEO principale.
+              */}
               <Lead className="mt-5 text-(--surface-fg-muted)">
-                Une activité d’élagage, d’abattage et d’entretien des arbres
-                installée à {area.city} et dans la {area.metro}.
+                Une activité d’élagage, d’abattage et d’entretien des arbres,
+                qui intervient à {area.city} et dans la {area.metro}.
               </Lead>
 
               {/* Le nom du dirigeant est le sujet de la page : il est mis en

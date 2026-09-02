@@ -2,68 +2,76 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/cn";
-import { area, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 type WordmarkProps = {
   className?: string;
   /** `lg` est reserve au menu mobile et a la style guide. */
   size?: "sm" | "md" | "lg";
   /**
-   * `lockup` : symbole + nom, en ligne. Pour une barre horizontale.
-   * `full`   : le logo complet du client, tel quel. Demande de la hauteur.
+   * `lockup` : le logo en LIGNE — symbole a gauche, nom a droite.
+   * `full`   : le logo complet, empile. Demande de la hauteur.
    */
   variant?: "lockup" | "full";
 };
 
-const nameClasses: Record<NonNullable<WordmarkProps["size"]>, string> = {
-  sm: "text-[1.25rem]",
-  md: "text-subtitle",
-  lg: "text-title",
-};
-
-/** Hauteur du symbole, calee sur la taille du nom qu'il accompagne. */
-const symbolClasses: Record<NonNullable<WordmarkProps["size"]>, string> = {
-  sm: "h-8",
-  md: "h-10",
-  lg: "h-12",
+/**
+ * Hauteur du logotype en ligne.
+ *
+ * Plus haute que l'ancien symbole seul (`h-8`), et il le faut : c'est
+ * desormais le texte du logo qui doit rester lisible, pas seulement la feuille.
+ * A `h-12`, ses trois lignes retrouvent ~12 px chacune.
+ */
+const lockupClasses: Record<NonNullable<WordmarkProps["size"]>, string> = {
+  sm: "h-11",
+  md: "h-12",
+  lg: "h-14",
 };
 
 /**
- * Logotype — logo reel du client, livre en phase 15B.
+ * Logotype — logo reel du client. NOUVELLE VERSION livree en phase 16B.
  *
- * DEUX TRAITEMENTS, ET POURQUOI
- * -----------------------------
- * Le logo fourni est un **bloc vertical** : la feuille au-dessus, puis
- * « Arbres et Cimes Élagage » sur deux lignes, puis « Arboriste Grimpeur ».
- * Le fichier de navigation lui-meme fait 354 x 420 px.
+ * PLUS AUCUN TEXTE RECOMPOSE
+ * --------------------------
+ * Jusqu'ici, l'en-tete affichait le symbole du client accompagne d'un nom
+ * compose dans la typographie du site — « Arbres & Cimes / ÉLAGAGE · ROUEN ».
+ * Le client a demande que ce soit **son logo**, avec **son texte**, et l'a
+ * confirme apres que la contrainte de hauteur lui a ete signalee.
  *
- * Dans une barre d'en-tete de 72 px de haut, ce bloc tiendrait sur environ
- * 50 px de large et son texte tomberait sous 8 px — illisible. Le logo n'est
- * donc pas utilise tel quel partout :
+ * LE BLOC VERTICAL NE POUVAIT PAS ENTRER DANS LA BARRE
+ * ----------------------------------------------------
+ * Le maitre detoure fait 905 x 912 — quasiment carre — et son pave de texte
+ * occupe 31 % de sa hauteur pour TROIS lignes. Dans une barre de 81 px, un
+ * logo de 56 px de haut donne 17 px de texte au total, soit **moins de 6 px
+ * par ligne**. Atteindre 10 px demanderait un logo de 97 px de haut, donc une
+ * barre plus haute que le logo lui-meme.
  *
- * - **`lockup`** (en-tete, menu mobile) : le **symbole reel** — la feuille —
- *   accompagne du nom compose dans la typographie du site. C'est une
- *   composition horizontale, lisible a 40 px de haut, qui porte la marque
- *   sans deformer le logo ni rendre son texte illisible.
- * - **`full`** (pied de page) : le **logo complet**, tel que fourni. Le pied
- *   de page est centre et dispose de la hauteur necessaire.
+ * LE LOGO EST DONC REAGENCE, PAS REDESSINE
+ * -----------------------------------------
+ * `scripts/build-brand-assets.mjs` decoupe les deux composants du maitre — le
+ * symbole et le pave de texte — et les repose **cote a cote**. Aucun pixel
+ * n'est redessine, aucune typographie n'est substituee : c'est le dessin du
+ * client, dans un autre agencement. Le resultat fait 1917 x 512, soit un
+ * rapport de 3,74:1 qui entre dans une barre de navigation.
  *
- * Le nom compose reprend `site.shortName` : il suit donc automatiquement toute
- * correction de la source unique (`CLAUDE.md` § 4).
+ * | Variante | Ou | Fichier |
+ * | --- | --- | --- |
+ * | `lockup` | en-tete, menu mobile | `logo-lockup.png` — le logo en ligne |
+ * | `full` | pied de page | `logo-complet.png` — le logo empile, tel que fourni |
+ *
+ * LE NOM ACCESSIBLE VIENT DE L'`alt`
+ * ----------------------------------
+ * Il n'y a plus de texte visible : WCAG 2.5.3 ne s'applique donc plus. L'`alt`
+ * porte le nom de l'entreprise depuis `site.ts`, source unique, et la
+ * destination s'ajoute en `sr-only`.
  */
 export function Wordmark({
   className,
   size = "md",
   variant = "lockup",
 }: WordmarkProps) {
-  /*
-    PAS d'`aria-label` qui remplacerait le texte : WCAG 2.5.3 demande que le
-    nom accessible CONTIENNE le texte visible. Le texte porte donc lui-meme le
-    nom, et la destination s'ajoute en `sr-only` (releve en phase 15).
-  */
   const base = cn(
-    "group inline-flex min-h-11 no-underline",
-    variant === "full" ? "flex-col items-center" : "items-center gap-3",
+    "group inline-flex min-h-11 items-center no-underline",
     className,
   );
 
@@ -71,12 +79,12 @@ export function Wordmark({
     return (
       <Link href="/" className={base}>
         <Image
-          src="/brand/logo-footer.webp"
+          src="/brand/logo-complet.png"
           alt={site.name}
-          width={540}
-          height={640}
-          sizes="176px"
-          className="h-auto w-44"
+          width={905}
+          height={912}
+          sizes="192px"
+          className="h-auto w-48"
         />
         <span className="sr-only">— retour à l’accueil</span>
       </Link>
@@ -85,40 +93,28 @@ export function Wordmark({
 
   return (
     <Link href="/" className={base}>
-      {/* Le symbole seul : c'est la partie du logo qui reste lisible petite. */}
+      {/*
+        `w-auto` + une hauteur fixe : c'est la HAUTEUR qui est contrainte dans
+        une barre de navigation, jamais la largeur. Le rapport 3,74:1 fait le
+        reste.
+      */}
       <Image
-        src="/brand/logo-symbol.png"
-        alt=""
-        aria-hidden="true"
-        width={1280}
-        height={1115}
-        sizes="56px"
-        className={cn("w-auto shrink-0", symbolClasses[size])}
+        src="/brand/logo-lockup.png"
+        alt={site.name}
+        width={1917}
+        height={512}
+        sizes="200px"
+        /*
+          `loading="eager"` ET NON `priority` — mesure.
+          `priority` ajoute un `<link rel=preload>` qui entre en concurrence
+          avec la photographie du hero, elle-meme en `fetchPriority="high"`.
+          Mesure sur l'accueil : LCP passe de 2,9 s a 4,3 s et la performance
+          de 91 a 85 pour un fichier de 9 Ko. `eager` suffit : le logotype
+          n'est pas differe, mais il ne double pas la file de prechargement.
+        */
+        loading="eager"
+        className={cn("w-auto shrink-0", lockupClasses[size])}
       />
-
-      <span className="flex flex-col justify-center gap-1">
-        <span
-          className={cn(
-            "font-display leading-none whitespace-nowrap",
-            "tracking-tight text-(--surface-heading)",
-            nameClasses[size],
-          )}
-        >
-          Arbres{" "}
-          <span className="italic text-(--surface-fg-muted)">&amp;</span> Cimes
-        </span>
-
-        <span
-          className={cn(
-            "font-sans text-eyebrow font-semibold uppercase whitespace-nowrap",
-            "text-(--surface-fg-muted)",
-          )}
-        >
-          Élagage
-          <span className="mx-1.5 text-(--color-safety)">·</span>
-          {area.city}
-        </span>
-      </span>
 
       <span className="sr-only">— retour à l’accueil</span>
     </Link>

@@ -335,7 +335,7 @@ gabarit applique déjà à ses formulations depuis la phase 14.
 
 Avec les phases précédentes, le site expose maintenant des repères sur
 **tous** ses parcours de conversion : accueil, quatre services, à propos,
-réalisations, zones et 23 pages locales.
+réalisations, zones et 19 pages locales.
 
 **Rappel** — le CTA « Appeler » n'est rendu nulle part : le numéro n'est pas
 confirmé (`contact.phoneConfirmed`). Le renseigner le fera apparaître dans plus
@@ -359,7 +359,7 @@ fonction, pas sur la forme.
 | --- | --- | --- |
 | En-tête | bouton primaire | **toutes** les pages, visible en permanence |
 | Barre d'action mobile | bouton primaire | **toutes** les pages, persistante |
-| Hero de page | bouton primaire | accueil, 4 services, zones, 23 villes |
+| Hero de page | bouton primaire | accueil, 4 services, zones, 19 villes |
 | Carte de conversion finale | bouton primaire | **toutes** les pages de contenu |
 | ~~Pied de page~~ | ~~bouton~~ | **retiré** |
 
@@ -440,7 +440,7 @@ suffi.**
 | En-tête | toutes les pages | oui |
 | Menu mobile | toutes les pages | oui |
 | Barre d'action mobile | toutes les pages | oui |
-| Hero de page | accueil, 4 services, zones, 23 villes | oui |
+| Hero de page | accueil, 4 services, zones, 19 villes | oui |
 | Carte de conversion finale | toutes les pages de contenu | oui |
 | Carte téléphone de `/contact` | apparue d'elle-même | oui |
 | Coordonnées du pied de page | sous l'e-mail | oui |

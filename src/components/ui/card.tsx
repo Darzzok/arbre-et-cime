@@ -37,6 +37,19 @@ import { cn } from "@/lib/cn";
  * surfaces solides, pas du relief. L'interaction se lit a la bordure et a une
  * translation de 2 px : assez pour repondre, trop peu pour bouger la page.
  *
+ * `bordered={false}` RETIRE LE FILET — phase 16B
+ * ----------------------------------------------
+ * Une carte dont le fond tranche deja sur la section n'a pas besoin d'etre
+ * cernee en plus : le filet devient un trait de plus a lire, pas une limite
+ * utile. C'est le cas des quatre cartes de prestations des pages villes, ou
+ * quatre rectangles cernes sur une meme grille produisaient exactement le
+ * motif que `CLAUDE.md` § 6 interdit.
+ *
+ * La bordure reste PRESENTE mais transparente : la boite garde ses dimensions,
+ * donc aucun decalage de mise en page, et l'etat de survol continue de la
+ * colorer. C'est une VARIANTE du composant, pas une `className` qui ecrase —
+ * `cn()` ne fusionne pas les classes concurrentes (voir `src/lib/cn.ts`).
+ *
  * COMPOSANT SERVEUR. `interactive` rend un lien reel, jamais un `div`
  * cliquable.
  */
@@ -44,12 +57,28 @@ import { cn } from "@/lib/cn";
 export type CardTone = "plain" | "sand" | "forest" | "deep" | "accent";
 export type CardPadding = "none" | "sm" | "md" | "lg";
 
-const toneClasses: Record<CardTone, string> = {
-  plain: "bg-(--surface-bg) border-(--surface-rule)",
-  sand: "bg-sand border-forest/10",
-  forest: "bg-forest border-ivory/10",
-  deep: "bg-deep-forest border-ivory/10",
-  accent: "bg-safety border-forest/15",
+const toneBackground: Record<CardTone, string> = {
+  plain: "bg-(--surface-bg)",
+  sand: "bg-sand",
+  forest: "bg-forest",
+  deep: "bg-deep-forest",
+  accent: "bg-safety",
+};
+
+/**
+ * Couleur du filet, SEPAREE du fond.
+ *
+ * Concatener `border-transparent` apres `border-(--surface-rule)` ne
+ * garantirait rien : `cn()` ne fusionne pas les classes concurrentes et c'est
+ * l'ordre de la feuille de style qui tranche, pas celui de l'attribut. On
+ * choisit donc la classe, on ne l'ecrase pas.
+ */
+const toneBorder: Record<CardTone, string> = {
+  plain: "border-(--surface-rule)",
+  sand: "border-forest/10",
+  forest: "border-ivory/10",
+  deep: "border-ivory/10",
+  accent: "border-forest/15",
 };
 
 /**
@@ -77,6 +106,11 @@ type BaseProps = {
   padding?: CardPadding;
   /** Reaction au survol et au focus. Sans lien, reste purement visuel. */
   interactive?: boolean;
+  /**
+   * Filet peripherique. `false` le rend transparent — la boite garde sa
+   * taille, le survol continue de la colorer. Voir le docblock.
+   */
+  bordered?: boolean;
   className?: string;
   children: ReactNode;
 };
@@ -94,11 +128,15 @@ function classesFor({
   tone = "plain",
   padding = "md",
   interactive = false,
+  bordered = true,
   className,
 }: Omit<BaseProps, "children">) {
   return cn(
     shell,
-    toneClasses[tone],
+    toneBackground[tone],
+    /* Sans filet, on garde la meme EPAISSEUR en transparent : la boite ne
+       change pas de dimensions, et le survol continue de la colorer. */
+    bordered ? toneBorder[tone] : "border-transparent",
     paddingClasses[padding],
     interactive && interactiveShell,
     className,
@@ -114,6 +152,7 @@ export function Card({
   tone = "plain",
   padding,
   interactive,
+  bordered,
   className,
   children,
   ...rest
@@ -124,7 +163,13 @@ export function Card({
   return (
     <Tag
       {...(surface ? { "data-surface": surface } : {})}
-      className={classesFor({ tone, padding, interactive, className })}
+      className={classesFor({
+        tone,
+        padding,
+        interactive,
+        bordered,
+        className,
+      })}
       {...rest}
     >
       {children}
@@ -155,12 +200,19 @@ export function CardLink({
   tone = "plain",
   padding,
   interactive = true,
+  bordered,
   className,
   children,
   ...rest
 }: CardLinkProps) {
   const surface = toneSurface[tone];
-  const classes = classesFor({ tone, padding, interactive, className });
+  const classes = classesFor({
+    tone,
+    padding,
+    interactive,
+    bordered,
+    className,
+  });
   const props = surface ? { "data-surface": surface } : {};
 
   if (href.startsWith("/") || href.startsWith("#")) {

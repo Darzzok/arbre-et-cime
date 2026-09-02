@@ -63,7 +63,9 @@ export function missingLocalBusinessData(): readonly string[] {
   // Non modelisees dans le code tant qu'elles ne sont pas confirmees : publier
   // une adresse ou des horaires approximatifs abimerait la coherence NAP avec
   // la fiche Google Business Profile (cf. SEO_STRATEGY.md).
-  missing.push("adresse postale OU choix explicite d'une zone de service seule");
+  missing.push(
+    "adresse postale OU choix explicite d'une zone de service seule",
+  );
   missing.push("horaires d'ouverture et conditions d'urgence");
   missing.push("raison sociale et SIREN");
 
@@ -139,11 +141,10 @@ export function serviceSchema(id: RouteId): JsonLdNode | null {
  * C'est le SEUL JSON-LD emis par une page ville, et c'est deliberé.
  *
  * **Aucun `LocalBusiness` par commune.** Arbres & Cimes est une entreprise
- * unique, basee a Rouen ; declarer vingt-trois etablissements reviendrait a
- * affirmer vingt-trois implantations qui n'existent pas. Une page ville decrit
- * une **zone de service**, pas une agence — et une adresse locale inventee est
- * exactement le genre de donnee qui detruit la confiance d'un moteur comme
- * d'un visiteur.
+ * unique ; declarer un etablissement par commune reviendrait a affirmer
+ * dix-neuf implantations qui n'existent pas. Une page ville decrit une **zone
+ * de service**, pas une agence — et une adresse locale inventee est exactement
+ * le genre de donnee qui detruit la confiance d'un moteur comme d'un visiteur.
  *
  * Le `LocalBusiness` unique du site reste gele tant que les donnees client
  * manquent (voir `missingLocalBusinessData`), et `areaServed` sera le bon

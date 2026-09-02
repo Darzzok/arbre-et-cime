@@ -141,7 +141,23 @@ const HERO_SURFACE: Record<LocationTier, Surface> = {
  */
 function distanceLine(location: Location): string {
   if (location.km === 0) {
-    return `${location.nom} est la commune d’attache d’${site.shortName}.`;
+    /*
+     * « COMMUNE D'ATTACHE » AFFIRMAIT UNE IMPLANTATION — corrigé en phase 17.
+     *
+     * Le siège de l'entreprise est au Grand-Quevilly, pas à Rouen. Écrire que
+     * Rouen est la commune d'attache laissait entendre une adresse
+     * rouennaise ; la phrase dit maintenant ce qui est vrai et suffisant :
+     * Rouen est le centre du secteur, pas le domicile de l'entreprise.
+     *
+     * Le centre cartographique, les distances et les voisins sont inchangés :
+     * Rouen reste le point de projection et la cible SEO principale.
+     *
+     * La phrase ne reprend pas non plus le chapô de la commune, qui dit déjà
+     * « Rouen se situe au cœur du secteur d'intervention ». Ce bloc-ci est le
+     * repère de DISTANCE : pour toutes les autres communes il annonce des
+     * kilomètres, il dit donc ici d'où ces kilomètres sont comptés.
+     */
+    return `${location.nom} est le point de référence du secteur : toutes les distances annoncées s’y rapportent.`;
   }
 
   return `À environ ${location.km} km de ${area.city} à vol d’oiseau, au ${location.direction}.`;
@@ -271,7 +287,14 @@ export default async function VillePage({ params }: PageProps) {
       {/* --------------------------------------------------- Prestations ---
           Cartes DÉLIBÉRÉMENT plus petites que celles de l'accueil et des pages
           services : ici elles servent le maillage et la compréhension, pas la
-          démonstration. Deux colonnes dès 390 px. */}
+          démonstration. Deux colonnes dès 390 px.
+
+          SANS FILET — demande client, phase 16B. Quatre rectangles cernés sur
+          une même grille produisaient exactement le motif de cartes identiques
+          que `CLAUDE.md` § 6 interdit. Le fond de la carte tranche déjà sur la
+          section : le filet n'ajoutait qu'un trait à lire. La bordure reste
+          transparente, donc le survol continue de la révéler et aucune
+          dimension ne bouge. */}
       <Section surface={apresHero} aria-labelledby="interventions">
         <Container>
           <Reveal className="mx-auto max-w-reading">
@@ -295,9 +318,31 @@ export default async function VillePage({ params }: PageProps) {
                   href={route.path}
                   tone={apresHero === "sand" ? "plain" : "sand"}
                   padding="md"
+                  bordered={false}
                   className="flex h-full flex-col justify-center"
                 >
-                  <span className="font-display text-subtitle leading-tight text-(--surface-heading)">
+                  {/*
+                    « DESSOUCHAGE » NE TIENT PAS EN 22 px SUR DEUX COLONNES.
+
+                    Mesuré à 320 px : la carte fait 132 px, il en reste 92 une
+                    fois le rembourrage retiré, et le mot en réclame 150. La
+                    carte porte `overflow-hidden` : il était donc COUPÉ, pas
+                    débordé — on lisait « Dessouchag ». Idem à 390 px.
+
+                    Le titre passe donc au corps de texte sous 480 px et ne
+                    reprend sa taille de sous-titre qu'ensuite. Mesuré après
+                    correction : plus aucune troncature à 390, 768 ni 1 440 px.
+
+                    Restent les écrans de 320 px, sous le plancher de conception
+                    du projet, où « Dessouchage » réclame encore 112 px pour 92
+                    disponibles. Deux filets de sécurité, dans cet ordre :
+                    `hyphens-auto` (la page est en `lang="fr"`) coupe le mot
+                    proprement quand le navigateur dispose du dictionnaire ;
+                    `break-words` le renvoie à la ligne quand il ne l'a pas.
+                    Une césure ou un retour à la ligne valent mieux qu'un mot
+                    coupé au ciseau par `overflow-hidden`.
+                  */}
+                  <span className="font-display text-body leading-tight hyphens-auto break-words text-(--surface-heading) sm:text-subtitle">
                     {route.navLabel}
                   </span>
                   {route.navTagline ? (

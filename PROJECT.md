@@ -167,7 +167,14 @@ référence.
    partout où il était prévu.
 3. Adresse professionnelle : affichée publiquement ou zone de service seule
    (impacte le balisage `LocalBusiness`, cf. `SEO_STRATEGY.md`).
-4. Forme juridique, SIREN, assurance décennale / RC pro, mentions légales.
+4. Forme juridique, raison sociale exacte, SIREN/SIRET, TVA, assurance
+   professionnelle. **Les pages légales sont écrites depuis la phase 16B** et
+   n'affichent que des données confirmées ; ces champs-là manquent encore et
+   sont recensés dans `LEGAL_CHECKLIST.md`, avec la médiation de la
+   consommation et la durée de conservation des demandes.
 5. Photothèque : volume, qualité, droits, présence d'avant/après.
 6. Avis clients existants (Google Business Profile ou autres) réutilisables.
 7. Hébergement retenu et adresse de réception des demandes de devis.
+   Préproduction sur Vercel, production prévue chez Hostinger : tant que le
+   contrat n'est pas souscrit, `/mentions-legales` ne nomme **aucun**
+   hébergeur plutôt que d'en nommer un qui deviendra faux.

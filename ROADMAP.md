@@ -1058,6 +1058,11 @@ commune ait été classée à la main.
 
 ### Carte interactive
 
+> **⚠ Relevé antérieur au retrait des quatre communes littorales.** Le
+> périmètre comptait alors 23 communes ; il en compte **19** depuis. Les
+> chiffres ci-dessous ne sont pas réécrits.
+
+
 Les 23 points renvoient vers leur page. **22 étiquettes permanentes, 1
 différée** (Saint-Étienne-du-Rouvray, trop au cœur de la grappe) : le point
 existe et reste cliquable, le nom apparaît au survol, au focus ou au tap.
@@ -1212,7 +1217,7 @@ retirée.
 
 *Non modifié, et signalé au client :* le logo porte « **Arboriste
 Grimpeur** » là où le site dit « **Élagueur-grimpeur** ». Ce second terme
-est le mot-clé SEO principal — il porte les 23 `h1` des pages villes et
+est le mot-clé SEO principal — il porte les 19 `h1` des pages villes et
 l'essentiel des titres. Le changer est une décision éditoriale, pas une
 correction ; elle n'a pas été prise sans demande explicite.
 
@@ -1617,10 +1622,17 @@ disque et restent au registre** (`MEDIA_SOURCES.md` § 12), pas supprimées.
 
 ---
 
-### Phase 15B.5 — Zones, carte et 23 pages villes ✅
+### Phase 15B.5 — Zones, carte et pages villes ✅
+
+> **⚠ RELEVÉ HISTORIQUE — 23 communes.** Ce rapport date de la phase 15B.5,
+> quand le périmètre en comptait vingt-trois. Le périmètre a été ramené à
+> **19 communes** juste après, sur demande du client : Dieppe, Le Tréport,
+> Fécamp et Le Havre ont été retirés avec leurs pages. Les chiffres ci-dessous
+> décrivent l'état d'alors et ne sont pas modifiés — un relevé qu'on réécrit
+> n'est plus un relevé. **L'invariant en vigueur est 19.**
 
 Les deux dernières pages restées dans l'état d'avant la refonte visuelle :
-`/zones-intervention` et le gabarit des 23 pages locales.
+`/zones-intervention` et le gabarit des pages locales.
 
 ### Le constat
 
@@ -1805,7 +1817,7 @@ Six sous-phases, douze routes refondues plus les 22 autres pages villes.
 | 15B.2 | en-tête, navigation, pied de page, CTA |
 | 15B.3 | page d'accueil |
 | 15B.4 | services, à propos, réalisations |
-| 15B.5 | zones, carte, 23 pages villes |
+| 15B.5 | zones, carte, pages villes |
 | 15B.6 | contact, devis, cohérence finale |
 
 **Aucune dépendance ajoutée sur l'ensemble des six sous-phases.**
@@ -1832,7 +1844,7 @@ numéro : chaque emplacement portait déjà son bouton « Appeler », conditionn
 | Emplacement | Vérifié |
 | --- | --- |
 | En-tête, menu mobile, barre d'action mobile | oui |
-| Hero de page — accueil, 4 services, zones, 23 villes | oui |
+| Hero de page — accueil, 4 services, zones, 19 villes | oui |
 | Carte de conversion finale de chaque page | oui |
 | Carte téléphone de `/contact` — apparue d'elle-même | oui |
 | Coordonnées du pied de page | oui |
@@ -1853,6 +1865,11 @@ Accessibilité **100**, bonnes pratiques **100**, **CLS 0** conservés
 ---
 
 ### Correctif carte — repères littoraux, lisibilité, chevauchements ✅
+
+> **⚠ Relevé antérieur au retrait des quatre communes littorales.** Le
+> périmètre comptait alors 23 communes ; il en compte **19** depuis. Les
+> chiffres ci-dessous ne sont pas réécrits.
+
 
 Trois signalements du client sur la carte.
 
@@ -1968,25 +1985,455 @@ typecheck et build au vert.
 
 ---
 
-## Phase 16 — Analytics et conversions ⬜
+## Phase 16B — Pages légales ✅
 
-- Analytics respectueux de la vie privée
-- Six événements de `CONVERSION_STRATEGY.md` instrumentés
-- Tableau de bord de suivi des abandons par étape du configurateur
+Menée avant la phase 16, sur demande du client. Les deux dernières pages
+d'attente du site sont écrites : `/mentions-legales` et
+`/politique-confidentialite`.
 
-**Sortie :** chaque événement vérifié manuellement en conditions réelles.
+### Ce qu'elles étaient
+
+Deux `PlaceholderPage` annonçant ce qu'elles publieraient « en phase 18 ».
+Une page de mentions légales qui ne mentionne rien ne remplit ni son
+obligation, ni sa fonction de vérification. Avec elles, `PlaceholderPage`
+n'est plus employé nulle part.
+
+### La règle de la phase : ne rien inventer
+
+Ce qui est affiché vient de `src/lib/site.ts` et de lui seul — nom, activité,
+responsable, e-mail, téléphone, zone. Rien n'est recopié en dur.
+
+Ce qui n'est pas connu **n'est pas affiché** : forme juridique, raison sociale
+exacte, SIREN/SIRET, TVA, adresse professionnelle, assurance. Un SIRET
+plausible mais faux serait invérifiable pour le client et vérifiable en trente
+secondes par n'importe qui d'autre.
+
+L'absence n'est pas maquillée pour autant : un bloc « En cours de finalisation »
+énumère en clair ce qui manque et annonce l'échéance. Une fiche trouée ligne à
+ligne se lirait comme une fiche bâclée ; un seul avertissement lisible vaut
+mieux.
+
+### L'hébergeur n'est pas nommé, et c'est le bon choix
+
+| | |
+| --- | --- |
+| Préproduction actuelle | Vercel |
+| Production **prévue** | Hostinger (endpoint PHP + SMTP du devis) |
+
+Nommer l'hébergeur de préproduction publierait une information qui devient
+fausse le jour de la bascule ; écrire une adresse Hostinger de mémoire serait
+une invention. La rubrique annonce donc l'échéance, et `LEGAL_CHECKLIST.md`
+porte le blocage.
+
+### La politique décrit le site réel, pas un site type
+
+Vérifié dans le code avant rédaction, puis à l'exécution :
+
+| Affirmation | Vérification |
+| --- | --- |
+| Aucun outil de mesure | `emitQuoteEvent()` a un corps vide |
+| Aucun cookie | 0 occurrence de `document.cookie` / `cookies()` ; à l'exécution `document.cookie` vide, `localStorage` et `sessionStorage` vides |
+| Aucun script tiers | 0 script hors origine |
+| Aucun envoi | `submit()` bascule l'écran, il n'appelle rien |
+| Ce que garde le navigateur | les clés de `StoredShape` — besoin, chantier, code postal, commune, étape, nombre de photos |
+
+Les clauses recopiées d'un autre site décrivent Google Analytics, des cookies
+de suivi, une base de données et un compte utilisateur. Ce site n'a **rien** de
+tout cela, et la page le dit — y compris que `sessionStorage` n'est pas un
+cookie, confusion qui conduit à réclamer un consentement là où il n'y a rien à
+consentir.
+
+Aucune durée de conservation chiffrée n'est publiée : « trois ans » n'a été
+décidé par personne ici.
+
+### Une obligation de licence enfin honorée
+
+`MAP_DATA_SOURCES.md` § 2 signalait depuis la phase 14 : « reporter ces
+attributions dans les mentions légales du site. Ce n'est pas fait à ce jour. »
+L'ODbL l'exige. Les attributions IGN / france-geojson (ODbL) et Étalab / DINUM
+(Licence Ouverte 2.0) figurent désormais dans la rubrique « Propriété
+intellectuelle ».
+
+### Forme
+
+Un module partagé, `src/components/legal/legal.tsx`, porte le squelette
+commun : hero `deep-forest` **compact**, articles en `<section
+aria-labelledby>` séparés au filet, colonne `max-w-reading`, pied avec date
+d'édition et renvoi croisé. Aucun texte juridique n'y vit — il reste dans
+chaque page, relisible d'un bloc.
+
+La date d'édition est une **constante**, jamais `new Date()` : une date
+calculée au rendu changerait à chaque build et prétendrait une mise à jour qui
+n'a pas eu lieu.
+
+Le centrage `VERROUILLÉ` est respecté. La parade au texte long centré n'est pas
+de désobéir mais d'écrire court : aucun bloc de ces deux pages ne dépasse
+quatre lignes, et les énumérations emploient l'idiome déjà en place — bloc
+centré, éléments ferrés à gauche.
+
+### Mesures
+
+| Page | perf | a11y | BP | CLS | 320 / 390 / 430 / 768 / 1440 |
+| --- | --- | --- | --- | --- | --- |
+| `/mentions-legales` | 95 | **100** | **100** | 0 | 0 débordement |
+| `/politique-confidentialite` | 94 | **100** | **100** | 0 | 0 débordement |
+
+Un seul `h1` par page, hiérarchie de titres continue (4 puis 13 `h2`), focus
+visible mesuré à 2 px sur le lien croisé, cible 241 × 44 px. `noindex, follow`
+intact sur les deux pages. Les deux routes sont dans le pied de page depuis la
+phase 3, groupe « Informations » — rien à ajouter.
+
+Lint, typecheck et build au vert.
 
 ---
 
-## Phase 17 — Recette (QA) ⬜
+## Correctif 16B — retours client ✅
 
-- Parcours testés sur iOS Safari, Android Chrome, desktop Chrome et Firefox
-- Test à 390 px, 768 px, 1280 px, 1920 px
-- Vérification des liens `tel:` et `mailto:`, des formulaires, des 404
-- Relecture orthographique et typographique de tous les textes
-- Vérification finale : aucune donnée factice, aucune image générée
+Quatre demandes, plus un défaut trouvé en chemin.
 
-**Sortie :** liste de recette signée, aucun défaut bloquant ouvert.
+### 1. Les filets des cartes de prestations, pages villes
+
+Quatre rectangles cernés sur une même grille : exactement le motif de cartes
+identiques que `CLAUDE.md` § 6 interdit. Le fond de la carte tranche déjà sur
+la section, le filet n'ajoutait qu'un trait à lire.
+
+Retiré par une **variante de la primitive**, `bordered={false}`, et non par une
+`className` qui écrase : `cn()` ne fusionne pas les classes concurrentes, et
+poser `border-transparent` après `border-(--surface-rule)` n'aurait rien
+garanti — c'est l'ordre de la feuille de style qui tranche, pas celui de
+l'attribut. `toneClasses` est donc scindé en `toneBackground` et
+`toneBorder` : on **choisit** la classe.
+
+La bordure reste présente en transparent : aucune dimension ne bouge, et le
+survol continue de la révéler.
+
+### 2. « Demander un devis » décentré sur mobile
+
+Mesuré à 390 px : la barre laissait **175 px par moitié**, et le libellé passait
+à la ligne. Il se centrait alors sur deux lignes pendant que la flèche restait
+calée à droite — d'où l'impression de texte décentré.
+
+Deux causes, deux corrections :
+
+- la gouttière de 20 px amputait les cibles de 40 px alors que la barre est
+  déjà collée aux bords de l'écran → supprimée sous 480 px ;
+- `flex-1` partageait à égalité deux moitiés aux besoins très inégaux
+  (« Appeler » 81 px, « Demander un devis » 171 px) → `flex-[1.4]` pour la
+  seconde, `whitespace-nowrap` sur les deux.
+
+| Largeur | Moitié devis | Lignes |
+| --- | --- | --- |
+| 320 px | 186 px | **1** |
+| 390 px | 227 px | **1** |
+
+### 3. Textes décalés dans le pied de page
+
+Les listes portaient `lg:items-start`. Au-delà de 1 024 px, les liens se
+ferraient à gauche pendant que leur intitulé de colonne restait centré — la
+règle globale s'appliquant au texte. Mesuré à 1 440 px : **28 px d'écart** entre
+chaque intitulé et ses liens, et un bloc d'identité mélangeant logotype centré,
+texte centré et coordonnées ferrées à gauche.
+
+`DESIGN_SYSTEM.md` § 4 est pourtant explicite : « tout le contenu de page et le
+pied de page sont centrés », décision client `VERROUILLÉE`. **Le
+`lg:items-start` était l'anomalie, pas le centrage.** Retiré.
+
+Après correction, chaque intitulé et ses liens partagent le même axe : 712,
+968 et 1 224 px.
+
+### 4. SIRET et forme juridique — la clé de contrôle a servi
+
+Le client a communiqué « auto-entrepreneur » et un SIRET. Un SIREN et un SIRET
+portent une **clé de contrôle** (algorithme de Luhn) : le premier numéro
+communiqué ne la vérifiait pas.
+
+Le validateur employé a d'abord été contrôlé sur quatre SIREN publics connus,
+qu'il valide tous les quatre — le défaut était donc dans le numéro, pas dans le
+contrôle. Le numéro a été retenu, signalé, corrigé par le client (un `3` au
+lieu d'un `9` en dernière position du SIREN), et le nouveau passe la clé sur
+le SIREN **et** sur le SIRET complet.
+
+Sans ce contrôle, un SIRET faux serait parti en production. Il se vérifie en
+trente secondes sur l'annuaire des entreprises et aurait fait passer toute la
+page pour une fabrication.
+
+`site.ts` porte désormais un bloc `legal` — forme juridique, SIRET, drapeau de
+confirmation. La fiche éditeur et la liste « En cours de finalisation » se
+construisent à partir de lui : un champ confirmé apparaît dans l'une et
+disparaît de l'autre, sans double saisie.
+
+> En entreprise individuelle, **RCS et capital social ne s'appliquent pas** :
+> leur absence est normale. La TVA reste non affichée — une micro-entreprise
+> est le plus souvent en franchise en base, mais ce n'est pas confirmé.
+
+### 5. Défaut trouvé en chemin — « Dessouchage » était coupé
+
+En retirant les filets, une troncature est apparue. Mesurée : la carte fait
+132 px à 320 px de large, il en reste 92 une fois le remboursage retiré, et le
+mot en réclamait **150** à 22 px. La carte porte `overflow-hidden` : le mot
+était **coupé**, pas débordé. On lisait « Dessouchag », à 320 comme à 390 px.
+
+Le libellé passe au corps de texte sous 480 px. Après correction : plus aucune
+troncature à 390, 768 ni 1 440 px. À 320 px — sous le plancher de conception —
+`hyphens-auto` puis `break-words` servent de filets de sécurité.
+
+---
+
+## Correctif 16B bis — nouveau logo, adresse, assurance ✅
+
+### 1. Adresse et assurance
+
+Le client a communiqué **Le Grand-Quevilly** comme adresse professionnelle et
+« pas d'assurance à mettre ».
+
+La fiche éditeur porte donc « Commune du siège : Le Grand-Quevilly ». La voie
+et le code postal n'ont **pas** été complétés d'office : le client a donné la
+commune seule, et le code présent dans `data/geo/communes.json` (76322) est un
+code **INSEE**, pas un code postal — les deux ne se confondent pas.
+
+L'assurance n'est pas annoncée « à venir » : une absence assumée n'est pas une
+information manquante. La réponse est enregistrée dans
+`legal.assuranceAffichee` pour que la question ne se repose pas.
+
+Le bloc « En cours de finalisation » est passé de quatre entrées à **une**.
+
+> **⚠ Point ouvert.** `locations.ts` fait de **Rouen** la commune d'attache et
+> la page `/zones-intervention/rouen` affiche « Rouen est la commune d'attache
+> d'Arbres & Cimes ». Siège administratif et ancrage commercial ne sont pas
+> contradictoires — Le Grand-Quevilly est à 5 km, dans la métropole — mais ils
+> ne disent pas la même chose. **Rien n'a été modifié** : déplacer la commune
+> d'attache toucherait 19 pages, la carte et la stratégie SEO. Décision client.
+
+### 2. Le lot de logos était corrompu
+
+Le lot de 25 fichiers livré était inexploitable tel quel, et c'est vérifiable :
+
+| Défaut | Portée |
+| --- | --- |
+| Le contenu de chaque fichier est celui du fichier précédent dans l'ordre alphabétique | tout le lot |
+| Extension qui ment sur le format (`.ico` qui est un PNG, `.webp` qui sont des PNG) | **13 fichiers sur 25** |
+| Déclinaisons « symbole » = recadrages qui coupent le texte à « Arbres et » | toutes |
+| Favicons portant ce texte tronqué, sur fond blanc opaque | toutes |
+
+Servir un PNG sous `Content-Type: image/webp` casse le navigateur autant que
+l'optimiseur d'images de Next. **Aucun fichier du lot n'a été versionné.**
+
+Un seul était propre : le **maître 1024×1024 transparent**. Il est versionné
+dans `brand-source/`, et tout le reste en est dérivé par
+`scripts/build-brand-assets.mjs` — au moment de l'écriture, jamais au build.
+`sharp` n'est pas une dépendance ajoutée : Next l'installe déjà pour
+l'optimisation d'images.
+
+Le script écrit puis **relit ce qu'il vient d'écrire** pour son rapport. C'est
+exactement la vérification qui manquait au lot d'origine.
+
+### 3. Ce qui est produit
+
+| Fichier | Forme | Où |
+| --- | --- | --- |
+| `public/brand/logo-complet.png` | 905×912 | pied de page |
+| `public/brand/logo-symbole.png` | 699×512, **détouré** | logotype d'en-tête |
+| `src/app/icon.png` | 512×512, carré | favicon, PWA |
+| `src/app/apple-icon.png` | 180×180, fond plein | iOS |
+| `src/app/favicon.ico` | 16/32/48/64/128/256 | onglet |
+
+Le `favicon.ico` de la phase 15B portait encore l'ANCIEN logo, et Next l'émet
+avant `icon.png` : c'est lui que l'onglet affiche. Il a été refait. `sharp` ne
+sait pas écrire d'ICO — le conteneur est assemblé à la main, puis relu entrée
+par entrée pour vérification.
+
+### 4. Le pied de page reçoit enfin le logo complet
+
+`variant="full"` existait depuis la phase 15B et n'était employé **nulle
+part** : l'ancien logo avait son texte en charbon, illisible sur le forêt.
+
+Le nouveau logo a un texte ivoire cerné de bleu nuit. Mesuré sur le maître :
+`#faf8ed` sur `#081a14`, **contraste 16,88**. La réserve tombe.
+
+L'en-tête, lui, garde le logotype composé : la barre fait 81 px, le bloc
+complet y tiendrait sur 48 px de large et ses **quatre** lignes de texte
+tomberaient sous 7 px. Le nouveau logo est plus contraint que l'ancien — une
+ligne de plus dans la même hauteur.
+
+### 5. Deux symboles, et la différence était visible
+
+Le symbole détouré fait 779×571, nettement plus large que haut. Servir la
+version **carrée** dans l'en-tête coûtait un tiers de la hauteur utile en
+transparent : la marque n'occupait que ~23 px et se lisait comme une tache.
+Avec le détouré, elle occupe **44 × 32 px**. Les icônes, elles, gardent le
+carré — les systèmes l'imposent.
+
+### 6. Vérification
+
+| Page | perf | a11y | BP | CLS |
+| --- | --- | --- | --- | --- |
+| `/` | 91 | **100** | **100** | 0 |
+| `/mentions-legales` | 95 | **100** | **100** | 0 |
+| `/zones-intervention/rouen` | 96 | **100** | **100** | 0 |
+
+Chaque URL d'image contrôlée côté serveur : `logo-symbole.png` sert bien
+699×512, et l'optimiseur 128×94 et 64×47 — le bon rapport. Lint, typecheck et
+build au vert.
+
+> **Réserve.** Le texte du logo passe sur fond sombre, mais le **contour bleu
+> nuit de l'arc** s'y fond : seule la feuille verte porte alors le symbole. Une
+> version inversée reste souhaitable. Et l'orange de « Arboriste Grimpeur »
+> n'appartient pas aux six couleurs `VERROUILLÉES` — il ne vit que dans le
+> logo, aucun jeton n'a été ajouté.
+
+---
+
+## Correctif 16B ter — le logo entre dans la barre de navigation ✅
+
+Demande client, maintenue après réserve : c'est **son logo, avec son texte**,
+qui doit figurer dans l'en-tête — plus le nom recomposé dans la typographie du
+site (« Arbres & Cimes / ÉLAGAGE · ROUEN »).
+
+### Le bloc vertical ne pouvait pas y entrer
+
+Le maître détouré fait 905 × 912 ; son pavé de texte occupe 31 % de la hauteur
+pour **trois** lignes.
+
+| Hauteur du logo | Texte disponible | Par ligne |
+| --- | --- | --- |
+| 56 px (barre de 81 px) | 17 px | **< 6 px** |
+| 97 px | 30 px | 10 px — mais plus haut que la barre |
+
+### Le logo est réagencé, pas redessiné
+
+Le générateur découpe les deux composants du maître — symbole et pavé de texte
+— et les repose **côte à côte**. Aucun pixel redessiné, aucune typographie
+substituée : le dessin du client, dans un autre agencement.
+
+Résultat : **1917 × 512**, rapport 3,74:1. Rendu à **165 × 44 px**, identique à
+390 et à 1440 px, avec 93 px de dégagement avant « Menu » sur mobile et 66 px
+avant la navigation sur desktop. Aucun débordement.
+
+### Un piège de découpe, trouvé et corrigé
+
+Partir de la ligne de coupe du symbole embarquait les **pointes basses de la
+feuille** dans le pavé de texte : deux taches sombres flottaient au-dessus de
+« Arbres et », là où l'œil attend des accents.
+
+Or « Arbres et » n'a aucun accent — rien n'y dépasse légitimement la hauteur de
+capitale. Tout ce qui se trouve entre la coupe et cette ligne est du reste de
+feuille. La découpe part donc de y = 650, juste au-dessus de la ligne de
+capitale relevée à y = 656 sur le profil de densité.
+
+### Une régression de performance, mesurée et corrigée
+
+`priority` sur le logotype ajoutait un `<link rel=preload>` en concurrence
+avec la photographie du hero, elle-même en `fetchPriority="high"`.
+
+| | LCP accueil | perf |
+| --- | --- | --- |
+| avec `priority` | 4,3 s | **85** |
+| avec `loading="eager"` | 3,6 s | **91** |
+
+Pour un fichier de **9 Ko** servi. `eager` suffit : le logotype n'est pas
+différé, mais il ne double pas la file de préchargement.
+
+### Le favicon aussi
+
+Refait depuis le même maître : `favicon.ico` (16/32/48/64/128/256),
+`icon.png` (512) et `apple-icon.png` (180, fond plein). Ils portent le
+**symbole seul** — les icônes du lot livré montraient le logo entier avec son
+texte tronqué à « Arbres et », ce qui à 16 px n'est qu'une tache.
+
+### Vérification
+
+| Page | perf | a11y | BP | CLS |
+| --- | --- | --- | --- | --- |
+| `/` | 91 | **100** | **100** | 0 |
+| `/mentions-legales` | 94 | **100** | **100** | 0 |
+| `/zones-intervention/rouen` | 95 | **100** | **100** | 0 |
+
+Le nom accessible vient désormais de l'`alt` (`site.name`) : il n'y a plus de
+texte visible, WCAG 2.5.3 ne s'applique plus. Lint, typecheck et build au vert.
+
+---
+
+## Phase 16 — Analytics et conversions — NON RETENUE POUR LA V1 ⛔
+
+**Décision produit du client, phase 17.** Aucun outil de mesure ne sera
+installé pour la première version : ni Plausible, ni Umami, ni GA4, ni bannière
+de consentement.
+
+Ce qui reste en place, et qui ne coûte rien :
+
+- `emitQuoteEvent()` (`src/lib/quote/events.ts`) garde son **corps vide** et
+  ses points d'appel. Le jour où la mesure est décidée, un seul fichier change.
+- `NEXT_PUBLIC_ANALYTICS_DOMAIN` reste dans `.env.example`, vide.
+
+**Conséquence assumée et vérifiée :** aucun cookie, aucun script tiers, aucun
+bandeau de consentement — et la politique de confidentialité le dit en clair
+plutôt que de décrire un outil inexistant.
+
+Si la mesure est reprise plus tard, les six événements de
+`CONVERSION_STRATEGY.md` restent la référence.
+
+---
+
+## Phase 17 — Recette (QA) — automatisée ✅ / manuelle ⬜
+
+Rapport complet : **`QA_REPORT.md`**.
+
+### Vérifié, et mesuré
+
+- [x] **31 routes** atteintes en suivant les liens depuis l'accueil, toutes en
+      HTTP 200. Aucune route publique inattendue, aucune route prévue absente.
+- [x] **Un seul `h1` par page**, `title` unique partout, `description`
+      présente partout, `noindex` partout.
+- [x] **Aucun identifiant HTML dupliqué**, aucun `href="#"`, aucun `tabindex`
+      positif, aucun `<img>` sans `alt`.
+- [x] **Tous les liens internes répondent 200.** Aucun lien mort.
+- [x] **51 images inspectées** sur 13 routes : aucune 404, aucun `alt`
+      manquant, aucun `sizes` absent, chaque source remonte à un fichier réel.
+- [x] **Invariant des communes :** 19 slugs = 19 liens du hub = 19 pages HTTP
+      200. Aucun slug dupliqué, aucun voisin inconnu. *(Le brief parlait de 23 :
+      quatre communes littorales ont été retirées sur demande client après la
+      phase 15B.5.)*
+- [x] **Audit de contenu sur 31 routes :** aucune affirmation non soutenue —
+      ni 24/7, ni garantie, ni avis, ni note, ni prix, ni délai chiffré, ni
+      horaires, ni assurance, ni certification, ni volumétrie client.
+- [x] **Les 5 communes « Déplacement à étudier »** portent toutes une réserve
+      de déplacement et aucune formulation affirmative.
+- [x] **Responsive : 104 contrôles** (13 routes × 8 largeurs, de 320 à
+      1 440 px). **Zéro débordement horizontal.**
+- [x] **Aucune troncature de texte** à 320, 390 et 1 440 px sur 15 routes.
+- [x] **Configurateur :** les 5 branches conditionnelles vérifiées ; le
+      dessouchage ne demande **pas** de hauteur d'arbre ; « Je ne sais pas »
+      donne un parcours en texte libre.
+- [x] **Photos :** 5 maximum, 6ᵉ refusée, doublon refusé, PDF refusé, 11 Mo
+      refusé avec message chiffré, suppression et ré-ajout fonctionnels.
+- [x] **Persistance :** étape, code postal et commune restaurés ; **adresse,
+      nom, téléphone, e-mail et photos non restaurés** ; enregistrement mesuré
+      à **197 octets**.
+- [x] **Envoi : ZÉRO requête réseau** à la soumission. L'écran final dit
+      « Votre demande est prête », jamais « envoyée ».
+- [x] **Clavier :** lien d'évitement visible au premier `Tab` (230 × 44 px),
+      menu mobile avec verrou de défilement, piège de focus, `Échap` et retour
+      du focus, sous-menu Prestations idem.
+- [x] **Mouvement réduit :** règle globale présente ; 85 éléments animés tous à
+      opacité 1 — aucun contenu caché derrière une animation.
+- [x] **Polices :** Sora + Inter uniquement, préchargées. **0 Fraunces,
+      0 Manrope.**
+- [x] **Aucune dépendance ajoutée** en phase 15B ni 16B : `package.json` et
+      `package-lock.json` inchangés depuis le dernier commit.
+- [x] **Console : 0 erreur** sur 14 routes, aucune image en échec.
+- [x] **404 :** statut HTTP 404 réel, titre propre, `noindex`, liens utiles.
+- [x] **Accessibilité 100 et bonnes pratiques 100** sur les 5 routes mesurées.
+
+### Non vérifiable ici — recette manuelle requise
+
+- [ ] iOS Safari et Android Chrome sur appareils réels
+- [ ] Relecture orthographique humaine de tous les textes
+- [ ] Rendu des favicons dans les onglets réels et l'écran d'accueil iOS
+- [ ] Comportement du `tel:` sur un téléphone
+
+**Sortie :** défauts trouvés en recette corrigés ; aucun défaut bloquant
+ouvert. Les points restants ne sont pas des défauts du site mais des
+**dépendances externes**, listées dans `QA_REPORT.md`.
 
 ---
 
@@ -1994,7 +2441,10 @@ typecheck et build au vert.
 
 - Domaine, DNS, HTTPS, en-têtes de sécurité
 - Variables d'environnement de production renseignées
-- Mentions légales et politique de confidentialité publiées
+- Mentions légales et politique de confidentialité **complétées** — les deux
+  pages sont écrites depuis la phase 16B ; il reste à y verser les données
+  manquantes et à retirer le bloc « En cours de finalisation ». Liste dans
+  `LEGAL_CHECKLIST.md`
 - Sitemap soumis, GBP à jour, suivi actif
 - Sauvegarde et procédure de mise à jour transmises au client
 
@@ -2006,6 +2456,7 @@ typecheck et build au vert.
 
 | Bloque | En attente de |
 | --- | --- |
+| Fiche éditeur et rubrique hébergement des mentions légales | Forme juridique, SIREN/SIRET, adresse, assurance, contrat d'hébergement — `LEGAL_CHECKLIST.md` |
 | Qualité finale des phases 5B et 9 | Photothèque client — un repli libre est en place depuis la phase 5A |
 | Phases 4, 14, 18 | Téléphone, e-mail, domaine définitifs |
 | Phase 13 | **Hébergement Hostinger et domaine** — sans eux, pas de SMTP |

@@ -185,6 +185,82 @@ export const site = {
 } as const;
 
 /**
+ * IDENTITE LEGALE — source unique, comme le reste.
+ *
+ * Communiquee par le client en phase 16B : « auto-entrepreneur », SIRET
+ * 928 119 403 00014.
+ *
+ * « Auto-entrepreneur » designe depuis 2016 un ENTREPRENEUR INDIVIDUEL place
+ * sous le regime fiscal de la micro-entreprise. C'est la formulation retenue :
+ * elle dit la meme chose, dans les termes qui ont cours.
+ */
+export const legal = {
+  /** Forme juridique. CONFIRMEE par le client. */
+  form: "Entrepreneur individuel — régime de la micro-entreprise",
+
+  /**
+   * SIRET, en presentation conventionnelle : les neuf chiffres du SIREN par
+   * groupes de trois, puis les cinq du NIC.
+   *
+   * SA CLE DE CONTROLE A ETE VERIFIEE
+   * ---------------------------------
+   * Un SIREN et un SIRET portent une cle de controle (algorithme de Luhn).
+   * `928119403` et `92811940300014` la verifient tous les deux.
+   *
+   * Le controle n'est pas une precaution de style. Le premier numero
+   * communique se terminait par un `9` au lieu d'un `3` : il echouait a la
+   * cle, et il aurait ete publie tel quel sans cette verification. Un SIRET
+   * faux sur des mentions legales est PIRE que pas de SIRET du tout — il se
+   * controle en trente secondes sur l'annuaire des entreprises et fait passer
+   * toute la page pour une fabrication.
+   *
+   * **Toute modification de ce numero doit repasser par la cle de Luhn.**
+   */
+  siret: "928 119 403 00014",
+
+  /** Vrai : cle de controle verifiee (SIREN et SIRET). */
+  siretConfirmed: true,
+
+  /**
+   * Commune du siege — CONFIRMEE par le client (phase 16B) : Le Grand-Quevilly.
+   *
+   * LA COMMUNE, PAS L'ADRESSE COMPLETE
+   * ----------------------------------
+   * Le client a communique la commune, pas la voie ni le code postal. Rien
+   * n'est complete d'office : ni numero de rue devine, ni code postal recopie
+   * de memoire. Le code present dans `data/geo/communes.json` (76322) est un
+   * code INSEE, PAS un code postal — les deux ne se confondent pas.
+   *
+   * A NE PAS CONFONDRE AVEC L'ANCRAGE COMMERCIAL
+   * ---------------------------------------------
+   * Rouen reste le coeur du secteur d'intervention et la cible SEO principale,
+   * mais **le site n'affirme plus d'implantation rouennaise** : les
+   * formulations « basee a Rouen » et « commune d'attache » ont ete corrigees
+   * en phase 17, precisement parce que ce champ dit autre chose.
+   *
+   * Siege administratif et ancrage commercial ne se confondent pas. Le premier
+   * est ici, le second est Rouen, et les deux peuvent coexister sans mentir :
+   * Le Grand-Quevilly appartient a la Metropole Rouen Normandie, a cinq
+   * kilometres de Rouen.
+   *
+   * **Ce champ ne sert qu'aux mentions legales.** Il ne doit pas etre injecte
+   * dans les textes editoriaux, les metadonnees ni les donnees structurees
+   * sans decision explicite du client.
+   */
+  siege: "Le Grand-Quevilly",
+
+  /**
+   * FAUX : aucune assurance a afficher.
+   *
+   * Le client a repondu « pas d'assurance a mettre » en phase 16B. On
+   * n'affiche donc rien — ni mention, ni ligne vide, ni « nous consulter ». Le
+   * champ existe pour que la reponse soit ENREGISTREE : sans lui, la question
+   * se reposerait a chaque relecture des mentions legales.
+   */
+  assuranceAffichee: false,
+} as const;
+
+/**
  * Qualifications reelles, confirmees par le client (`PROJECT.md`).
  *
  * Seuls les INTITULES vivent ici : ce sont des faits. Ce que chaque formation
