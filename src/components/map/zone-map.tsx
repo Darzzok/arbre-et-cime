@@ -438,10 +438,31 @@ export function ZoneMap({
             suffit a distinguer cette invite du contenu — l'opacite n'ajoutait
             rien qu'un echec de contraste.
           */
-          <span>
-            Touchez ou survolez une commune pour connaître sa distance depuis{" "}
-            {area.city}.
-          </span>
+          /*
+            DEUX FORMULATIONS, PARCE QUE DEUX RÉALITÉS.
+
+            Sous 768 px, seuls les repères non secondaires sont rendus — cinq
+            sur dix-neuf. Promettre « touchez une commune » y était faux pour
+            les quatorze autres, et « survolez » n'a aucun sens au doigt.
+
+            Le remède n'est PAS de réafficher les quatorze : mesuré, la carte
+            fait 316 px de large pour ±112 km, soit 0,71 km par pixel. Les cinq
+            communes de la métropole tiennent dans 5 km, donc **sept pixels** :
+            cinq boutons de 44 px y seraient parfaitement superposés, et le tap
+            toucherait toujours le même. Le repère caché n'est pas un oubli,
+            c'est la seule issue à cette densité.
+
+            Chaque formulation dit donc ce qui est vrai à sa largeur.
+          */
+          <>
+            <span className="md:hidden">
+              Touchez un repère pour connaître sa distance depuis {area.city}.
+            </span>
+            <span className="hidden md:inline">
+              Touchez ou survolez une commune pour connaître sa distance depuis{" "}
+              {area.city}.
+            </span>
+          </>
         )}
       </p>
     </div>

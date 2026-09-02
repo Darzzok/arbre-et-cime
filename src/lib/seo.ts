@@ -84,21 +84,43 @@ function robotsFor(route: RouteDefinition): Metadata["robots"] {
 }
 
 /**
- * Image Open Graph partagee.
+ * Image Open Graph partagee — ACTIVEE en phase 17B.
  *
- * VOLONTAIREMENT NULL tant que la phototheque client n'est pas livree :
- * la charte impose une photographie REELLE (aucune image generee), et une
- * balise `og:image` pointant vers un fichier absent est pire que son absence.
+ * ELLE ETAIT NULLE, ET C'ETAIT DEVENU EXCESSIF
+ * ---------------------------------------------
+ * Le raisonnement d'origine tenait : la charte impose une photographie REELLE,
+ * la phototheque client n'est pas livree, et une `og:image` pointant vers un
+ * fichier absent est pire que son absence.
  *
- * Pour l'activer partout : deposer la photo dans `public/og/`, renseigner
- * l'objet ci-dessous (1200 x 630, JPEG optimise), c'est tout.
+ * Mais la premiere premisse a change. Le hero de l'accueil EST une
+ * photographie reelle — sous licence libre, en production depuis la phase 5B,
+ * inscrite au registre des medias. Aucune image generee n'entre ici. Ce qui
+ * restait, c'etait un partage social sans aucun visuel : sur Facebook, sur
+ * WhatsApp, sur LinkedIn, chaque lien vers le site sortait en carte grise.
+ *
+ * POURQUOI LE HERO ET PAS LE LOGO
+ * -------------------------------
+ * Un logo en carte de partage dit le nom, une photographie dit le metier. Le
+ * hero montre un grimpeur en action : c'est ce qui fait cliquer.
+ *
+ * **A remplacer par une photographie du client** des que la phototheque est
+ * livree — comme le hero lui-meme. Le fichier change, cette constante suit.
+ *
+ * Le rapport 1200 x 630 n'est PAS celui du fichier source (2400 x 1800) :
+ * les reseaux recadrent au centre. Les dimensions declarees ici decrivent la
+ * vignette attendue, pas l'original.
  */
 const OG_IMAGE: {
   url: string;
   width: number;
   height: number;
   alt: string;
-} | null = null;
+} | null = {
+  url: "/images/hero/elagueur-grimpeur-arbre-mature.jpg",
+  width: 2400,
+  height: 1800,
+  alt: "Élagueur-grimpeur suspendu dans la couronne d’un arbre mature",
+};
 
 /**
  * Construit une URL absolue a partir d'un chemin interne.

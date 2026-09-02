@@ -317,7 +317,7 @@ export function SiteHeader() {
           {menuOpen ? (
             <>
               <Container className="flex h-16 shrink-0 items-center justify-between gap-6">
-                <Wordmark size="sm" />
+                <Wordmark size="sm" onActivate={closeMenu} />
                 <button
                   ref={closeRef}
                   type="button"

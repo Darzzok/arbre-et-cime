@@ -17,6 +17,7 @@ export type RouteId =
   | "dessouchage"
   | "entretien-exterieur"
   | "realisations"
+  | "faq"
   | "zones-intervention"
   | "devis"
   | "a-propos"
@@ -196,6 +197,35 @@ const definitions: Record<RouteId, RouteDefinition> = {
     changeFrequency: "monthly",
   },
 
+  /*
+   * AJOUTÉE EN PHASE 17B, sur relevé d'audit.
+   *
+   * Le site répondait à « élagueur à Rouen » et à rien d'autre : aucune page
+   * ne visait « quand élaguer », « faut-il une autorisation pour abattre » ou
+   * « que devient le bois ». Ces requêtes précèdent la demande de devis de
+   * plusieurs semaines, et c'est par elles que se fait le premier contact.
+   *
+   * Groupe `preuve` et non `service` : la FAQ ne vend pas une prestation,
+   * elle lève des objections. C'est aussi ce qui la tient hors du sous-menu
+   * Prestations, déjà à quatre entrées.
+   */
+  faq: {
+    id: "faq",
+    path: "/faq",
+    navLabel: "Questions fréquentes",
+    title: "Questions fréquentes sur l’élagage",
+    description:
+      "Quand élaguer, faut-il une autorisation pour abattre, que devient le bois, ce qui fait varier un devis : les réponses d’un arboriste-grimpeur à Rouen.",
+    intent:
+      "longue traîne informationnelle — fort volume, intention en amont du devis",
+    group: "preuve",
+    headerVariant: "solid",
+    inSitemap: true,
+    noindex: false,
+    priority: 0.7,
+    changeFrequency: "monthly",
+  },
+
   "zones-intervention": {
     id: "zones-intervention",
     path: "/zones-intervention",
@@ -272,7 +302,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     navLabel: "Mentions légales",
     title: "Mentions légales",
     description:
-      "Informations légales relatives à l’entreprise Arbres et Cimes Élagage et au présent site.",
+      "Éditeur, forme juridique, SIRET, hébergement et propriété intellectuelle : les informations légales d’Arbres et Cimes Élagage, élagueur-grimpeur à Rouen.",
     intent: "obligation légale — aucune intention de recherche",
     group: "legal",
     headerVariant: "solid",
@@ -288,7 +318,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     navLabel: "Politique de confidentialité",
     title: "Politique de confidentialité",
     description:
-      "Données collectées par le formulaire de devis, finalité, durée de conservation et exercice des droits.",
+      "Ce que devient une demande de devis : informations demandées, finalité, destinataire, conservation et exercice de vos droits. Aucun cookie, aucune mesure d’audience.",
     intent: "obligation légale — aucune intention de recherche",
     group: "legal",
     headerVariant: "solid",
@@ -391,7 +421,7 @@ export const footerGroups: readonly FooterGroup[] = [
   },
   {
     title: "L’entreprise",
-    ids: ["realisations", "zones-intervention", "a-propos", "contact"],
+    ids: ["realisations", "faq", "zones-intervention", "a-propos", "contact"],
   },
   {
     title: "Informations",

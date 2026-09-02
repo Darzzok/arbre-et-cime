@@ -11,12 +11,32 @@ import { cn } from "@/lib/cn";
  *
  * QUATRE VARIANTES, CHOISIES PAR LA SURFACE
  * -----------------------------------------
- * | Variante | Fond | Texte | Contraste | Ou |
- * | --- | --- | --- | --- | --- |
- * | `light` | sable | foret | 12,22 | surfaces claires |
- * | `dark` | ivoire 10 % | ivoire | — | surfaces sombres **unies** |
- * | `photo` | foret 80 % | ivoire | >= 7,43 | par-dessus une PHOTOGRAPHIE |
- * | `accent` | jaune | foret | 8,06 | **rare** — une seule par ecran |
+ * | Variante | Fond | Texte | Ou |
+ * | --- | --- | --- | --- |
+ * | `light` | `--surface-inset` | `--surface-heading` | surfaces claires |
+ * | `dark` | ivoire 10 % | ivoire | surfaces sombres **unies** |
+ * | `photo` | foret 80 % | ivoire | par-dessus une PHOTOGRAPHIE |
+ * | `accent` | jaune | foret | **rare** — une seule par ecran |
+ *
+ * `light` ETAIT SABLE EN DUR — 35 CAPSULES ETAIENT INVISIBLES
+ * -----------------------------------------------------------
+ * La variante posait `bg-sand`. Elle fonctionnait sur ivoire, et disparaissait
+ * completement des qu'on la posait sur une surface SABLE : meme couleur de
+ * part et d'autre, **contraste de fond 1,00**. Il ne restait que le texte et
+ * la pastille, flottant sans pilule.
+ *
+ * Releve a l'ecran sur **11 pages et 35 capsules** — dont les quatre pages
+ * services, `/contact`, `/devis`, `/realisations` et le hub des zones. Le
+ * client l'avait vu sur `/dessouchage` ; ce n'etait qu'une occurrence.
+ *
+ * La cause n'etait pas le choix de variante fait par chaque page, mais le fait
+ * que la variante decrive une COULEUR au lieu d'un ROLE. `--surface-inset`
+ * existe precisement pour cela et est defini par les quatre surfaces : la
+ * pilule se detache maintenant de son fond quel qu'il soit, sans qu'aucune
+ * page ait a le savoir.
+ *
+ * > **Une variante qui nomme une couleur finit par mentir. Elle doit nommer un
+ * > role.**
  *
  * La variante `accent` suit la meme regle de parcimonie que le bouton
  * primaire : c'est la rarete du jaune qui lui donne sa valeur.
@@ -51,7 +71,7 @@ import { cn } from "@/lib/cn";
 export type CapsuleVariant = "light" | "dark" | "photo" | "accent";
 
 const variantClasses: Record<CapsuleVariant, string> = {
-  light: "bg-sand text-forest",
+  light: "bg-(--surface-inset) text-(--surface-heading)",
   dark: "bg-ivory/10 text-ivory",
   photo: "bg-forest/80 text-ivory",
   accent: "bg-safety text-forest",

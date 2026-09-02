@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { ZoneMap } from "@/components/map/zone-map";
 import {
   ArrowLink,
@@ -7,11 +9,40 @@ import {
   Container,
   Reveal,
   Section,
+  Small,
   Title,
 } from "@/components/ui";
+import { LOCATIONS } from "@/content/locations";
 import { ZONE_LEVELS } from "@/lib/map-content";
 import { getRoute } from "@/lib/routes";
+import { locationPath } from "@/lib/seo";
 import { area, site } from "@/lib/site";
+
+/**
+ * Communes du cœur de zone, listées sous la carte.
+ *
+ * POURQUOI CETTE LISTE EXISTE
+ * ---------------------------
+ * Mesuré en recette : sur l'accueil, à 390 px, la section zone offrait
+ * **zéro commune cliquable**. La carte y est décorative — ses repères
+ * secondaires ne sont pas rendus sous 768 px — et rien ne la relayait.
+ * Le visiteur mobile lisait « touchez un repère » devant cinq points
+ * superposés au centre de l'image.
+ *
+ * La liste répond à cela sans toucher au moteur cartographique : elle est du
+ * texte, elle fonctionne à toutes les largeurs, et elle dit la distance que
+ * la carte ne peut plus afficher en petit.
+ *
+ * ELLE CORRIGE AUSSI LE MAILLAGE
+ * ------------------------------
+ * L'accueil ne pointait vers aucune page locale. Les sept communes du cœur en
+ * reçoivent désormais un lien depuis la page la plus forte du site.
+ *
+ * **Sept, et pas dix-neuf.** Lister les dix-neuf ferait de l'accueil un
+ * annuaire et diluerait le signal ; les communes plus lointaines restent
+ * accessibles depuis le hub, où elles sont toutes présentes.
+ */
+const CORE_CITIES = LOCATIONS.filter((l) => l.tier === "core");
 
 /**
  * Section 6 des 7 sections VERROUILLÉES — zone d'intervention.
@@ -100,6 +131,41 @@ export function Zone() {
             variant="home"
             title={`Carte de la zone d’intervention : la ${area.metro} au centre, la ${area.department} en zone principale, la Seine, ${area.city} et la portée de ${area.maxRadiusKm} km`}
           />
+        </Reveal>
+
+        {/* ------------------------------------- Communes du cœur --- */}
+        <Reveal className="mt-9">
+          <Small className="mx-auto max-w-reading">
+            Au cœur de la zone, à vol d’oiseau depuis {area.city}
+          </Small>
+
+          {/*
+            Une rangée de puces, pas une grille de cartes : la section en
+            compte déjà trois au-dessus, et la charte proscrit l'empilement
+            de blocs identiques. Chaque puce fait 44 px de haut.
+          */}
+          <ul className="mx-auto mt-4 flex max-w-4xl flex-wrap justify-center gap-2.5">
+            {CORE_CITIES.map((city) => (
+              <li key={city.slug}>
+                <Link
+                  href={locationPath(city.slug)}
+                  className={[
+                    "inline-flex min-h-11 items-center gap-2 rounded-pill",
+                    "border border-(--surface-rule) px-4",
+                    "font-sans text-caption text-(--surface-fg) no-underline",
+                    "motion-safe:transition-colors motion-safe:duration-(--duration-micro)",
+                    "hover:border-(--surface-fg-muted) hover:text-(--surface-heading)",
+                    "focus-visible:border-(--surface-fg-muted)",
+                  ].join(" ")}
+                >
+                  {city.nom}
+                  <span className="text-(--surface-fg-muted) tabular-nums">
+                    {city.km === 0 ? "centre" : `${city.km} km`}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </Reveal>
 
         <Reveal className="mt-9">

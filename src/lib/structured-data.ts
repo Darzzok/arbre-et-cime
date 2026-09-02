@@ -1,4 +1,4 @@
-import { area, services, site } from "./site";
+import { area, legal, services, site } from "./site";
 import { breadcrumbFor, getRoute, type RouteId } from "./routes";
 import { absoluteUrl, isRouteIndexable, SITE_INDEXABLE } from "./seo";
 
@@ -60,14 +60,27 @@ export function missingLocalBusinessData(): readonly string[] {
   if (!site.phone) missing.push("NEXT_PUBLIC_PHONE (telephone public)");
   if (!site.email) missing.push("NEXT_PUBLIC_EMAIL (e-mail public)");
 
+  /*
+   * LA LISTE A RACCOURCI EN PHASE 16B — et il faut qu'elle le reflete.
+   *
+   * Le SIREN etait ici depuis la phase 14. Il est desormais confirme et
+   * verifie (cle de Luhn) dans `legal.siret` : le laisser dans les manquants
+   * ferait croire a un blocage qui n'existe plus, et retarderait l'activation
+   * du balisage le jour du lancement.
+   *
+   * Ce qui reste est soit un achat, soit une decision du client — jamais
+   * quelque chose que le code peut produire.
+   */
+  if (!legal.siretConfirmed) missing.push("SIREN / SIRET verifie");
+
   // Non modelisees dans le code tant qu'elles ne sont pas confirmees : publier
   // une adresse ou des horaires approximatifs abimerait la coherence NAP avec
   // la fiche Google Business Profile (cf. SEO_STRATEGY.md).
   missing.push(
-    "adresse postale OU choix explicite d'une zone de service seule",
+    "adresse postale complete OU choix explicite d'une zone de service seule",
   );
   missing.push("horaires d'ouverture et conditions d'urgence");
-  missing.push("raison sociale et SIREN");
+  missing.push("raison sociale exacte (avis de situation SIRENE)");
 
   return missing;
 }
@@ -181,5 +194,42 @@ export function locationBreadcrumbSchema(input: {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: listItems,
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* FAQPage — ajoute en phase 17B                                               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Le SEUL schema riche du site qui ne depende d'AUCUNE donnee client en
+ * attente.
+ *
+ * `LocalBusiness` attend le domaine, l'adresse et les horaires ; `Service` en
+ * decoule et attend donc la meme chose. `FAQPage`, lui, ne decrit que du
+ * contenu deja publie : il s'active des que le site est indexable.
+ *
+ * Les reponses sont aplaties en texte : Google refuse le balisage dont le
+ * contenu ne figure pas visiblement sur la page, et cette page affiche
+ * exactement ces paragraphes.
+ */
+export function faqSchema(
+  entries: readonly { question: string; reponse: readonly string[] }[],
+): JsonLdNode | null {
+  if (!site.url || !isRouteIndexable(getRoute("faq")) || entries.length === 0) {
+    return null;
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: entries.map((entry) => ({
+      "@type": "Question",
+      name: entry.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: entry.reponse.join(" "),
+      },
+    })),
   };
 }

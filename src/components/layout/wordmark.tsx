@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+
+import { HomeLink } from "@/components/layout/home-link";
 
 import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
@@ -13,6 +14,12 @@ type WordmarkProps = {
    * `full`   : le logo complet, empile. Demande de la hauteur.
    */
   variant?: "lockup" | "full";
+  /**
+   * Rappel declenche au clic, navigation ou non. Le menu mobile s en sert
+   * pour se fermer : il ne se ferme sinon que sur changement de chemin, et
+   * cliquer le logo depuis l accueil ne change pas de chemin.
+   */
+  onActivate?: () => void;
 };
 
 /**
@@ -69,6 +76,7 @@ export function Wordmark({
   className,
   size = "md",
   variant = "lockup",
+  onActivate,
 }: WordmarkProps) {
   const base = cn(
     "group inline-flex min-h-11 items-center no-underline",
@@ -77,7 +85,7 @@ export function Wordmark({
 
   if (variant === "full") {
     return (
-      <Link href="/" className={base}>
+      <HomeLink className={base} onActivate={onActivate}>
         <Image
           src="/brand/logo-complet.png"
           alt={site.name}
@@ -87,12 +95,12 @@ export function Wordmark({
           className="h-auto w-48"
         />
         <span className="sr-only">— retour à l’accueil</span>
-      </Link>
+      </HomeLink>
     );
   }
 
   return (
-    <Link href="/" className={base}>
+    <HomeLink className={base} onActivate={onActivate}>
       {/*
         `w-auto` + une hauteur fixe : c'est la HAUTEUR qui est contrainte dans
         une barre de navigation, jamais la largeur. Le rapport 3,74:1 fait le
@@ -117,6 +125,6 @@ export function Wordmark({
       />
 
       <span className="sr-only">— retour à l’accueil</span>
-    </Link>
+    </HomeLink>
   );
 }

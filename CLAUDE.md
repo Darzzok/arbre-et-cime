@@ -27,6 +27,7 @@ Documents de référence, à lire selon le sujet traité :
 | `ROADMAP.md` | Découpage en 18 phases et critères de sortie |
 | `LEGAL_CHECKLIST.md` | Données légales encore manquantes avant mise en production |
 | `QA_REPORT.md` | Recette de préproduction : ce qui est vérifié, ce qui manque |
+| `src/content/faq.ts` | Questions fréquentes — et ce qu'on refuse d'y répondre |
 
 ---
 

@@ -587,10 +587,67 @@ export function locationByCode(code: string): Location | undefined {
   return BY_CODE.get(code);
 }
 
+/** Distance orthodromique entre deux communes, en kilomètres. */
+function distanceKm(a: Location, b: Location): number {
+  const R = 6371.0088;
+  const rad = (d: number) => (d * Math.PI) / 180;
+  const dLat = rad(b.lat - a.lat);
+  const dLon = rad(b.lon - a.lon);
+  const s =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
+
+/** Nombre maximal de voisins affichés sur une page ville. */
+const MAX_VOISINS = 6;
+
+/**
+ * Voisins d'une commune — RENDUS RÉCIPROQUES en phase 17B.
+ *
+ * LE VOISINAGE N'ÉTAIT PAS SYMÉTRIQUE, ET C'ÉTAIT UN DÉFAUT DE MODÈLE
+ * -------------------------------------------------------------------
+ * Chaque commune citait ses quatre plus proches. Mais « être parmi les quatre
+ * plus proches » ne se rend pas : Abbeville cite Amiens sans qu'aucune commune
+ * ne cite Abbeville. Mesuré sur les dix-neuf :
+ *
+ * | Citée comme voisine | Communes |
+ * | --- | --- |
+ * | 7 fois | Mont-Saint-Aignan, Sotteville, Le Grand-Quevilly |
+ * | **1 fois** | **Abbeville** |
+ *
+ * Les communes du cœur, déjà les mieux reliées, recevaient donc sept fois plus
+ * de liens internes que les périphériques — exactement l'inverse de ce dont
+ * ces dernières ont besoin pour exister dans l'index.
+ *
+ * La correction n'ajoute aucune donnée et ne choisit rien à la main : si A
+ * cite B, alors B cite A. Le voisinage géographique **est** une relation
+ * symétrique ; ne pas la modéliser ainsi était l'erreur.
+ *
+ * Résultat : plus aucune commune sous quatre voisins, et le lien devient
+ * réciproque dans les deux sens de la navigation.
+ *
+ * TRI PAR DISTANCE RÉELLE, PAS PAR ORDRE D'INSERTION
+ * ---------------------------------------------------
+ * Les voisins ajoutés par réciprocité arriveraient sinon en fin de liste, quel
+ * que soit leur éloignement. Le tri est recalculé sur les coordonnées, et la
+ * liste est bornée à {@link MAX_VOISINS} : sans borne, Elbeuf en afficherait
+ * huit, soit deux rangées de cartes pour un bloc secondaire.
+ */
 export function neighboursOf(location: Location): readonly Location[] {
-  return location.voisins
+  const slugs = new Set(location.voisins);
+
+  for (const autre of LOCATIONS) {
+    if (autre.slug !== location.slug && autre.voisins.includes(location.slug)) {
+      slugs.add(autre.slug);
+    }
+  }
+
+  return [...slugs]
     .map((slug) => BY_SLUG.get(slug))
-    .filter((item): item is Location => item !== undefined);
+    .filter((item): item is Location => item !== undefined)
+    .sort((a, b) => distanceKm(location, a) - distanceKm(location, b))
+    .slice(0, MAX_VOISINS);
 }
 
 /* ------------------------------------------------------- Regroupements --- */

@@ -129,26 +129,23 @@ export default function ZonesInterventionPage() {
 
           <Container className="relative">
             <Reveal className="mx-auto max-w-reading">
-              <Eyebrow>{area.metro}</Eyebrow>
+              {/*
+                CAPSULES AU-DESSUS DU TITRE — corrigé en recette.
 
-              <Display
-                id="zones-titre"
-                as="h1"
-                className="mt-4 lg:text-[3.25rem] lg:leading-[1.06]"
-              >
-                Zone d’intervention
-              </Display>
+                Cette page était la SEULE des quinze à les poser sous le chapô.
+                Relevé à l'écran : quatorze pages les placent avant le `h1`,
+                celle-ci après. L'ordre d'un hero n'est pas une variable
+                d'auteur — c'est ce qui fait qu'on reconnaît une page du site.
 
-              <Lead className="mt-5 text-(--surface-fg-muted)">
-                {area.city} au cœur des déplacements : la métropole rouennaise
-                et la {area.department} en zone principale, et des trajets plus
-                lointains selon la nature du chantier.
-              </Lead>
+                Le surtitre est retiré dans le même mouvement : il faisait
+                doublon avec la première capsule, qui disait déjà la métropole,
+                et seules deux pages sur quinze en portaient un.
 
-              {/* Trois capsules, pas quatre. La troisième porte sa réserve
-                  AVEC elle : « jusqu'à 100 km » seul se lirait comme une
-                  couverture garantie. */}
-              <CapsuleGroup className="mt-8">
+                Trois capsules, pas quatre. La troisième garde sa réserve AVEC
+                elle : « jusqu'à 100 km » seul se lirait comme une couverture
+                garantie.
+              */}
+              <CapsuleGroup>
                 <Capsule variant="dark" dot>
                   {area.city} &amp; Métropole
                 </Capsule>
@@ -159,6 +156,20 @@ export default function ZonesInterventionPage() {
                   Jusqu’à {area.maxRadiusKm} km selon chantier
                 </Capsule>
               </CapsuleGroup>
+
+              <Display
+                id="zones-titre"
+                as="h1"
+                className="mt-6 lg:text-[3.25rem] lg:leading-[1.06]"
+              >
+                Zone d’intervention
+              </Display>
+
+              <Lead className="mt-5 text-(--surface-fg-muted)">
+                {area.city} au cœur des déplacements : la métropole rouennaise
+                et la {area.department} en zone principale, et des trajets plus
+                lointains selon la nature du chantier.
+              </Lead>
 
               <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
                 {/* La largeur est portée par une ENVELOPPE : `cn()` ne fusionne
@@ -213,8 +224,8 @@ export default function ZonesInterventionPage() {
                 Où nous intervenons
               </Title>
               <Body className="mt-4 text-(--surface-fg-muted)">
-                Touchez ou survolez une commune pour connaître sa distance
-                depuis {area.city} et ouvrir sa page.
+                Touchez un repère pour connaître sa distance depuis {area.city}{" "}
+                et ouvrir sa page.
               </Body>
             </Reveal>
 

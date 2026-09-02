@@ -82,6 +82,31 @@ export type ServiceContent = {
     position?: string;
   };
 
+  /**
+   * CE QUI FAIT VARIER LE DEVIS — ajouté en phase 17B, sur relevé d'audit.
+   *
+   * Deux manques se rejoignaient. D'un côté, les quatre pages services
+   * plafonnaient entre 405 et 476 mots, là où une page qui se classe sur une
+   * requête commerciale locale en compte plutôt 800 à 1 200. De l'autre, le
+   * mot « prix » n'apparaissait nulle part : le visiteur devait franchir cinq
+   * étapes de configurateur avant d'avoir le moindre ordre de grandeur.
+   *
+   * Ce bloc répond aux deux, **sans avancer un seul chiffre**. Aucun tarif n'a
+   * été communiqué par le client ; publier une fourchette inventée serait la
+   * faute la plus coûteuse possible sur une page de vente. Ce qu'on peut dire
+   * en revanche, et qui est vrai pour tout élagueur, c'est ce qui pèse sur un
+   * devis — et le dire désamorce l'essentiel de l'angoisse.
+   *
+   * Les facteurs sont propres à chaque prestation : la hauteur décide d'un
+   * élagage, le diamètre décide d'un dessouchage. Un bloc générique aurait
+   * reproduit le clonage que la charte interdit.
+   */
+  factors: {
+    title: string;
+    intro: string;
+    items: readonly { title: string; body: string }[];
+  };
+
   /** Précision propre à la prestation. Donne à chaque page un temps de plus. */
   note: { title: string; body: string };
 
@@ -155,6 +180,34 @@ export const servicesContent: Record<string, ServiceContent> = {
       image: "/images/details/materiel-harnais-corde-grimpe.jpg",
       alt: "Harnais et corde de grimpe préparés avant une intervention, en sous-bois",
       position: "object-[center_35%]",
+    },
+
+    factors: {
+      title: "Ce qui fait varier un devis d’élagage",
+      intro:
+        "Il n’y a pas de tarif au forfait : deux arbres de même hauteur peuvent demander le double de temps selon ce qu’il y a autour. Voici ce qui pèse réellement, dans l’ordre.",
+      items: [
+        {
+          title: "La hauteur et le volume de la couronne",
+          body: "C’est le premier facteur. Un sujet de huit mètres se travaille en une matinée ; un grand arbre de vingt mètres demande davantage de montée, de repositionnement et de descente contrôlée des branches.",
+        },
+        {
+          title: "L’accès au pied de l’arbre",
+          body: "Peut-on approcher un véhicule, ou faut-il sortir chaque branche à la main par un portail de quatre-vingts centimètres ? C’est souvent ce qui sépare deux devis très différents pour un arbre identique.",
+        },
+        {
+          title: "Ce qu’il y a en dessous",
+          body: "Une toiture, une véranda, une serre, une clôture mitoyenne ou une ligne électrique imposent la descente contrôlée branche par branche, au lieu du démontage libre.",
+        },
+        {
+          title: "Le volume de bois produit",
+          body: "Une réduction de couronne génère un volume sans commune mesure avec un simple retrait de bois mort — et ce volume doit être manipulé, débité, puis rangé ou évacué.",
+        },
+        {
+          title: "L’évacuation, ou non",
+          body: "Le bois peut rester sur place, débité et rangé, ou partir entièrement. C’est une prestation distincte, qui apparaît telle quelle sur le devis plutôt que d’être noyée dans le prix de la taille.",
+        },
+      ],
     },
 
     note: {
@@ -240,6 +293,34 @@ export const servicesContent: Record<string, ServiceContent> = {
       position: "object-[center_30%]",
     },
 
+    factors: {
+      title: "Ce qui fait varier un devis d’abattage",
+      intro:
+        "Un abattage se chiffre moins à la taille de l’arbre qu’à la place disponible autour de lui. Ce qui compte, dans l’ordre :",
+      items: [
+        {
+          title: "La place pour faire tomber l’arbre",
+          body: "Un arbre qui peut tomber d’un bloc dans un pré se coupe en une fois. Sans dégagement, il faut le démonter par sections depuis le haut : le même arbre demande alors plusieurs heures de plus.",
+        },
+        {
+          title: "Le diamètre du tronc",
+          body: "Il décide du matériel, du nombre de coupes et du poids de chaque billon à déplacer. Au-delà d’un certain diamètre, le débitage devient à lui seul une part significative du chantier.",
+        },
+        {
+          title: "Ce qui se trouve dans la zone de chute",
+          body: "Habitation, véhicule, ligne aérienne, mur mitoyen, canalisation apparente : chaque contrainte réduit la marge et impose des techniques de retenue.",
+        },
+        {
+          title: "L’état de l’arbre",
+          body: "Un sujet sain se travaille de façon prévisible. Un arbre creux, fendu, penché ou déjà déraciné réclame davantage de précautions — c’est précisément le cas où l’on ne s’improvise pas.",
+        },
+        {
+          title: "Le devenir du bois et de la souche",
+          body: "Évacuation complète, bois laissé sur place en bûches, rognage de la souche : trois postes distincts, chiffrés séparément pour que vous puissiez arbitrer.",
+        },
+      ],
+    },
+
     note: {
       title: "Avant d’engager les travaux",
       body: "Certaines communes encadrent l’abattage — plan local d’urbanisme, arbre protégé, espace boisé classé. Un renseignement en mairie avant de lancer le chantier évite une mauvaise surprise.",
@@ -317,6 +398,34 @@ export const servicesContent: Record<string, ServiceContent> = {
       position: "object-[center_45%]",
     },
 
+    factors: {
+      title: "Ce qui fait varier un devis de dessouchage",
+      intro:
+        "Le dessouchage se chiffre surtout au diamètre et à l’accès — la souche, elle, ne bouge pas. Les points qui comptent :",
+      items: [
+        {
+          title: "Le diamètre de la souche",
+          body: "C’est le facteur principal : le temps de rognage croît beaucoup plus vite que le diamètre. Une souche de vingt centimètres et une souche d’un mètre ne sont pas le même chantier.",
+        },
+        {
+          title: "L’accès pour la rogneuse",
+          body: "La machine doit atteindre la souche. Un portail étroit, un escalier, une pente forte ou un sol détrempé changent l’équipement nécessaire, voire la méthode.",
+        },
+        {
+          title: "La profondeur souhaitée",
+          body: "Un engazonnement demande moins de profondeur qu’une nouvelle plantation ou qu’une terrasse. C’est l’usage prévu de l’emplacement qui fixe le travail, pas la souche.",
+        },
+        {
+          title: "Ce qu’il y a autour et dessous",
+          body: "Réseaux enterrés, arrosage automatique, dallage, muret, racines affleurantes contre une clôture : tout cela s’identifie avant de lancer la machine, jamais pendant.",
+        },
+        {
+          title: "Les copeaux",
+          body: "Le rognage produit un volume important de copeaux mêlés de terre. Ils peuvent combler le trou, être régalés sur place ou être évacués — ce dernier choix se chiffre à part.",
+        },
+      ],
+    },
+
     note: {
       title: "Ce que devient le broyat",
       body: "Le rognage produit un mélange de copeaux et de terre. Il peut rester sur place pour combler le trou, ou être évacué si la zone doit être aménagée — c’est à décider avec vous.",
@@ -392,6 +501,34 @@ export const servicesContent: Record<string, ServiceContent> = {
       image: "/images/services/taille-de-haie-cisailles-manuelles.jpg",
       alt: "Finition d’une haie à la cisaille manuelle, en gros plan",
       position: "object-center",
+    },
+
+    factors: {
+      title: "Ce qui fait varier un devis d’entretien",
+      intro:
+        "Ici, c’est le métrage et l’état de départ qui commandent, bien plus que la difficulté technique. Ce qui pèse :",
+      items: [
+        {
+          title: "Le linéaire et la hauteur de haie",
+          body: "Une haie se chiffre au mètre linéaire, mais la hauteur change tout : au-delà de deux mètres cinquante, le travail passe en échafaudage ou en nacelle, et la coupe se ramasse différemment.",
+        },
+        {
+          title: "L’état de départ",
+          body: "Une haie taillée chaque année se reprend vite. Une haie laissée trois ou quatre ans demande une remise en forme, avec un volume de déchets sans rapport avec un entretien courant.",
+        },
+        {
+          title: "La surface à débroussailler",
+          body: "Et surtout sa nature : une prairie haute n’est pas une friche avec ronciers et jeunes ligneux, qui réclame un matériel plus lourd et davantage de passages.",
+        },
+        {
+          title: "Le relief et les obstacles",
+          body: "Pente, terrain irrégulier, arbres isolés, mobilier, bordures : tout ce qui oblige à contourner ralentit un travail qui se fait autrement en ligne droite.",
+        },
+        {
+          title: "Le volume de déchets verts",
+          body: "C’est souvent le poste le plus sous-estimé. Broyage sur place, mise en tas ou évacuation en déchetterie professionnelle : trois options, trois coûts.",
+        },
+      ],
     },
 
     note: {

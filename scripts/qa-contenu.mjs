@@ -28,9 +28,14 @@ const INTERDITS = [
     "mention d’assurance",
   ],
   [/décennale|RC ?pro\b/i, "assurance décennale / RC pro"],
+  /*
+   * Le mot « tarif » seul ne prouve rien : « il n'y a pas de tarif au forfait »
+   * NIE un prix, elle n'en affiche pas. Le motif exige donc un CHIFFRE — c'est
+   * un montant qu'on cherche, pas un champ lexical.
+   */
   [
-    /\b\d+\s*€|\bà partir de \d|\btarif\b|\bprix (?:fixe|ferme)\b/i,
-    "prix affiché",
+    /\b\d+\s*€|\bà partir de \d|\btarifs? (?:de |à )?\d|\bprix (?:fixe|ferme)\b|\b\d+\s*(?:euros?|EUR)\b/i,
+    "montant affiché",
   ],
   [/sous \d+ ?(?:h|heures?|jours?)\b/i, "délai chiffré"],
   [

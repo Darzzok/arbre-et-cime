@@ -338,6 +338,30 @@ export default function AProposPage() {
           </Container>
         </Section>
 
+        {/*
+          RAPPEL À MI-PAGE — ajouté en phase 17B, sur relevé d'audit.
+
+          `/a-propos` fait 8,7 écrans à 390 px pour un seul appel au devis, en
+          bas. Le rappel tombe après les qualifications : c'est le moment où la
+          page a fini de rassurer.
+        */}
+        <Section surface="light" spacing="compact" plain>
+          <Container>
+            <Reveal className="mx-auto max-w-reading">
+              <Body className="text-(--surface-fg-muted)">
+                Un arbre à faire regarder par quelqu’un de formé ?{" "}
+                <ArrowLink
+                  href={contact.quotePath}
+                  data-cta="devis"
+                  data-cta-source="a-propos-milieu"
+                >
+                  Demander un devis
+                </ArrowLink>
+              </Body>
+            </Reveal>
+          </Container>
+        </Section>
+
         {/* ------------------------------------ 4. Manière de travailler --- */}
         <Section surface="light" aria-labelledby="apropos-methode">
           <Container>

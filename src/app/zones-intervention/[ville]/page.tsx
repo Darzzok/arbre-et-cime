@@ -72,8 +72,41 @@ export function generateStaticParams() {
 }
 
 /** Titre court et régulier : « Élagueur à X | Arbres & Cimes ». */
+/**
+ * LE TITRE LAISSAIT UN TIERS DE LA VITRINE VIDE — corrigé en phase 17B.
+ *
+ * « Élagueur à Rouen | Arbres & Cimes » fait **37 signes** quand un résultat
+ * de recherche en affiche près de 60. Sur les communes à nom court, plus d'un
+ * tiers de la place disponible n'était pas utilisé.
+ *
+ * Le département comble l'écart et travaille : il lève l'ambiguïté entre les
+ * homonymes, et il porte une requête réelle — « élagueur 76 » se cherche
+ * autant que « élagueur Rouen ».
+ *
+ * LE TITRE RESTE BORNÉ À 60 SIGNES, et c'est mesuré ici même. Sur les noms
+ * longs — Saint-Étienne-du-Rouvray, Mantes-la-Jolie — l'ajout ferait déborder :
+ * la marque saute alors, jamais la commune. Le nom de la commune est ce qui
+ * fait cliquer ; « Arbres & Cimes » est ce que le visiteur découvrira ensuite.
+ */
+const DEPARTEMENT_CODE: Record<string, string> = {
+  "Seine-Maritime": "76",
+  Eure: "27",
+  Calvados: "14",
+  Oise: "60",
+  Somme: "80",
+  Yvelines: "78",
+};
+
+const TITRE_MAX = 60;
+
 function titleFor(location: Location): string {
-  return `Élagueur ${location.a} | ${site.shortName}`;
+  const code = DEPARTEMENT_CODE[location.departement];
+  const base = code
+    ? `Élagueur ${location.a} (${code})`
+    : `Élagueur ${location.a}`;
+
+  const complet = `${base} | ${site.shortName}`;
+  return complet.length <= TITRE_MAX ? complet : base;
 }
 
 export async function generateMetadata({

@@ -2353,6 +2353,86 @@ texte visible, WCAG 2.5.3 ne s'applique plus. Lint, typecheck et build au vert.
 
 ---
 
+## Phase 17B — Suites de l'audit ✅
+
+Mise en œuvre des relevés de l'audit complet. **Les avis clients en sont
+exclus** : il n'y en a pas encore, ils viendront plus tard.
+
+### Ce qui a été fait
+
+| Sujet | Avant | Après |
+| --- | --- | --- |
+| Communes cliquables sur l'accueil | **0** | **7** |
+| Volume éditorial | — | **+1 862 mots** |
+| Pages services | 405 à 476 mots | **597 à 699** |
+| Liens entrants, page ville la moins reliée | **2** | **4** |
+| Voisins par page ville | 4 fixes | **4 à 6, réciproques** |
+| Rappel devis à mi-page sur `/realisations` et `/a-propos` | 0 | **1 chacun** |
+| Page FAQ | inexistante | **1 012 mots, 10 questions, `FAQPage`** |
+| Médias orphelins | 7 fichiers, 4,4 Mo | **1** (réserve documentée) |
+| Titres des pages villes | 37 à 56 signes | **département ajouté, borné à 60** |
+
+### Trois diagnostics de l'audit étaient faux — corrigés ici
+
+L'audit reposait sur des mesures ; trois de ses conclusions n'ont pas résisté
+à la mise en œuvre, et il faut le dire.
+
+**1. « 14 des 19 repères de carte sont cassés sur mobile ».** Le fait était
+exact, la conclusion non. Mesuré : la carte fait 316 px pour ±112 km, soit
+**0,71 km par pixel**. Les cinq communes de la métropole tiennent dans 5 km,
+donc **sept pixels** : réafficher leurs repères aurait produit cinq boutons de
+44 px parfaitement superposés. Le masquage n'est pas un oubli, c'est la seule
+issue à cette densité.
+
+Le vrai défaut était ailleurs, et plus grave : **l'accueil n'offrait aucune
+commune cliquable**, ni sur la carte ni ailleurs, tout en affichant « touchez
+un repère ». C'est cela qui est corrigé, par une liste de sept communes.
+
+**2. « Le balisage `Service` ne dépend d'aucune donnée manquante ».** Faux :
+`serviceSchema()` exige un `provider`, donc `LocalBusiness`, donc le domaine.
+Il était déjà câblé sur les quatre pages et retournait `null` à bon droit. Ce
+qui a pu être fait : retirer le SIREN de la liste des blocages, désormais
+confirmé et vérifié. **Six blocages, puis cinq.**
+
+**3. « Recompresser les sources ferait gagner 0,4 à 0,8 s de LCP ».** Mesuré :
+**10 % de gain** pour une seconde passe de compression avec perte. Et le hero
+n'est **pas** le goulot — il ne pèse que 51 ko servis, toutes les autres images
+sont paresseuses, et les audits d'images passent déjà. Les 186 ko de JS sont du
+socle framework, identique sur toutes les routes, correctement découpé. **Rien
+n'a été recompressé** : le jeu n'en valait pas la chandelle.
+
+### Ce qui n'a délibérément pas été fait
+
+- **Les avis clients** — demande explicite du client, à plus tard.
+- **Une fourchette de prix** — aucun chiffre n'a été communiqué. Le manque est
+  traité autrement : chaque page service explique désormais **ce qui fait
+  varier un devis**, sans avancer un montant.
+- **Un délai de réponse** — rien ne permet de promettre « sous 48 h ».
+- **Faire varier la structure des pages villes** — cela demande de la matière
+  éditoriale par commune que seule l'expérience de chantier fournit. Un bloc
+  supplémentaire au gabarit aggraverait le clonage qu'il prétend corriger.
+- **Resserrer le rythme vertical** — territoire `VERROUILLÉ`
+  (`DESIGN_SYSTEM.md` § 4), risque de régression réel, bénéfice discutable
+  après avoir volontairement ajouté du contenu.
+- **Renommer `/realisations`** — le `h1` a déjà été réécrit puis rétabli sur
+  demande client. À ne pas rouvrir sans décision explicite.
+
+### Vérification
+
+| Page | Perf | A11y | BP | LCP | CLS |
+| --- | --- | --- | --- | --- | --- |
+| `/` | 91 | **100** | **100** | 3,6 s | 0 |
+| `/elagage` | 96 | **100** | **100** | 2,8 s | 0 |
+| `/faq` | 96 | **100** | **100** | 2,7 s | 0 |
+| `/zones-intervention` | 95 | **100** | **100** | 2,9 s | 0 |
+| `/devis` | 94 | **100** | **100** | 3,1 s | 0 |
+
+**88 contrôles responsive** (11 routes × 8 largeurs) : zéro débordement.
+Invariant **19 = 19 = 19 = 19 = 19** intact. Aucune affirmation non soutenue
+sur 32 routes. Lint, typecheck et build au vert.
+
+---
+
 ## Phase 16 — Analytics et conversions — NON RETENUE POUR LA V1 ⛔
 
 **Décision produit du client, phase 17.** Aucun outil de mesure ne sera

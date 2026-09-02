@@ -11,6 +11,7 @@ import {
   CardLink,
   Container,
   Display,
+  ArrowLink,
   Eyebrow,
   Lead,
   Reveal,
@@ -51,6 +52,7 @@ import { breadcrumbSchema, serviceSchema } from "@/lib/structured-data";
  */
 
 const devis = getRoute("devis");
+const faq = getRoute("faq");
 
 /**
  * Les quatre temps d'une intervention.
@@ -408,7 +410,64 @@ export function ServicePage({ id }: { id: RouteId }) {
           </Container>
         </Section>
 
-        {/* --------------------------------------------- 5. Conversion --- */}
+        {/* ------------------------------- 5. Ce qui fait varier le devis ---
+            AJOUTÉE EN PHASE 17B, sur relevé d'audit. Deux manques d'un coup :
+            les quatre pages plafonnaient à 405-476 mots, et le mot « prix »
+            n'apparaissait nulle part sur le site.
+
+            Aucun chiffre n'y figure — aucun tarif n'a été communiqué. Ce qui
+            est dit, c'est ce qui PÈSE sur un devis, et cela suffit à désamorcer
+            l'essentiel de l'angoisse.
+
+            Surface : celle de la section « intention », qui n'est jamais la
+            voisine de la conversion. La règle « deux sections voisines ne
+            partagent jamais la même surface » tient donc toujours. */}
+        <Section surface={theme.intro} aria-labelledby="service-facteurs">
+          <Container>
+            <Reveal className="mx-auto max-w-reading">
+              <Eyebrow>Chiffrage</Eyebrow>
+              <Title
+                id="service-facteurs"
+                as="h2"
+                className="mt-4 lg:text-[2.25rem] lg:leading-[1.1]"
+              >
+                {content.factors.title}
+              </Title>
+              <Body className="mt-4 text-(--surface-fg-muted)">
+                {content.factors.intro}
+              </Body>
+            </Reveal>
+
+            {/* Une liste ferrée, pas une grille de cartes : la page en compte
+                déjà une pour les situations, et deux grilles identiques à la
+                suite sont exactement ce que la charte proscrit. */}
+            <Reveal className="mx-auto mt-10 max-w-reading lg:mt-12">
+              <dl className="flex flex-col gap-6 text-left">
+                {content.factors.items.map((item) => (
+                  <div
+                    key={item.title}
+                    className="border-t border-(--surface-rule) pt-5"
+                  >
+                    <dt className="font-display text-subtitle leading-tight text-(--surface-heading)">
+                      {item.title}
+                    </dt>
+                    <dd className="mt-2 font-sans text-body leading-relaxed text-(--surface-fg-muted)">
+                      {item.body}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
+
+            <Reveal className="mt-9">
+              <ArrowLink href={faq.path}>
+                D’autres questions fréquentes
+              </ArrowLink>
+            </Reveal>
+          </Container>
+        </Section>
+
+        {/* --------------------------------------------- 6. Conversion --- */}
         <Section surface={theme.conversion} aria-labelledby="service-cta">
           <Container>
             {/* -------- Trois repères, en capsules --------

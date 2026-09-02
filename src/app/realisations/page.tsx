@@ -4,6 +4,7 @@ import Image from "next/image";
 import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
+  ArrowLink,
   Body,
   ButtonLink,
   Capsule,
@@ -219,6 +220,34 @@ export default function RealisationsPage() {
                 réalisations d’Arbres et Cimes seront présentées ici avec leurs
                 propres photographies.
               </Small>
+            </Reveal>
+          </Container>
+        </Section>
+
+        {/*
+          RAPPEL À MI-PAGE — ajouté en phase 17B, sur relevé d'audit.
+
+          Mesuré : `/realisations` fait 8,4 écrans à 390 px et ne portait qu'UN
+          appel au devis, tout en bas. Or c'est ici, juste après le portfolio,
+          que le visiteur est convaincu — pas trois écrans plus loin.
+
+          Une ligne, un lien fléché : le bouton primaire reste unique et final.
+          Deux boutons identiques à quatre écrans d'intervalle donneraient
+          l'impression d'une page qui insiste.
+        */}
+        <Section surface="light" spacing="compact" plain>
+          <Container>
+            <Reveal className="mx-auto max-w-reading">
+              <Body className="text-(--surface-fg-muted)">
+                Un chantier qui ressemble au vôtre ?{" "}
+                <ArrowLink
+                  href={contact.quotePath}
+                  data-cta="devis"
+                  data-cta-source="realisations-milieu"
+                >
+                  Faites-le chiffrer
+                </ArrowLink>
+              </Body>
             </Reveal>
           </Container>
         </Section>

@@ -372,6 +372,23 @@ délai, aucun règlement municipal, aucune statistique. Le contenu local se
 limite à de la **géographie vérifiable** — relief, vallée, plateau, littoral,
 département — et à ce qu'elle implique concrètement pour organiser un chantier.
 
+### La FAQ — ajoutée en phase 17B
+
+`/faq` est la seule page du site qui vise la **longue traîne
+informationnelle** : « quand élaguer », « faut-il une autorisation pour
+abattre », « que devient le bois ». Ces requêtes précèdent la demande de devis
+de plusieurs semaines et amènent le premier contact.
+
+Elle porte le balisage **`FAQPage`**, et c'est le seul schéma riche du site
+qui **ne dépende d'aucune donnée client en attente** : `LocalBusiness` et
+`Service` réclament le domaine, l'adresse et les horaires ; celui-ci ne décrit
+que du contenu déjà publié. Il s'active dès que `SITE_INDEXABLE` passe à vrai.
+
+> **Deux questions attendues en sont volontairement absentes.** Aucun tarif
+> n'est chiffré — aucun n'a été communiqué — et l'assurance n'est pas
+> mentionnée, le client ayant indiqué qu'il n'y avait rien à afficher. Poser
+> une question sans pouvoir y répondre serait pire que de ne pas la poser.
+
 ### L'invariant du périmètre local — **19**
 
 Le périmètre local est volontairement limité à **19 communes**. Ce n'est pas un
