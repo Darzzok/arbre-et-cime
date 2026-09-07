@@ -174,7 +174,8 @@ référence.
    consommation et la durée de conservation des demandes.
 5. Photothèque : volume, qualité, droits, présence d'avant/après.
 6. Avis clients existants (Google Business Profile ou autres) réutilisables.
-7. Hébergement retenu et adresse de réception des demandes de devis.
-   Préproduction sur Vercel, production prévue chez Hostinger : tant que le
-   contrat n'est pas souscrit, `/mentions-legales` ne nomme **aucun**
-   hébergeur plutôt que d'en nommer un qui deviendra faux.
+7. Adresse de réception des demandes de devis. **L'hébergement est tranché :**
+   le site est en ligne chez Hostinger, et `/mentions-legales` nomme
+   l'hébergeur (`host` dans `src/lib/site.ts`, relevé sur les conditions
+   générales publiées par Hostinger). Reste à communiquer le **domaine
+   définitif** — `NEXT_PUBLIC_SITE_URL` est vide.

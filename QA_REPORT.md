@@ -137,7 +137,7 @@ Deux commentaires de code devenus faux ont été corrigés au passage
 | `robots.txt` | `Allow: /` sans `Disallow` — exploration permise, indexation bloquée page par page. Cohérent avec la stratégie. |
 | Canonique | **absente** — `NEXT_PUBLIC_SITE_URL` non renseignée. Attendu. |
 | Open Graph | titre, description, type, locale, `siteName`. **`og:image` volontairement absente** (`OG_IMAGE = null`) : la charte impose une photographie réelle. |
-| JSON-LD | fil d'Ariane uniquement. **`LocalBusiness` gelé** faute de domaine et d'adresse complète. |
+| JSON-LD | fil d'Ariane uniquement. **`LocalBusiness` gelé** faute de domaine. L'adresse complète, elle, ne viendra pas : le client a décidé de ne pas la publier. `missingLocalBusinessData()` prévoyait déjà l'autre voie — « **zone de service seule** » — mais c'est une décision client à prendre, pas un défaut à corriger. |
 
 ### Contenu métier — 31 routes auditées
 

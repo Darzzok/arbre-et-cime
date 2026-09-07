@@ -250,6 +250,30 @@ export const legal = {
   siege: "Le Grand-Quevilly",
 
   /**
+   * FAUX : l'adresse postale complete ne sera PAS publiee.
+   *
+   * DECISION CLIENT, PAS UNE DONNEE MANQUANTE
+   * ------------------------------------------
+   * Jusqu'ici la voie et le code postal etaient traites comme une information
+   * en attente : les mentions legales les annoncaient « a venir ». Le client a
+   * tranche — on n'affichera pas l'adresse complete du siege. La page ne doit
+   * donc plus promettre une publication qui n'arrivera pas.
+   *
+   * Meme mecanique que `assuranceAffichee` : le champ existe pour que la
+   * REPONSE soit enregistree. Sans lui, la question se reposerait a chaque
+   * relecture, et l'adresse reviendrait dans la liste « en cours de
+   * finalisation » a la premiere occasion.
+   *
+   * CE QUE CELA N'ANNULE PAS
+   * ------------------------
+   * La commune du siege reste affichee (`siege`), et le SIRET aussi : les deux
+   * suffisent a identifier l'entreprise sur l'annuaire public des entreprises.
+   * Le point reste signale dans `LEGAL_CHECKLIST.md` § 1 comme un choix assume
+   * et non comme une case cochee.
+   */
+  adresseCompleteAffichee: false,
+
+  /**
    * FAUX : aucune assurance a afficher.
    *
    * Le client a repondu « pas d'assurance a mettre » en phase 16B. On
@@ -258,6 +282,45 @@ export const legal = {
    * se reposerait a chaque relecture des mentions legales.
    */
   assuranceAffichee: false,
+} as const;
+
+/**
+ * Hebergeur du site — CONFIRME par le client : Hostinger.
+ *
+ * L'IDENTITE N'EST PAS ECRITE DE MEMOIRE, ELLE EST RELEVEE A LA SOURCE
+ * --------------------------------------------------------------------
+ * La raison sociale et l'adresse ci-dessous sont recopiees des conditions
+ * generales publiees par Hostinger, qui designent l'entite contractante pour
+ * les clients de l'Union europeenne :
+ *
+ *   https://www.hostinger.com/legal/universal-terms-of-service-agreement
+ *
+ * C'etait la condition posee en phase 16B pour renseigner cette rubrique :
+ * « ecrire une adresse Hostinger de memoire serait une invention ». Elle ne
+ * l'est pas — elle est verifiee sur le site de l'hebergeur.
+ *
+ * A FAIRE VERIFIER PAR LE CLIENT
+ * ------------------------------
+ * Le groupe Hostinger compte plusieurs entites, et celle qui facture depend du
+ * pays d'achat. Celle-ci est l'entite europeenne. **La facture ou le contrat du
+ * client fait foi** : si elle nomme une autre societe du groupe, c'est celle-la
+ * qui doit figurer ici.
+ *
+ * PAS DE TELEPHONE, ET CE N'EST PAS UN OUBLI
+ * ------------------------------------------
+ * Hostinger ne publie pas de numero de telephone : son support passe par chat
+ * et par e-mail. On n'en invente donc pas. Le champ vaut `null`, la ligne ne
+ * s'affiche pas, et le point reste ouvert dans `LEGAL_CHECKLIST.md` § 2.
+ */
+export const host = {
+  /** Vrai : l'hebergement de production est en place (confirme par le client). */
+  confirmed: true,
+  name: "Hostinger International Limited",
+  address: "61 Lordou Vironos str., 6023 Larnaca, Chypre",
+  /** En clair, pas en lien : la page ne porte aucun `href` vers un tiers. */
+  website: "www.hostinger.com",
+  /** Non publie par l'hebergeur. Ne pas remplir sans source. */
+  phone: null,
 } as const;
 
 /**

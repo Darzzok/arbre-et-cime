@@ -48,10 +48,30 @@ code.
       et factures. **À confirmer** — ne rien afficher tant que ce n'est pas
       tranché.
 - [x] **Commune du siège** — Le Grand-Quevilly, confirmée en phase 16B.
-- [ ] **Adresse postale complète** — voie et code postal. Le client a donné la
-      commune seule. Rien n'a été complété d'office : le code présent dans
-      `data/geo/communes.json` (76322) est un code **INSEE**, pas un code
-      postal — les deux ne se confondent pas.
+- [x] **Adresse postale complète** — **ne sera pas publiée.** Décision du
+      client, prise après la phase 17 : les mentions légales portent la commune
+      du siège et le SIRET, pas la voie ni le code postal. Enregistré dans
+      `legal.adresseCompleteAffichee` (`src/lib/site.ts`), au même titre que la
+      réponse sur l'assurance.
+
+      **L'encadré « En cours de finalisation » de `/mentions-legales` a été
+      supprimé**, à la demande du client : l'adresse était sa dernière entrée,
+      et il annonçait donc une publication qui n'aura pas lieu. La liste qui
+      l'alimentait est supprimée avec lui. Rien n'a été complété d'office : le
+      code présent dans `data/geo/communes.json` (76322) est un code **INSEE**,
+      pas un code postal.
+
+      > Si une mention devait un jour redevenir « en attente de publication »,
+      > c'est un bloc à réécrire dans `src/app/mentions-legales/page.tsx`, pas
+      > à réactiver — il n'existe plus.
+
+      > **⚠ Le point mérite d'être vérifié avec un conseil, et il l'est ici
+      > sans être tranché à la place du client.** La LCEN demande à un éditeur
+      > professionnel de faire figurer une adresse ; pour une entreprise
+      > individuelle, c'est en principe celle de l'établissement. En pratique,
+      > le SIRET publié rend l'adresse consultable sur l'annuaire public des
+      > entreprises, sauf demande de non-diffusion. La décision appartient au
+      > client ; elle est appliquée et tracée, pas commentée sur le site.
 - [x] **Assurance professionnelle** — le client a répondu qu'il n'y en avait
       **pas à afficher** (phase 16B). Rien n'est donc publié, et rien n'est
       annoncé « à venir » : une absence assumée n'est pas une information
@@ -76,29 +96,45 @@ code.
 
 ## 2. Hébergement
 
-- [ ] **Identité de l'hébergeur de production** — raison sociale
-- [ ] **Adresse de l'hébergeur**
-- [ ] **Téléphone de l'hébergeur**
+- [x] **Identité de l'hébergeur de production** — `Hostinger International
+      Limited`. Mise en ligne chez Hostinger confirmée par le client.
+- [x] **Adresse de l'hébergeur** — `61 Lordou Vironos str., 6023 Larnaca,
+      Chypre`.
+- [ ] **Téléphone de l'hébergeur** — **Hostinger n'en publie pas** : son
+      support passe par chat et e-mail. Rien n'est inventé, la ligne ne
+      s'affiche pas (`host.phone === null`). Si un numéro figure sur le contrat
+      ou la facture du client, il peut être renseigné ; sinon le point reste
+      ouvert en connaissance de cause.
 
 **État réel du dossier :**
 
 | | |
 | --- | --- |
-| Préproduction actuelle | déploiement sur Vercel, le temps de la construction |
-| Production **prévue** | Hostinger — choix retenu pour l'endpoint PHP + SMTP du devis (`QUOTE_FLOW.md`) |
-| Domaine définitif | non arrêté (`NEXT_PUBLIC_SITE_URL` vide) |
+| Hébergement de production | **en place — Hostinger**, confirmé par le client |
+| Entité publiée | `Hostinger International Limited`, entité contractante pour l'Union européenne |
+| Domaine définitif | **non communiqué** (`NEXT_PUBLIC_SITE_URL` vide) |
 
-La page `/mentions-legales` **ne nomme aucun hébergeur** et annonce que
-l'information sera publiée avant la mise en ligne. C'est volontaire :
+La page `/mentions-legales` **nomme désormais l'hébergeur**. L'identité et
+l'adresse ne sont pas écrites de mémoire : elles sont relevées sur les
+conditions générales publiées par Hostinger, qui désignent l'entité
+contractante pour les clients de l'Union européenne
+(`hostinger.com/legal/universal-terms-of-service-agreement`). C'était la
+condition posée en phase 16B pour renseigner cette rubrique.
 
-- nommer l'hébergeur de préproduction publierait une information qui devient
-  fausse le jour de la bascule ;
-- écrire une adresse Hostinger de mémoire serait une invention, interdite par
-  `CLAUDE.md` § 9 et par le brief de la phase 16B.
+> **⚠ À faire confirmer par le client.** Le groupe Hostinger compte plusieurs
+> sociétés, et celle qui facture dépend du pays d'achat. **La facture ou le
+> contrat fait foi** : si elle nomme une autre entité du groupe, c'est
+> celle-là qui doit figurer dans `host` (`src/lib/site.ts`).
 
-**À faire en phase 18 :** relever les coordonnées exactes sur le contrat
-d'hébergement souscrit, puis compléter la rubrique « Hébergement » de
-`src/app/mentions-legales/page.tsx`.
+> **⚠ Deux points restent ouverts malgré la mise en ligne.**
+>
+> 1. `NEXT_PUBLIC_SITE_URL` est vide. Tant qu'elle l'est, les URLs absolues du
+>    site (Open Graph, canoniques, JSON-LD) ne portent pas le vrai domaine.
+>    **C'est à renseigner sur l'hébergement, pas dans le dépôt.**
+> 2. `NEXT_PUBLIC_SITE_INDEXABLE` reste à `false`, et **n'a pas été touchée** :
+>    être en ligne n'est pas être indexable. Le passage à `"true"` est la
+>    phase 18, sur décision explicite du client, une seule fois
+>    (`CLAUDE.md` § 3.10).
 
 ---
 

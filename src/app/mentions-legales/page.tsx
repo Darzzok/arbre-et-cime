@@ -6,14 +6,12 @@ import {
   LegalData,
   LegalFooter,
   LegalHero,
-  LegalList,
   type LegalDatum,
 } from "@/components/legal/legal";
 import { MAIN_CONTENT_ID } from "@/components/layout/skip-link";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
   Body,
-  Capsule,
   Card,
   Container,
   Reveal,
@@ -22,7 +20,7 @@ import {
   Subtitle,
 } from "@/components/ui";
 import { buildMetadata } from "@/lib/seo";
-import { area, contact, legal, site } from "@/lib/site";
+import { area, contact, host, legal, site } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/structured-data";
 
 export const metadata: Metadata = buildMetadata("mentions-legales");
@@ -39,23 +37,49 @@ export const metadata: Metadata = buildMetadata("mentions-legales");
  * CE QUI EST AFFICHÉ EST CONFIRMÉ. CE QUI MANQUE EST DIT.
  * ------------------------------------------------------
  * Toutes les données viennent de `src/lib/site.ts`, source unique. Aucune
- * n'est recopiée en dur ici. Et surtout : **rien n'est inventé**. La forme
- * juridique, le numéro d'identification, l'adresse professionnelle et
- * l'assurance ne sont pas connus à ce jour — ils ne figurent donc pas dans la
- * fiche, et leur absence est signalée explicitement au visiteur plutôt que
- * maquillée.
+ * n'est recopiée en dur ici. Et surtout : **rien n'est inventé**.
+ *
+ * Deux absences sont des DÉCISIONS du client, pas des trous : l'assurance
+ * (`legal.assuranceAffichee`) et l'adresse postale complète du siège
+ * (`legal.adresseCompleteAffichee`). Elles ne sont donc ni affichées, ni
+ * annoncées « à venir » — annoncer une publication qui n'aura pas lieu serait
+ * la même faute que d'inventer la donnée.
+ *
+ * L'entreprise reste identifiable : la commune du siège et le SIRET sont
+ * publiés, et le SIRET suffit à retrouver la fiche publique de l'entreprise.
+ *
+ * PLUS D'ENCADRÉ « EN COURS DE FINALISATION » — DEMANDE CLIENT
+ * ------------------------------------------------------------
+ * La fiche éditeur était suivie d'un encadré listant les mentions restant à
+ * publier. Il n'avait plus qu'une entrée, l'adresse postale complète, et le
+ * client a tranché : elle ne sera pas publiée. L'encadré annonçait donc une
+ * publication qui n'aurait jamais lieu.
+ *
+ * Il est retiré, avec la liste qui l'alimentait. Le drapeau
+ * `legal.adresseCompleteAffichee` reste la trace de la décision côté données,
+ * et `LEGAL_CHECKLIST.md` § 1 la trace côté dossier — de sorte que personne ne
+ * lise plus tard cette absence comme un oubli.
+ *
+ * Si une mention devait un jour redevenir « en attente », c'est un bloc à
+ * réécrire, pas à ressusciter : le cas ne se présente plus.
  *
  * Un SIRET plausible mais faux serait la pire faute possible sur cette page :
  * invérifiable pour le client, immédiatement vérifiable par n'importe qui
  * d'autre.
  *
- * L'HÉBERGEUR N'EST PAS NOMMÉ, ET C'EST VOULU
- * -------------------------------------------
- * Le site est en préproduction. L'hébergement définitif est prévu chez
- * Hostinger (`QUOTE_FLOW.md` § envoi) mais n'est pas en place. Nommer
- * l'hébergeur de préproduction reviendrait à publier une information fausse le
- * jour de la bascule ; inventer une adresse Hostinger serait pire. La rubrique
- * annonce donc l'échéance, et `LEGAL_CHECKLIST.md` porte le blocage.
+ * L'HÉBERGEUR EST DÉSORMAIS NOMMÉ
+ * -------------------------------
+ * La rubrique annonçait une publication « dès que l'hébergement de production
+ * sera en place ». Il l'est : le client a confirmé la mise en ligne chez
+ * Hostinger. L'annonce est donc remplacée par l'information elle-même.
+ *
+ * L'identité vient de `host` (`site.ts`), relevée sur les conditions générales
+ * publiées par Hostinger — pas écrite de mémoire. C'était la condition posée
+ * en phase 16B pour renseigner cette rubrique.
+ *
+ * Le téléphone de l'hébergeur n'y figure pas : Hostinger n'en publie pas. Une
+ * valeur `null` retire la ligne, elle n'affiche pas un trou — même règle que
+ * pour le téléphone de l'entreprise.
  *
  * LES ATTRIBUTIONS CARTOGRAPHIQUES SONT ENFIN PORTÉES
  * ---------------------------------------------------
@@ -83,8 +107,8 @@ const EDITEUR: readonly LegalDatum[] = [
      `legal.siretConfirmed` dans `site.ts`. */
   { label: "SIRET", value: legal.siretConfirmed ? legal.siret : null },
   { label: "Responsable de la publication", value: site.manager },
-  /* La commune, telle que confirmée. Ni voie ni code postal ne sont ajoutés :
-     le client ne les a pas communiqués. */
+  /* La commune, telle que confirmée. Ni voie ni code postal : le client a
+     décidé de ne pas publier l'adresse complète (`adresseCompleteAffichee`). */
   { label: "Commune du siège", value: legal.siege },
   { label: "E-mail", value: contact.emailConfirmed ? contact.email : null },
   {
@@ -95,30 +119,6 @@ const EDITEUR: readonly LegalDatum[] = [
     label: "Zone d’intervention",
     value: `${area.city} et la ${area.metro}`,
   },
-];
-
-/**
- * Ce qui n'est pas encore publiable. Énuméré, pas contourné.
- *
- * LA LISTE S'EST VIDÉE AU FUR ET À MESURE, ET C'EST VOULU
- * -------------------------------------------------------
- * Elle est construite à partir des drapeaux de `site.ts` : une donnée
- * confirmée apparaît dans la fiche et disparaît d'ici, sans double saisie et
- * sans risque d'oubli. En phase 16B elle a perdu la forme juridique, puis le
- * SIRET, puis la commune du siège.
- *
- * L'assurance n'y figure pas : le client a répondu qu'il n'y en avait **pas à
- * afficher** (`legal.assuranceAffichee`). Une absence assumée n'est pas une
- * information manquante — l'annoncer « à venir » serait faux.
- *
- * Reste l'adresse postale complète : le client a donné la commune, pas la voie
- * ni le code postal.
- */
-const A_COMPLETER = [
-  ...(legal.siretConfirmed
-    ? []
-    : ["Le numéro d’identification de l’entreprise (SIRET)"]),
-  "L’adresse postale complète du siège",
 ];
 
 export default function MentionsLegalesPage() {
@@ -145,27 +145,6 @@ export default function MentionsLegalesPage() {
                 <LegalData items={EDITEUR} />
               </Card>
 
-              {/*
-                L'AVERTISSEMENT EST VISIBLE, PAS ENFOUI.
-
-                Le site est déployé publiquement pendant sa préparation. Un
-                visiteur qui cherche un SIRET doit apprendre en une phrase
-                qu'il n'y est pas encore — plutôt que de parcourir la page en
-                se demandant s'il a mal lu.
-              */}
-              <div className="mt-7 rounded-card border border-(--surface-rule) p-6 lg:p-7">
-                <Capsule variant="light">En cours de finalisation</Capsule>
-
-                <Body className="mx-auto mt-4 text-(--surface-fg-muted)">
-                  Le site est en cours de préparation. Les mentions suivantes ne
-                  sont pas encore publiées et le seront sur cette page avant sa
-                  mise en ligne définitive :
-                </Body>
-
-                <div className="mt-5">
-                  <LegalList items={A_COMPLETER} />
-                </div>
-              </div>
             </Reveal>
           </Container>
         </Section>
@@ -174,13 +153,19 @@ export default function MentionsLegalesPage() {
         <LegalArticles surface="sand">
           <LegalArticle id="mentions-hebergement" title="Hébergement">
             <Body className="mx-auto text-(--surface-fg-muted)">
-              Le site est actuellement déployé sur un environnement de
-              préproduction, le temps de sa préparation.
+              Le site est hébergé par {host.name}, {host.address}.
             </Body>
+
+            {/* Le téléphone suit la même règle que partout : `null` retire la
+                ligne. Hostinger n'en publie pas — cf. `host.phone`. */}
+            {host.phone ? (
+              <Body className="mx-auto text-(--surface-fg-muted)">
+                Téléphone : {host.phone}
+              </Body>
+            ) : null}
+
             <Body className="mx-auto text-(--surface-fg-muted)">
-              L’identité et les coordonnées de l’hébergeur définitif seront
-              publiées ici dès que l’hébergement de production sera en place, et
-              en tout état de cause avant la mise en ligne du site.
+              Site de l’hébergeur : {host.website}
             </Body>
           </LegalArticle>
 
