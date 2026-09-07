@@ -95,11 +95,14 @@ const cards: Record<string, ServiceCard> = {
     height: "h-[21rem] sm:h-[24rem] lg:h-[24rem]",
   },
   "entretien-exterieur": {
-    image: "/images/services/taille-de-haie-taille-haie-thermique.jpg",
-    alt: "Taille d’une haie de conifères au taille-haie thermique",
-    position: "object-[center_42%]",
+    image: "/images/services/entretien-debroussailleuse-en-action.jpg",
+    alt: "Débroussailleuse thermique en action au ras d’un talus enherbé, herbe projetée et opérateur en pantalon haute visibilité",
+    /* La tête de débroussailleuse occupe le tiers droit du cadre, l'opérateur
+       le tiers supérieur. Sur la carte étroite du mobile, un centrage
+       laisserait la machine hors champ : le cadrage est décalé à droite. */
+    position: "object-[68%_center]",
     capsule: "Entretien",
-    description: "Haies, débroussaillage et espaces extérieurs.",
+    description: "Haies, tonte, débroussaillage et friches.",
     span: "lg:col-span-7",
     height: "h-[21rem] sm:h-[24rem] lg:h-[24rem]",
   },

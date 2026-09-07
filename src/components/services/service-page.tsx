@@ -99,7 +99,7 @@ const STEPS = [
  * vrai.
  */
 const proofs = [
-  `${site.experienceYears}+ ans de métier`,
+  `${site.experienceYears} ans de métier`,
   "Professionnel diplômé",
   "Matériel professionnel",
 ];
@@ -551,23 +551,59 @@ export function ServicePage({ id }: { id: RouteId }) {
               </Card>
             </Reveal>
 
-            {/* -------- Maillage interne : trois cartes compactes -------- */}
+            {/* -------- Maillage interne : trois cartes compactes --------
+                LA DERNIÈRE CARTE PREND TOUTE LA LARGEUR SUR MOBILE.
+
+                Trois cartes sur deux colonnes laissaient la troisième seule
+                dans la cellule de gauche, la moitié droite vide. Sur mobile,
+                cette carte orpheline se lit comme un oubli de mise en page.
+
+                Elle s'étale donc sur les deux colonnes — la largeur des deux
+                du dessus — dès que le nombre de cartes est IMPAIR. Le test
+                porte sur le compte réel : si un service venait à en lister
+                deux ou quatre, la règle ne s'appliquerait pas.
+
+                À partir de 480 px la grille passe à trois colonnes, la
+                question ne se pose plus, et la carte reprend une cellule. */}
             <Reveal className="mt-16 lg:mt-20">
               <Eyebrow as="h2">Autres interventions</Eyebrow>
 
               <ul className="mt-6 grid grid-cols-2 gap-(--card-gap) sm:grid-cols-3">
-                {content.related.map((relatedId) => {
+                {content.related.map((relatedId, index) => {
                   const related = getRoute(relatedId);
 
+                  const derniereSeule =
+                    content.related.length % 2 === 1 &&
+                    index === content.related.length - 1;
+
                   return (
-                    <li key={relatedId} className="h-full">
+                    <li
+                      key={relatedId}
+                      /* En UNE expression : `cn()` ne fusionne pas les classes
+                         concurrentes, deux `col-span` se disputeraient. */
+                      className={
+                        derniereSeule
+                          ? "h-full col-span-2 sm:col-span-1"
+                          : "h-full"
+                      }
+                    >
                       <CardLink
                         href={related.path}
                         tone="plain"
                         padding="md"
                         className="flex h-full flex-col justify-center"
                       >
-                        <span className="font-display text-subtitle leading-tight text-(--surface-heading)">
+                        {/*
+                          « DESSOUCHAGE » ÉTAIT COUPÉ — mesuré : 150 px de
+                          texte pour 127 disponibles dans une carte de demi-
+                          largeur, que `overflow-hidden` tranchait net.
+
+                          Même remède que sur les pages villes : corps de texte
+                          sous 480 px, sous-titre au-delà. `hyphens-auto` et
+                          `break-words` servent de filets sur les écrans les
+                          plus étroits.
+                        */}
+                        <span className="font-display text-body leading-tight hyphens-auto break-words text-(--surface-heading) sm:text-subtitle">
                           {related.navLabel}
                         </span>
 

@@ -56,12 +56,12 @@ const zones = getRoute("zones-intervention");
 /**
  * Trois repères chiffrés, tous dans `site.ts`.
  *
- * Ils se lisent comme une progression : une dizaine d'années de métier, dont
+ * Ils se lisent comme une progression : dix ans de métier, dont
  * environ trois à son compte, depuis la création de l'entreprise en 2023.
  * **Aucune date supplémentaire n'est inventée.**
  */
 const milestones = [
-  { value: `≈ ${site.experienceYears} ans`, label: "de pratique du métier" },
+  { value: `${site.experienceYears} ans`, label: "de pratique du métier" },
   { value: `≈ ${site.selfEmployedYears} ans`, label: "à son compte" },
   { value: String(site.foundedYear), label: "création de l’entreprise" },
 ];
@@ -168,7 +168,7 @@ export default function AProposPage() {
             <Reveal className="mx-auto max-w-reading">
               <CapsuleGroup>
                 <Capsule variant="dark" dot>
-                  ≈ {site.experienceYears} ans de métier
+                  {site.experienceYears} ans de métier
                 </Capsule>
                 <Capsule variant="dark" dot>
                   Entreprise créée en {site.foundedYear}
@@ -242,10 +242,10 @@ export default function AProposPage() {
 
                     <Body className="mt-5 text-(--surface-fg-muted)">
                       {site.manager} exerce le métier d’
-                      {site.trade.toLowerCase()} depuis une dizaine d’années.
-                      L’essentiel s’apprend là où il s’apprend vraiment : en
-                      hauteur, sur des chantiers dont aucun ne ressemble tout à
-                      fait au précédent.
+                      {site.trade.toLowerCase()} depuis {site.experienceYears}{" "}
+                      ans. L’essentiel s’apprend là où il s’apprend vraiment :
+                      en hauteur, sur des chantiers dont aucun ne ressemble tout
+                      à fait au précédent.
                     </Body>
                     <Body className="mt-4 text-(--surface-fg-muted)">
                       {site.name} est né de cela, en {site.foundedYear}.

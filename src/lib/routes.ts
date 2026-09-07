@@ -92,7 +92,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     title: "Arbres et Cimes Élagage — Élagueur-grimpeur à Rouen",
     titleAbsolute: true,
     description:
-      "Élagueur-grimpeur à Rouen et dans la métropole rouennaise : élagage, abattage, dessouchage et entretien extérieur. Devis gratuit, intervention rapide.",
+      "Élagueur-grimpeur à Rouen et dans la métropole rouennaise : élagage, abattage, dessouchage et entretien des espaces verts. Devis gratuit, intervention rapide.",
     intent:
       "élagueur Rouen / élagueur-grimpeur Rouen / élagage Rouen / abattage d’arbres Rouen",
     group: "preuve",
@@ -158,14 +158,14 @@ const definitions: Record<RouteId, RouteDefinition> = {
   "entretien-exterieur": {
     id: "entretien-exterieur",
     path: "/entretien-exterieur",
-    navLabel: "Entretien extérieur",
+    navLabel: "Entretien des espaces verts",
     navTagline: "Haies et débroussaillage",
     // 36 caracteres : avec le gabarit « | Arbres et Cimes Élagage », le titre
     // complet tient en 60, la cible de SEO_STRATEGY.md § 6. « Entretien
     // exterieur » reste porte par le h1 de la page.
-    title: "Entretien extérieur à Rouen",
+    title: "Entretien des espaces verts à Rouen",
     description:
-      "Taille de haies, débroussaillage et entretien extérieur à Rouen et dans la métropole rouennaise. Évacuation des déchets comprise. Devis gratuit.",
+      "Taille de haies, débroussaillage et entretien des espaces verts à Rouen et dans la métropole rouennaise. Évacuation des déchets comprise. Devis gratuit.",
     intent:
       "taille de haies et débroussaillage Rouen — entretien récurrent d’un terrain",
     group: "service",
@@ -269,7 +269,7 @@ const definitions: Record<RouteId, RouteDefinition> = {
     // Rouen » : ce mot-clé appartient a la page d'accueil, et deux pages qui le
     // visent se cannibalisent (SEO_STRATEGY.md § 3).
     description:
-      "Arbres et Cimes Élagage, c’est Cédric Simon : élagueur-grimpeur diplômé, une dizaine d’années de métier, installé dans la métropole rouennaise depuis 2023.",
+      "Arbres et Cimes Élagage, c’est Cédric Simon : élagueur-grimpeur diplômé, 10 ans de métier, en activité dans la métropole rouennaise depuis 2023.",
     intent:
       "requêtes de marque et vérification de confiance avant prise de contact",
     group: "entreprise",

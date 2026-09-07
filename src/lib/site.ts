@@ -308,6 +308,8 @@ export const services: readonly Service[] = [
   { slug: "dessouchage", label: "Dessouchage" },
   { slug: "debroussaillage", label: "Débroussaillage" },
   { slug: "taille-de-haies", label: "Taille de haies" },
-  { slug: "entretien-exterieur", label: "Entretien extérieur" },
+  /* Le SLUG reste `entretien-exterieur` : le renommer casserait l'URL sans
+     rien apporter. Seul le LIBELLÉ change — demande client. */
+  { slug: "entretien-exterieur", label: "Entretien des espaces verts" },
   { slug: "evacuation-des-dechets", label: "Évacuation des déchets" },
 ] as const;

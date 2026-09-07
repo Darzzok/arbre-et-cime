@@ -108,7 +108,7 @@ export const LOCATIONS: readonly Location[] = [
     servicesIntro:
       "Les quatre prestations sont assurées à Rouen, du jardin de centre-ville au grand sujet de coteau.",
     description:
-      "Élagueur-grimpeur à Rouen : élagage, abattage, dessouchage et entretien extérieur, du jardin de centre-ville aux arbres de coteau. Devis gratuit.",
+      "Élagueur-grimpeur à Rouen : élagage, abattage, dessouchage et entretien des espaces verts, du jardin de centre-ville aux arbres de coteau. Devis gratuit.",
   },
   {
     id: "76451",
@@ -130,7 +130,7 @@ export const LOCATIONS: readonly Location[] = [
       "le-grand-quevilly",
     ],
     intro:
-      "Mont-Saint-Aignan est à trois kilomètres de Rouen, sur le plateau nord. Arbres & Cimes y intervient pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
+      "Mont-Saint-Aignan est à trois kilomètres de Rouen, sur le plateau nord. Arbres & Cimes y intervient pour l’élagage, l’abattage, le dessouchage et l’entretien des espaces verts.",
     contexte:
       "La commune occupe le plateau qui domine Rouen, avec une rupture de pente marquée vers la vallée. Les parcelles résidentielles y sont souvent plus généreuses qu’en fond de vallée, et les sujets ont eu la place de vieillir. Sur le plateau, l’exposition au vent est plus franche qu’en contrebas — un paramètre qui compte pour juger de la tenue d’un arbre.",
     servicesIntro:
@@ -158,7 +158,7 @@ export const LOCATIONS: readonly Location[] = [
       "le-grand-quevilly",
     ],
     intro:
-      "Arbres & Cimes intervient à Bois-Guillaume pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur. La commune est à quatre kilomètres du centre de Rouen.",
+      "Arbres & Cimes intervient à Bois-Guillaume pour l’élagage, l’abattage, le dessouchage et l’entretien des espaces verts. La commune est à quatre kilomètres du centre de Rouen.",
     contexte:
       "Bois-Guillaume s’étend sur le plateau nord-est, dans un tissu très majoritairement résidentiel. Les jardins y sont nombreux et les arbres de haute tige fréquents en limite de propriété — configuration où la question de la mitoyenneté et de la chute des bois se pose avant tout le reste. L’accès véhicule y est en général plus simple qu’en centre-ville rouennais.",
     servicesIntro:
@@ -186,13 +186,13 @@ export const LOCATIONS: readonly Location[] = [
       "mont-saint-aignan",
     ],
     intro:
-      "Sotteville-lès-Rouen jouxte Rouen sur la rive gauche. Arbres & Cimes y assure l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
+      "Sotteville-lès-Rouen jouxte Rouen sur la rive gauche. Arbres & Cimes y assure l’élagage, l’abattage, le dessouchage et l’entretien des espaces verts.",
     contexte:
       "Le tissu urbain y est dense et de plain-pied, sans le relief de la rive droite. Les parcelles sont souvent étroites et closes, avec des arbres proches des habitations et des limites séparatives. Dans cette configuration, c’est rarement la hauteur qui complique un chantier, mais le peu de place disponible pour faire tomber les bois et les évacuer.",
     servicesIntro:
       "Sur des parcelles resserrées, le démontage par sections remplace souvent l’abattage direct — et le dessouchage se règle au cas par cas selon l’accès.",
     description:
-      "Élagueur-grimpeur à Sotteville-lès-Rouen, commune limitrophe de Rouen. Élagage, démontage, dessouchage et entretien extérieur. Devis gratuit et sans engagement.",
+      "Élagueur-grimpeur à Sotteville-lès-Rouen, commune limitrophe de Rouen. Élagage, démontage, dessouchage et entretien des espaces verts. Devis gratuit et sans engagement.",
   },
   {
     id: "76322",
@@ -214,13 +214,13 @@ export const LOCATIONS: readonly Location[] = [
       "mont-saint-aignan",
     ],
     intro:
-      "Arbres & Cimes intervient au Grand-Quevilly, à cinq kilomètres de Rouen sur la rive gauche, pour l’élagage, l’abattage, le dessouchage et l’entretien extérieur.",
+      "Arbres & Cimes intervient au Grand-Quevilly, à cinq kilomètres de Rouen sur la rive gauche, pour l’élagage, l’abattage, le dessouchage et l’entretien des espaces verts.",
     contexte:
       "La commune associe des quartiers résidentiels, de larges espaces verts publics et des secteurs d’activité en bord de Seine. Cette mixité se retrouve dans les demandes : un arbre de jardin particulier et un alignement en limite de zone d’activité ne se traitent pas de la même manière, ni avec les mêmes contraintes de circulation autour du chantier.",
     servicesIntro:
       "Particuliers, copropriétés et professionnels : la nature du site pèse ici autant que celle de l’arbre.",
     description:
-      "Élagueur-grimpeur au Grand-Quevilly, rive gauche de Rouen : élagage, abattage, dessouchage et entretien extérieur pour particuliers et professionnels.",
+      "Élagueur-grimpeur au Grand-Quevilly, rive gauche de Rouen : élagage, abattage, dessouchage et entretien des espaces verts pour particuliers et professionnels.",
   },
   {
     id: "76575",
@@ -248,7 +248,7 @@ export const LOCATIONS: readonly Location[] = [
     servicesIntro:
       "En lisière de massif, l’élagage de mise en sécurité et l’abattage de sujets dépérissants reviennent plus souvent qu’ailleurs.",
     description:
-      "Élagueur-grimpeur à Saint-Étienne-du-Rouvray, en lisière de la forêt du Rouvray : élagage, abattage, dessouchage, entretien extérieur. Devis gratuit.",
+      "Élagueur-grimpeur à Saint-Étienne-du-Rouvray, en lisière de la forêt du Rouvray : élagage, abattage, dessouchage, entretien des espaces verts. Devis gratuit.",
   },
   {
     id: "76231",
@@ -276,7 +276,7 @@ export const LOCATIONS: readonly Location[] = [
     servicesIntro:
       "Entre fond de vallée et coteau, deux réalités de chantier très différentes coexistent sur la même commune.",
     description:
-      "Élagueur-grimpeur à Elbeuf, commune de la Métropole Rouen Normandie. Élagage, abattage, dessouchage et entretien extérieur, y compris en terrain pentu.",
+      "Élagueur-grimpeur à Elbeuf, commune de la Métropole Rouen Normandie. Élagage, abattage, dessouchage et entretien des espaces verts, y compris en terrain pentu.",
   },
 
   /* ---------------------------------------------------------- PRIMARY --- */
@@ -304,7 +304,7 @@ export const LOCATIONS: readonly Location[] = [
     contexte:
       "La ville est traversée par l’Eure et bordée par un vaste massif forestier au nord. Les propriétés riveraines de la rivière ou adossées au bois présentent souvent des sujets élancés et des accès contraints par l’eau ou la clôture de lisière. La proximité de la forêt pose la même question qu’ailleurs : jusqu’où va la parcelle, et qui entretient quoi.",
     servicesIntro:
-      "Élagage, abattage, dessouchage et entretien extérieur : la faisabilité se juge surtout sur l’accès au pied de l’arbre.",
+      "Élagage, abattage, dessouchage et entretien des espaces verts : la faisabilité se juge surtout sur l’accès au pied de l’arbre.",
     description:
       "Élagueur à Louviers, dans l’Eure, à 25 km de Rouen : élagage, abattage et dessouchage possibles selon la nature du chantier. Devis gratuit.",
   },

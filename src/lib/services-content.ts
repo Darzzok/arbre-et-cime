@@ -129,12 +129,12 @@ export const servicesContent: Record<string, ServiceContent> = {
   elagage: {
     eyebrow: "Prestation",
     heading: "Élagage d’arbres à Rouen",
-    lead: "Tailler un arbre que l’on conserve : réduire, éclaircir, sécuriser, sans compromettre sa santé ni sa forme.",
+    lead: "Accompagner la cohabitation de l’arbre avec son environnement, sécuriser ses abords et assurer son entretien.",
 
     intro: {
       title: "À quoi sert un élagage",
       paragraphs: [
-        "L’élagage s’adresse à un arbre que l’on garde. Il consiste à retirer ce qui pose problème — bois mort, branche fragilisée, volume devenu trop important — en conservant la structure et la silhouette de l’arbre.",
+        "L’élagage s’adresse à un arbre que l’on garde. Il répond à trois besoins qui se recoupent souvent : accompagner la cohabitation de l’arbre avec ce qui l’entoure — bâti, voisinage, réseaux —, sécuriser ses abords en retirant ce qui menace, et assurer son entretien pour qu’il vieillisse bien.",
         "Une taille bien conduite se voit peu. Elle enlève le nécessaire, respecte les points de coupe et laisse à l’arbre de quoi refermer ses plaies. À l’inverse, une coupe sévère répétée affaiblit durablement un sujet mature.",
       ],
     },
@@ -170,10 +170,11 @@ export const servicesContent: Record<string, ServiceContent> = {
     method: {
       title: "Comment nous intervenons",
       paragraphs: [
-        "L’intervention se fait en grimpe, sur cordes et harnais. C’est ce qui permet d’atteindre le houppier d’un arbre mature là où une nacelle ne passe pas — jardin clos, passage étroit, sol qui ne supporterait pas un engin.",
+        "L’accès peut se faire sur corde ou à la nacelle, selon la configuration du site. Le choix se décide au devis : ce sont l’espace disponible, la portance du sol et la hauteur à atteindre qui tranchent, pas une préférence de méthode.",
+        "L’intervention sur corde permet d’atteindre des arbres ou des zones où l’accès d’une nacelle est impossible ou inadapté — jardin clos, passage étroit, sol qui ne supporterait pas un engin. Elle permet aussi de choisir chaque coupe depuis l’arbre plutôt que depuis le sol.",
       ],
       points: [
-        "Travail sur cordes, EPI complets, zone de chantier sécurisée",
+        "Accès sur corde ou à la nacelle selon le chantier, EPI complets",
         "Matériel professionnel adapté à la taille et à l’essence",
         "Chantier laissé propre, évacuation selon l’intervention",
       ],
@@ -261,7 +262,7 @@ export const servicesContent: Record<string, ServiceContent> = {
         },
         {
           title: "Démontage par sections",
-          body: "Sans zone de chute suffisante, l’arbre est descendu morceau par morceau depuis le houppier, chaque section étant retenue par cordes.",
+          body: "Sans zone de chute suffisante, l’arbre est descendu morceau par morceau depuis le houppier, les sections pouvant être retenues sur corde selon ce qui se trouve en dessous.",
         },
         {
           title: "Accès complexe",
@@ -269,7 +270,7 @@ export const servicesContent: Record<string, ServiceContent> = {
         },
         {
           title: "Proximité immédiate d’un bâtiment",
-          body: "Toiture, mur mitoyen, véranda, ligne aérienne : les sections sont guidées et freinées jusqu’au sol, une par une.",
+          body: "Toiture, mur mitoyen, véranda, ligne aérienne : les sections peuvent être guidées et freinées jusqu’au sol, une par une, si nécessaire.",
         },
         {
           title: "Après un coup de vent",
@@ -281,11 +282,12 @@ export const servicesContent: Record<string, ServiceContent> = {
     method: {
       title: "Comment nous intervenons",
       paragraphs: [
-        "Le démontage par sections se fait en grimpe, avec rétention : les pièces coupées ne tombent pas librement, elles sont retenues sur corde et descendues. C’est ce qui rend possible un abattage entre une haie et une toiture.",
+        "Lorsque l’espace ne permet pas un abattage direct, l’arbre peut être démonté progressivement, depuis le houppier vers le pied. Les branches et les morceaux de bois peuvent alors être retenus sur corde afin de maîtriser leur descente et de protéger les abords.",
+        "La rétention n’est pas systématique : elle est mise en œuvre là où une chute libre poserait un risque — au-dessus d’une toiture, d’une véranda, d’une clôture mitoyenne ou d’une plantation. C’est ce qui rend possible un abattage entre une haie et un bâtiment.",
       ],
       points: [
         "Zone de chantier balisée avant toute coupe",
-        "Rétention sur corde pour les sections au-dessus d’un obstacle",
+        "Rétention sur corde si nécessaire, au-dessus d’un obstacle",
         "Débitage sur place, évacuation ou bois laissé selon votre choix",
       ],
       image: "/images/services/abattage-equipement-protection.jpg",
@@ -454,32 +456,36 @@ export const servicesContent: Record<string, ServiceContent> = {
   /* ------------------------------------------------------------------ */
   "entretien-exterieur": {
     eyebrow: "Prestation",
-    heading: "Entretien extérieur à Rouen",
-    lead: "Taille de haies, débroussaillage et entretien des espaces extérieurs, en ponctuel comme en suivi.",
+    heading: "Entretien des espaces verts à Rouen",
+    lead: "Taille de haies, tonte, débroussaillage et entretien de friches, en ponctuel comme en suivi.",
 
     intro: {
       title: "Un terrain qui se tient",
       paragraphs: [
-        "L’entretien extérieur regroupe ce qui maintient un terrain praticable et net : la haie ramenée à hauteur, la parcelle débroussaillée, les abords repris après l’hiver.",
+        "L’entretien des espaces verts regroupe ce qui maintient un terrain praticable et net : la haie ramenée à hauteur, la pelouse tondue, la parcelle débroussaillée, la friche reprise en main.",
         "Ces interventions se font au coup par coup ou en suivi régulier. Pour une copropriété, un professionnel ou une collectivité, un passage planifié coûte moins cher à l’année qu’un rattrapage sur un terrain laissé trois ans sans intervention.",
       ],
     },
 
     cases: {
       title: "Ce que cela recouvre",
-      intro: "Quatre prestations, souvent combinées sur un même passage.",
+      intro: "Cinq prestations, souvent combinées sur un même passage.",
       items: [
         {
           title: "Taille de haies",
           body: "Hauteur, largeur et fréquence dépendent de l’essence et de ce que la haie doit faire : masquer, délimiter, couper le vent.",
         },
         {
-          title: "Débroussaillage",
-          body: "Parcelle envahie, ronciers, terrain laissé à l’abandon : on remet la surface à plat pour pouvoir de nouveau l’entretenir normalement.",
+          title: "Tonte",
+          body: "Pelouses et abords enherbés, en passage ponctuel ou suivi sur la saison. La fréquence dépend de la surface, de l’exposition et de l’usage du terrain.",
         },
         {
-          title: "Entretien d’espaces verts",
-          body: "Reprise des abords, dégagement des allées et des limites, remise en ordre après une saison de pousse.",
+          title: "Débroussaillage",
+          body: "Parcelle envahie, ronciers, bordures laissées de côté : on remet la surface à plat pour pouvoir de nouveau l’entretenir normalement.",
+        },
+        {
+          title: "Entretien de friches",
+          body: "Terrain laissé plusieurs années, où la végétation ligneuse a repris le dessus. La remise en état demande un matériel plus lourd et souvent plusieurs passages.",
         },
         {
           title: "Évacuation des déchets verts",
@@ -491,11 +497,11 @@ export const servicesContent: Record<string, ServiceContent> = {
     method: {
       title: "Comment nous intervenons",
       paragraphs: [
-        "Le matériel s’adapte au terrain : taille-haie sur perche pour les haies hautes, débroussailleuse pour les parcelles, finition à la cisaille là où la précision compte. Le chantier est rendu propre à la fin de chaque passage.",
+        "Le matériel s’adapte au terrain : taille-haie sur perche pour les haies hautes, débroussailleuse pour les parcelles et les friches, finition à la cisaille là où la précision compte. Le chantier est rendu propre à la fin de chaque passage.",
       ],
       points: [
         "Passage ponctuel ou entretien suivi, selon vos besoins",
-        "Matériel choisi selon la hauteur, la densité et l’accès",
+        "Matériel choisi selon la hauteur, la densité, la surface et l’accès",
         "Déchets verts broyés sur place ou évacués",
       ],
       image: "/images/services/taille-de-haie-cisailles-manuelles.jpg",
@@ -510,7 +516,7 @@ export const servicesContent: Record<string, ServiceContent> = {
       items: [
         {
           title: "Le linéaire et la hauteur de haie",
-          body: "Une haie se chiffre au mètre linéaire, mais la hauteur change tout : au-delà de deux mètres cinquante, le travail passe en échafaudage ou en nacelle, et la coupe se ramasse différemment.",
+          body: "Une haie se chiffre au mètre linéaire, mais la hauteur change tout : selon la hauteur et les conditions d’accès, l’intervention peut nécessiter une nacelle ou une autre organisation adaptée au chantier, et la coupe se ramasse différemment.",
         },
         {
           title: "L’état de départ",

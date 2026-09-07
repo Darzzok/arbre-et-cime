@@ -511,7 +511,7 @@ export default async function VillePage({ params }: PageProps) {
           <Reveal>
             <CapsuleGroup>
               <Capsule variant="light" dot>
-                {site.experienceYears}+ ans de métier
+                {site.experienceYears} ans de métier
               </Capsule>
               {qualifications.map((titre) => (
                 <Capsule key={titre} variant="light" dot>

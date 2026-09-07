@@ -522,6 +522,56 @@ function secondaryVisibility(mark: MapMarker): string {
   return mark.secondary ? "hidden md:block" : "";
 }
 
+/**
+ * ARRONDI DÉTERMINISTE DES NOMBRES INJECTÉS DANS `style`.
+ *
+ * `Math.atan2` et `Math.hypot` sont « implementation-approximated » : la
+ * spécification ECMAScript n'impose PAS le même dernier bit à toutes les
+ * implémentations. Node et le moteur du navigateur ne rendent donc pas
+ * forcément le même double pour les mêmes entiers en entrée.
+ *
+ * Constaté sur Mont-Saint-Aignan (`dx: -34, dy: -58`) :
+ *
+ * | Rendu serveur (Node) | Hydratation (navigateur du client) |
+ * | --- | --- |
+ * | `-120.37912601136838` | `-120.37912601136834` |
+ *
+ * Quelques unités du dernier bit d'écart — invisibles à l'œil, mais React
+ * compare les attributs `style` **caractère par caractère** à l'hydratation.
+ * C'était le mismatch signalé : `rotate(...deg)`, largeur identique.
+ *
+ * LE DÉFAUT NE SE REPRODUIT PAS PARTOUT, ET C'EST LE PIÈGE
+ * --------------------------------------------------------
+ * Le Chromium de l'atelier renvoie `-120.37912601136838` — exactement la
+ * valeur de Node. Sur cette machine, la carte s'hydrate sans un mot. Le défaut
+ * n'appartient donc pas à la carte : il appartient au COUPLE de moteurs qui la
+ * rend. Un correctif validé par « je ne vois plus l'erreur ici » n'aurait rien
+ * corrigé du tout. D'où un remède structurel : la valeur écrite dans le HTML
+ * ne doit plus dépendre du moteur, quel qu'il soit.
+ *
+ * Le remède n'est ni de désactiver le rendu serveur, ni de faire taire
+ * l'avertissement : c'est de ne jamais laisser sortir un double brut. La
+ * valeur est arrêtée à trois décimales AVANT d'entrer dans la chaîne — les
+ * deux moteurs partent de doubles différents et arrivent au même texte.
+ *
+ * Trois décimales, et c'est mesuré : au millième de degré, un rappel de 85 px
+ * dévie de 1,5 millionième de pixel ; au millième de pixel, sa longueur est
+ * déjà cent fois plus fine qu'un pixel physique. Les quatre vecteurs réels du
+ * jeu de données produisent la même chaîne même en perturbant le double de
+ * ±8 unités du dernier bit — l'arrondi ne peut pas basculer d'un côté à
+ * l'autre.
+ *
+ * `toFixed` et non `Number(valeur.toFixed(3))` : on veut le TEXTE. Repasser
+ * par un nombre ne ferait que rendre la main à la sérialisation par défaut.
+ *
+ * NE S'APPLIQUE PAS AUX POURCENTAGES `left` / `top`
+ * ------------------------------------------------
+ * `toX` et `toY` n'enchaînent que soustraction, division et multiplication :
+ * IEEE-754 les impose au bit près, les deux moteurs écrivent déjà exactement
+ * la même chaîne. Les arrondir déplacerait les repères sans rien corriger.
+ */
+const cssNombre = (valeur: number) => valeur.toFixed(3);
+
 type CityMarkerProps = {
   mark: MapMarker;
   index: number;
@@ -540,8 +590,12 @@ function CityMarker({
   onPreview,
 }: CityMarkerProps) {
   const leader = mark.leader;
-  const length = leader ? Math.hypot(leader.dx, leader.dy) : 0;
-  const angle = leader ? (Math.atan2(leader.dy, leader.dx) * 180) / Math.PI : 0;
+  // Chaînes, pas des nombres : la valeur qui part dans le HTML est figée ici,
+  // identique au serveur et au client (cf. `cssNombre`).
+  const length = leader ? cssNombre(Math.hypot(leader.dx, leader.dy)) : "0";
+  const angle = leader
+    ? cssNombre((Math.atan2(leader.dy, leader.dx) * 180) / Math.PI)
+    : "0";
 
   return (
     <div

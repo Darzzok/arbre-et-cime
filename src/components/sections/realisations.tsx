@@ -72,8 +72,8 @@ export function Realisations() {
             Des interventions adaptées à chaque situation
           </Title>
           <Body className="mt-4 text-(--surface-fg-muted)">
-            En hauteur, au ras des habitations, ou une fois l’arbre au sol :
-            c’est la situation qui décide de la méthode, pas l’inverse.
+            Travail en hauteur et à proximité des habitations, ou au sol : c’est
+            la situation qui décide de la méthode, pas l’inverse.
           </Body>
         </Reveal>
 

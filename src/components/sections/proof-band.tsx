@@ -35,7 +35,7 @@ import { area, site } from "@/lib/site";
 
 const proofs = [
   {
-    value: `${site.experienceYears}+`,
+    value: `${site.experienceYears}`,
     label: "Années d’expérience",
   },
   {

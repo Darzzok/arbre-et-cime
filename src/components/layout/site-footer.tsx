@@ -9,8 +9,8 @@ import { area, contact, mailtoHref, site, telHref } from "@/lib/site";
 /**
  * Pied de page.
  *
- * UNE SEULE ZONE — le pied compact : l'identité et les coordonnées à gauche,
- * trois colonnes de liens à droite, le légal en bas. Volontairement dense —
+ * UNE SEULE ZONE — le pied compact : l’identité à gauche, trois colonnes de
+ * liens à droite dont les coordonnées, le légal en bas. Volontairement dense —
  * un pied de page n'est pas une page.
  *
  * PAS DE ZONE DE CONVERSION, ET C'EST UNE DEMANDE RÉPÉTÉE
@@ -63,18 +63,21 @@ export function SiteFooter() {
       {/* ------------------------------------------------ Pied compact --- */}
       <Container className="relative py-(--space-compact)">
         <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
-          {/* -------- Identité et coordonnées --------
+          {/* -------- Identité --------
 
-              LES COORDONNÉES SONT ICI, PAS DANS UNE COLONNE.
+              LES COORDONNÉES ONT DÉMÉNAGÉ DANS « INFORMATIONS ».
 
-              Elles occupaient une quatrième colonne de liens. Mesuré en phase
-              15B.2 : l’adresse a besoin de ~180 px pour tenir sur une ligne,
-              et cette colonne n’en faisait que 76 px à 480 px, 98 px à
-              1024 px. `break-all` la coupait alors au milieu de « gmail ».
+              Demande client. À noter, parce que c’est un aller-retour : la
+              phase 15B.2 les avait justement SORTIES d’une colonne, l’adresse
+              demandant ~180 px pour tenir sur une ligne quand une colonne n’en
+              faisait que 76 à 480 px — `break-all` la coupait au milieu de
+              « gmail ».
 
-              Le bloc d’identité fait 288 px : l’adresse y tient d’un tenant à
-              toutes les largeurs, et les coordonnées se lisent avec le nom de
-              l’entreprise plutôt qu’en bout de rangée.
+              Ce qui a changé depuis : les colonnes ne sont plus quatre mais
+              trois, et « Informations » n’en portait que deux liens. La
+              largeur disponible a été re-mesurée après déplacement, à 390, 480,
+              768 et 1440 px — l’adresse tient. Si une quatrième colonne était
+              ajoutée un jour, le problème reviendrait.
 
               Aucun lien « Demander un devis » ici non plus : le pied de page ne
               porte plus aucun appel au devis, sous aucune forme.
@@ -89,56 +92,96 @@ export function SiteFooter() {
               son texte sous 7 px. C'est le partage posé par `wordmark.tsx`.
             */}
             <Wordmark variant="full" />
+            {/*
+              CE BLOC NE PORTE PLUS QUE L'IDENTITÉ — demande client.
+
+              Il a perdu deux choses. La ligne « Déplacement possible jusqu'à
+              100 km selon les chantiers » : elle disait la même réserve que la
+              page zones, en moins bien, et elle allongeait une colonne qui n'a
+              pas à raconter la couverture.
+
+              Et les coordonnées, qui vivent désormais dans la colonne
+              « Informations » — c'est là qu'un visiteur va les chercher.
+            */}
             <Body className="mt-5 text-(--surface-fg-muted)">
               {site.trade} à {area.city} et dans la {area.metro}.
             </Body>
-            <Small className="mt-3 block text-(--surface-fg-muted)">
-              Déplacement possible jusqu’à {area.maxRadiusKm} km selon les
-              chantiers.
-            </Small>
-
-            {/* Rien ne s’affiche tant que la donnée n’est pas confirmée : le
-                téléphone n’est pas inventé (cf. `contact.phoneConfirmed`). */}
-            {mailto || tel ? (
-              <ul className="mt-4 flex flex-col items-center gap-0.5">
-                {mailto ? (
-                  <li>
-                    <FooterLink href={mailto} external>
-                      {contact.email}
-                    </FooterLink>
-                  </li>
-                ) : null}
-
-                {tel ? (
-                  <li>
-                    <FooterLink href={tel} external>
-                      {contact.phoneDisplay}
-                    </FooterLink>
-                  </li>
-                ) : null}
-              </ul>
-            ) : null}
           </div>
 
           {/* -------- Colonnes de liens -------- */}
           <div className="grid grid-cols-2 gap-x-10 gap-y-10 sm:grid-cols-3 lg:gap-x-14">
-            {footerGroups.map((group) => (
-              <nav key={group.title} aria-label={group.title}>
-                <FooterHeading>{group.title}</FooterHeading>
-                <ul className="mt-3 flex flex-col items-center gap-0.5">
-                  {group.ids.map((id) => {
-                    const route = getRoute(id);
-                    return (
-                      <li key={id}>
-                        <FooterLink href={route.path}>
-                          {route.navLabel}
-                        </FooterLink>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </nav>
-            ))}
+            {footerGroups.map((group, index) => {
+              /*
+                LA DERNIÈRE COLONNE PREND TOUTE LA LARGEUR SUR MOBILE.
+
+                Même défaut que sur les cartes « Autres interventions » :
+                trois colonnes sur une grille de deux laissaient
+                « Informations » seule dans la cellule de gauche.
+
+                Ce n'était pas qu'esthétique. Mesuré à 390 px : la colonne
+                faisait 155 px et l'adresse 179 — elle débordait de sa propre
+                cellule, décalée par rapport à son intitulé. Sur deux colonnes
+                elle retrouve 350 px et se centre correctement.
+              */
+              const derniereSeule =
+                footerGroups.length % 2 === 1 &&
+                index === footerGroups.length - 1;
+
+              return (
+                <nav
+                  key={group.title}
+                  aria-label={group.title}
+                  className={
+                    derniereSeule ? "col-span-2 sm:col-span-1" : undefined
+                  }
+                >
+                  <FooterHeading>{group.title}</FooterHeading>
+                  <ul className="mt-3 flex flex-col items-center gap-0.5">
+                    {group.ids.map((id) => {
+                      const route = getRoute(id);
+                      return (
+                        <li key={id}>
+                          <FooterLink href={route.path}>
+                            {route.navLabel}
+                          </FooterLink>
+                        </li>
+                      );
+                    })}
+
+                    {/*
+                    LES COORDONNÉES SONT ICI — demande client.
+
+                    Elles étaient sous le logotype, dans la colonne
+                    d'identité. « Informations » est l'endroit où on les
+                    cherche, et la colonne était la plus courte des trois :
+                    elle les absorbe sans se déséquilibrer.
+
+                    Rien ne s'affiche tant que la donnée n'est pas confirmée :
+                    le téléphone n'est jamais inventé (`contact.phoneConfirmed`).
+                  */}
+                    {group.title === "Informations" && (mailto || tel) ? (
+                      <>
+                        {mailto ? (
+                          <li>
+                            <FooterLink href={mailto} external>
+                              {contact.email}
+                            </FooterLink>
+                          </li>
+                        ) : null}
+
+                        {tel ? (
+                          <li>
+                            <FooterLink href={tel} external>
+                              {contact.phoneDisplay}
+                            </FooterLink>
+                          </li>
+                        ) : null}
+                      </>
+                    ) : null}
+                  </ul>
+                </nav>
+              );
+            })}
           </div>
         </div>
 

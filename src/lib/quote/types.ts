@@ -24,20 +24,12 @@
 /* --------------------------------------------------------------- Étapes -- */
 
 export type QuoteStepId =
-  | "besoin"
-  | "chantier"
-  | "photos"
-  | "lieu"
-  | "coordonnees";
+  "besoin" | "chantier" | "photos" | "lieu" | "coordonnees";
 
 /* --------------------------------------------------------------- Besoin -- */
 
 export type NeedId =
-  | "elagage"
-  | "abattage"
-  | "dessouchage"
-  | "entretien-exterieur"
-  | "inconnu";
+  "elagage" | "abattage" | "dessouchage" | "entretien-exterieur" | "inconnu";
 
 /* --------------------------------------------- Vocabulaire des réponses -- */
 
@@ -50,20 +42,12 @@ export type HeightId = "moins-5" | "5-10" | "10-20" | "plus-20" | "inconnu";
 export type StumpSizeId = "petite" | "moyenne" | "grande" | "inconnu";
 
 export type OutdoorWorkId =
-  | "taille-de-haies"
-  | "debroussaillage"
-  | "espaces-verts"
-  | "autre";
+  "taille-de-haies" | "debroussaillage" | "espaces-verts" | "autre";
 
 export type OutdoorScaleId = "petit" | "moyen" | "grand" | "inconnu";
 
 export type ConstraintId =
-  | "acces-difficile"
-  | "habitation"
-  | "route"
-  | "cables"
-  | "autre"
-  | "aucune";
+  "acces-difficile" | "habitation" | "route" | "cables" | "autre" | "aucune";
 
 /** « Aucune » annule toute autre contrainte, et réciproquement. */
 export const CONSTRAINT_EXCLUSIVE = "aucune" satisfies ConstraintId;
@@ -97,7 +81,7 @@ export type ChantierSouche = ChantierBase & {
   taille: StumpSizeId | "";
 };
 
-/** Entretien extérieur : ce n'est pas un sujet à compter, c'est un travail. */
+/** Entretien des espaces verts : ce n'est pas un sujet à compter, c'est un travail. */
 export type ChantierExterieur = ChantierBase & {
   kind: "exterieur";
   travaux: readonly OutdoorWorkId[];
@@ -118,10 +102,7 @@ export type ChantierInconnu = ChantierBase & {
 };
 
 export type Chantier =
-  | ChantierArbre
-  | ChantierSouche
-  | ChantierExterieur
-  | ChantierInconnu;
+  ChantierArbre | ChantierSouche | ChantierExterieur | ChantierInconnu;
 
 export type ChantierKind = Chantier["kind"];
 

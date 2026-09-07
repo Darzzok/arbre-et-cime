@@ -280,29 +280,50 @@ export default function RealisationsPage() {
               grille tombe juste sur deux rangées, sans cellule vide.
             */}
             <ul className="mt-10 grid grid-cols-2 gap-(--card-gap) lg:mt-14 lg:grid-cols-6">
-              {readingCriteria.map((criterion, index) => (
-                <Reveal
-                  as="li"
-                  key={criterion.title}
-                  className={cn(
-                    "h-full",
-                    index < 2 ? "lg:col-span-3" : "lg:col-span-2",
-                  )}
-                >
-                  <Card as="div" tone="forest" padding="md" className="h-full">
-                    <span
-                      aria-hidden="true"
-                      className="mx-auto block h-0.5 w-4 bg-safety"
-                    />
-                    <h3 className="mt-5 font-display text-subtitle leading-tight text-(--surface-heading)">
-                      {criterion.title}
-                    </h3>
-                    <Body className="mx-auto mt-3 max-w-[40ch] text-(--surface-fg-muted)">
-                      {criterion.body}
-                    </Body>
-                  </Card>
-                </Reveal>
-              ))}
+              {readingCriteria.map((criterion, index) => {
+                /*
+                  MÊME CORRECTION QUE SUR LES PAGES SERVICES.
+
+                  Cinq critères sur deux colonnes laissaient le cinquième seul
+                  dans la cellule de gauche. Il prend désormais la largeur des
+                  deux du dessus, sur mobile uniquement — à partir de 1024 px
+                  la grille passe à six colonnes et retrouve ses deux rangées
+                  pleines.
+                */
+                const derniereSeule =
+                  readingCriteria.length % 2 === 1 &&
+                  index === readingCriteria.length - 1;
+
+                return (
+                  <Reveal
+                    as="li"
+                    key={criterion.title}
+                    className={cn(
+                      "h-full",
+                      derniereSeule && "col-span-2",
+                      index < 2 ? "lg:col-span-3" : "lg:col-span-2",
+                    )}
+                  >
+                    <Card
+                      as="div"
+                      tone="forest"
+                      padding="md"
+                      className="h-full"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="mx-auto block h-0.5 w-4 bg-safety"
+                      />
+                      <h3 className="mt-5 font-display text-subtitle leading-tight text-(--surface-heading)">
+                        {criterion.title}
+                      </h3>
+                      <Body className="mx-auto mt-3 max-w-[40ch] text-(--surface-fg-muted)">
+                        {criterion.body}
+                      </Body>
+                    </Card>
+                  </Reveal>
+                );
+              })}
             </ul>
           </Container>
         </Section>

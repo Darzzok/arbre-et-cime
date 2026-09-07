@@ -110,11 +110,11 @@ export const NEED_OPTIONS: readonly NeedOption[] = [
   },
   {
     id: "entretien-exterieur",
-    label: "Entretien extérieur",
-    description: "Haies, débroussaillage, remise en état d’un extérieur.",
-    image: "/images/services/taille-de-haie-taille-haie-thermique.jpg",
-    alt: "Taille d’une haie de conifères au taille-haie thermique",
-    position: "object-[center_42%]",
+    label: "Entretien des espaces verts",
+    description: "Haies, tonte, débroussaillage, remise en état d’un terrain.",
+    image: "/images/services/entretien-debroussailleuse-en-action.jpg",
+    alt: "Débroussailleuse thermique en action au ras d’un talus enherbé, herbe projetée et opérateur en pantalon haute visibilité",
+    position: "object-[68%_center]",
   },
   {
     id: "inconnu",

@@ -162,8 +162,7 @@ export function Why() {
           <Body className="mx-auto max-w-reading text-(--surface-fg-muted)">
             Sécuriser la zone, travailler avec du matériel professionnel adapté,
             et laisser l’espace propre une fois l’intervention terminée — avec
-            environ {site.experienceYears} ans de métier derrière chaque
-            chantier.
+            {site.experienceYears} ans de métier derrière chaque chantier.
           </Body>
         </Reveal>
       </Container>

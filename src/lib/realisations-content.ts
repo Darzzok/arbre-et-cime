@@ -32,10 +32,7 @@
 
 /** Familles d'intervention affichées en étiquette. */
 export type RealisationCategory =
-  | "Élagage"
-  | "Abattage"
-  | "Gestion du bois"
-  | "Évacuation";
+  "Élagage" | "Abattage" | "Gestion du bois" | "Évacuation";
 
 export type Realisation = {
   id: string;
@@ -80,9 +77,9 @@ export const realisations: readonly Realisation[] = [
   {
     id: "gestion-du-bois",
     category: "Gestion du bois",
-    title: "Le bois, une fois l’arbre au sol",
-    teaser: "Débité, rangé, marqué : ce qui reste après la coupe.",
-    body: "Un arbre abattu devient un volume de bois qu’il faut débiter, ranger et parfois marquer avant de décider de son sort. C’est ce volume, plus que la hauteur de l’arbre, qui détermine le temps passé sur place et le nombre de rotations.",
+    title: "Le bois, au sol",
+    teaser: "Débité aux longueurs voulues, fendu ou rangé selon la demande.",
+    body: "Un arbre abattu devient un volume de bois qu’il faut traiter avant de décider de son sort. Le bois peut être coupé aux longueurs souhaitées, avec possibilité de fendage et de rangement selon la demande. C’est ce volume, plus que la hauteur de l’arbre, qui détermine le temps passé sur place et le nombre de rotations.",
     image: "/images/realisations/chantier-billons-marques-automne.jpg",
     alt: "Pile de billons fraîchement coupés portant des marques de repérage à la peinture, en sous-bois d’automne",
     onHome: true,

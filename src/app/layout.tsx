@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     default: `${site.name} — Élagueur-grimpeur à ${area.city}`,
     template: `%s | ${site.name}`,
   },
-  description: `Élagage, abattage, dessouchage et entretien extérieur à ${area.city} et dans la ${area.metro}. Devis gratuit, intervention rapide, travail sécurisé.`,
+  description: `Élagage, abattage, dessouchage et entretien des espaces verts à ${area.city} et dans la ${area.metro}. Devis gratuit, intervention rapide, travail sécurisé.`,
   applicationName: site.name,
   formatDetection: { telephone: true },
 };
