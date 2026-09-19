@@ -49,7 +49,7 @@ import { getRoute, type RouteId } from "@/lib/routes";
  * chaque build et prétendrait une mise à jour qui n'a pas eu lieu. Elle se
  * modifie à la main, quand le texte change réellement.
  *
- * Avancée au 7 septembre 2026 : les mentions légales ont changé pour de bon —
+ * Avancée au 20 septembre 2026 : les mentions légales ont changé pour de bon —
  * l'hébergeur y est nommé, et l'encadré des mentions restant à publier a été
  * retiré. C'est exactement le cas prévu ci-dessus.
  *
@@ -61,8 +61,8 @@ import { getRoute, type RouteId } from "@/lib/routes";
  * décision à prendre : deux constantes, pas un correctif.
  */
 export const LEGAL_UPDATED = {
-  iso: "2026-09-07",
-  label: "7 septembre 2026",
+  iso: "2026-09-20",
+  label: "20 septembre 2026",
 } as const;
 
 /* ------------------------------------------------------------------ Hero -- */

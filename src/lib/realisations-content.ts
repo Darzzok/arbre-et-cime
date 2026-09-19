@@ -58,9 +58,18 @@ export const realisations: readonly Realisation[] = [
     title: "Élagage en hauteur, sur cordes",
     teaser: "Travailler depuis l’arbre, quand aucun engin n’y accède.",
     body: "La grimpe encordée permet d’atteindre une charpentière que ni nacelle ni échelle ne desservent, et de choisir chaque coupe depuis l’arbre plutôt que depuis le sol. C’est aussi ce qui rend possible le travail au-dessus d’un jardin planté, sans écraser ce qu’il y a dessous.",
-    image: "/images/realisations/chantier-grimpe-encordee-elagage.jpg",
-    alt: "Élagueur encordé installé sur une charpentière, cordes et mousquetons, dans un boisement en hiver",
-    position: "object-[center_35%]",
+    image: "/images/realisations/chantier-elagueur-harnais-corde.jpg",
+    alt: "Élagueur en harnais, mousquetons et sac à corde à la ceinture, lovant une corde de grimpe rouge sous la couronne d’un arbre",
+    /*
+      42 % ET PAS LE CENTRE — mesuré sur les quatre cadres réels.
+
+      L'image est un portrait 2:3 ; les cartes la recadrent en 4/3, 2/1, 16/9
+      et, sur la grande carte de l'accueil, en hauteur libre. La bande 2/1 n'en
+      montre qu'un tiers : centrée, elle tombait sur le torse et perdait à la
+      fois le visage et la corde. À 42 %, les quatre cadres gardent les mains,
+      la corde et le harnais — ce qui fait la lecture « travail sur cordes ».
+    */
+    position: "object-[center_42%]",
     onHome: true,
   },
   {
@@ -80,8 +89,17 @@ export const realisations: readonly Realisation[] = [
     title: "Le bois, au sol",
     teaser: "Débité aux longueurs voulues, fendu ou rangé selon la demande.",
     body: "Un arbre abattu devient un volume de bois qu’il faut traiter avant de décider de son sort. Le bois peut être coupé aux longueurs souhaitées, avec possibilité de fendage et de rangement selon la demande. C’est ce volume, plus que la hauteur de l’arbre, qui détermine le temps passé sur place et le nombre de rotations.",
-    image: "/images/realisations/chantier-billons-marques-automne.jpg",
-    alt: "Pile de billons fraîchement coupés portant des marques de repérage à la peinture, en sous-bois d’automne",
+    image: "/images/realisations/chantier-bois-debite-fendu-en-tas.jpg",
+    alt: "Tas de bois débité et fendu, rondins et bûches empilés en vrac, découpés sur un ciel clair",
+    /*
+      LE CIEL EST EN HAUT DU CADRE, ET IL DOIT LE RESTER.
+
+      Les cartes recadrent cette image en 4/3, 16/9 et 2/1 selon l'écran.
+      Centrée, la bande 2/1 mangeait la ligne de crête : il ne restait qu'une
+      texture de bois, qui ne dit plus « un tas ». Le cadrage remonte donc à
+      30 %, ce qui conserve la silhouette du tas dans les trois formats.
+    */
+    position: "object-[center_30%]",
     onHome: true,
   },
   {

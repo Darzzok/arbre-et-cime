@@ -101,9 +101,29 @@ plus le cas.
 | Fichier | Dimensions | Poids | Usage | Auteur | Page source | Licence | Remarques |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `chantier-abattage-foret-tronconneuse.jpg` | 2400×1352 | 844 Ko | **Hero de `/realisations`** | Fabian Köhler | [pexels.com/photo/…-11932165](https://www.pexels.com/photo/man-cutting-the-tree-using-a-chainsaw-11932165/) | Pexels, gratuite, non Pexels+ | Coupe d'abattage au pied d'un hêtre, Hohenstein (Thuringe, Allemagne). Casque, visière, protections auditives. **Visage masqué par la visière, aucune marque lisible.** Cadrage 16/9 natif, adapté à un hero large. |
-| `chantier-grimpe-encordee-elagage.jpg` | 2400×3595 | 1 409 Ko | **Accueil + collection `/realisations`** — catégorie Élagage | Chris F | [pexels.com/photo/…-15163244](https://www.pexels.com/photo/man-hanging-on-ropes-in-a-forest-15163244/) | Pexels, gratuite, non Pexels+ | Élagueur encordé sur une charpentière, boisement en hiver. Personne à distance, de trois quarts, non identifiable. Aucun logo. *Réserve : pas de casque visible — à remplacer en priorité par une photo client.* |
-| `chantier-billons-marques-automne.jpg` | 2400×1600 | 805 Ko | **Accueil + collection `/realisations`** — catégorie Gestion du bois | Esmerald Heqimaj | [pexels.com/photo/…-33903905](https://www.pexels.com/photo/pile-of-logs-with-blue-numerical-markings-in-forest-33903905/) | Pexels, gratuite, non Pexels+ | Pile de billons marqués à la peinture, sous-bois d'automne. Aucune personne, aucun logo. |
+| `chantier-elagueur-harnais-corde.jpg` | 1333×2000 | 458 Ko | **EN PRODUCTION — Accueil (grande carte) + collection `/realisations`**, catégorie Élagage | **Fournie par le client — provenance à confirmer** | — | **À confirmer** | Élagueur en harnais lovant une corde de grimpe, contre-plongée sous une couronne. Aucun logo, aucun filigrane, aucune plaque lisible — vérifié en pleine résolution. Fichier repris **tel quel** : ni EXIF ni GPS à l'origine, et le ré-encoder n'aurait gagné que 21 % au prix d'une génération de perte sur un feuillage très détaillé, alors que Next ré-encode déjà à la volée. **Deux réserves ci-dessous.** |
+| `chantier-grimpe-encordee-elagage.jpg` | 2400×3595 | 1 409 Ko | **Inutilisée** depuis le remplacement demandé par le client. Conservée sur disque. | Chris F | [pexels.com/photo/…-15163244](https://www.pexels.com/photo/man-hanging-on-ropes-in-a-forest-15163244/) | Pexels, gratuite, non Pexels+ | Élagueur encordé sur une charpentière, boisement en hiver. Personne à distance, de trois quarts, non identifiable. Aucun logo. |
+| `chantier-bois-debite-fendu-en-tas.jpg` | 1333×889 | 189 Ko | **EN PRODUCTION — Accueil + collection `/realisations`**, catégorie Gestion du bois | **Fournie par le client — provenance à confirmer** | — | **À confirmer** | Tas de bois débité et fendu sur ciel clair. Aucune personne, aucun logo, aucun filigrane — vérifié en pleine résolution. Recadrée en 3:2 depuis un original 1333×2000 (bande haute, celle qui porte la ligne de crête) ; **aucun agrandissement**, 1333 px est la largeur native. Ré-encodée mozjpeg q82, sans EXIF : 412 Ko → 189 Ko. |
+| `chantier-billons-marques-automne.jpg` | 2400×1600 | 805 Ko | **Inutilisée** depuis le remplacement demandé par le client. Conservée sur disque. | Esmerald Heqimaj | [pexels.com/photo/…-33903905](https://www.pexels.com/photo/pile-of-logs-with-blue-numerical-markings-in-forest-33903905/) | Pexels, gratuite, non Pexels+ | Pile de billons marqués à la peinture, sous-bois d'automne. Aucune personne, aucun logo. |
 | `chantier-debitage-epi-protection.jpg` | 2400×1600 | 734 Ko | **`/a-propos`**, bloc « manière de travailler » | Karola / Kaboompics | [pexels.com/photo/…-4206050](https://www.pexels.com/photo/crop-man-cutting-log-with-chainsaw-4206050/) | Pexels, gratuite, non Pexels+ | Cadrage aux jambes : pantalon de protection jaune, chaussures de sécurité, billons de bouleau. **Aucun visage, aucune marque lisible.** |
+
+> **⚠ Deux réserves sur `chantier-elagueur-harnais-corde.jpg`.** Elles ne
+> bloquent rien — le client a demandé cette photographie — mais elles se
+> décident, elles ne se découvrent pas après coup.
+>
+> 1. **Le visage est parfaitement identifiable**, et c'est le premier cas du
+>    dépôt. Toutes les autres photographies ont été retenues **parce que** la
+>    personne ne l'était pas : visière, dos, jambes seules, silhouette
+>    lointaine. Sur le site d'un artisan seul, un visage net en grande carte
+>    d'accueil sera lu comme étant celui de Cédric Simon. Si ce n'en est pas
+>    un, le site laisse croire quelque chose de faux sur qui fait le travail —
+>    et la personne photographiée a un droit sur son image.
+> 2. **Pas de casque**, comme sur la photographie qu'elle remplace : la réserve
+>    n'est donc pas levée, elle est reconduite. Le reste de l'équipement est
+>    complet et réaliste (harnais, mousqueton, sac à corde, corde de grimpe).
+>
+> **Ce qui lèverait les deux d'un coup : une photographie de chantier du
+> client.** C'est la même conclusion qu'au correctif 9B.
 
 ### Déjà présentes
 
